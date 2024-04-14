@@ -19,4 +19,5 @@
     <string name="cloth">衣服</string>
     <string name="trousers">裤子</string>
     <string name="shoes">鞋子</string>
+    <string name="wardrobe">衣橱</string>
 </resources>
