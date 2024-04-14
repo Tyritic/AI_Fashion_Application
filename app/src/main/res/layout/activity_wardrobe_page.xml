@@ -1,10 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Wardrobe_Page">
+<RelativeLayout
+    xmlns:android=
+        "http://schemas.android.com/apk/res/android"
+    android:id=
+        "@+id/some_id"
+    android:layout_width=
+        "fill_parent"
+    android:layout_height=
+        "fill_parent"
+    android:clipToOutline=
+        "true"
+    android:background=
+        "#2615DDCA"
+    >
+    <Button
+        android:id=
+            "@+id/cloth"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:background="@drawable/log_in_box"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="109dp"
+        android:text="@string/cloth"
+        android:textSize="30dp"
+        android:textAppearance="@string/title_wardrobe">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </Button>
+
+    <Button
+        android:id="@+id/trousers"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="346dp"
+        android:background="@drawable/log_in_box"
+        android:text="@string/trousers"
+        android:textAppearance="@string/title_wardrobe"
+        android:textSize="30dp">
+
+    </Button>
+
+    <Button
+        android:id="@+id/shoes"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="576dp"
+        android:background="@drawable/log_in_box"
+        android:text="@string/shoes"
+        android:textAppearance="@string/title_wardrobe"
+        android:textSize="30dp">
+
+    </Button>
+</RelativeLayout>
