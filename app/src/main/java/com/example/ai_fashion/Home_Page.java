@@ -7,11 +7,8 @@ import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-public class HomePage extends AppCompatActivity {
+public class Home_Page extends AppCompatActivity {
 
     Button register;
     Button log_in;
@@ -25,7 +22,14 @@ public class HomePage extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(HomePage.this, RegisterPage.class);//设置切换对应activity
+                Intent intent=new Intent(Home_Page.this, Register_Page.class);//设置切换对应activity
+                startActivity(intent);//开始切换
+            }
+        });
+        log_in.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Home_Page.this, Wardrobe_Page.class);//设置切换对应activity
                 startActivity(intent);//开始切换
             }
         });

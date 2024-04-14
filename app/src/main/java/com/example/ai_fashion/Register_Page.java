@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class RegisterPage extends AppCompatActivity {
+public class Register_Page extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,12 +17,12 @@ public class RegisterPage extends AppCompatActivity {
         setContentView(R.layout.activity_register_page);
         ImageButton backTohomePage = findViewById(R.id.backToHomePage);
         backTohomePage.setOnClickListener(v -> {
-            Intent intent=new Intent(RegisterPage.this,HomePage.class);//设置切换对应activity
+            Intent intent=new Intent(Register_Page.this, Home_Page.class);//设置切换对应activity
             startActivity(intent);//开始切换
         });
         Button back= findViewById(R.id.back_button);
         back.setOnClickListener(v -> {
-            Intent intent=new Intent(RegisterPage.this,HomePage.class);//设置切换对应activity
+            Intent intent=new Intent(Register_Page.this, Home_Page.class);//设置切换对应activity
             startActivity(intent);//开始切换
         });
 

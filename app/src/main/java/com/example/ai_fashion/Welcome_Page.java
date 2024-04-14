@@ -6,11 +6,8 @@ import android.os.Handler;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-public class WelcomePage extends AppCompatActivity {
+public class Welcome_Page extends AppCompatActivity {
 
     Handler mhandler=new Handler();
 
@@ -22,7 +19,7 @@ public class WelcomePage extends AppCompatActivity {
         mhandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent=new Intent(WelcomePage.this,HomePage.class);
+                Intent intent=new Intent(Welcome_Page.this, Home_Page.class);
                 startActivity(intent);
             }
         },1000);
