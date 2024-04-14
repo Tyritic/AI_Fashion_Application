@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">AI_Fashion</string>
+    <string name="title_dressing">穿搭</string>
+    <string name="title_wardrobe">衣橱</string>
+    <string name="title_mine">我的</string>
+    <string name="title_welcome">Welcome to</string>
+    <string name="title_oreo">Oreo造型</string>
+    <string name="input_user_account">用户名</string>
+    <string name="input_user_password">密码</string>
+    <string name="register">注册</string>
+    <string name="login">登录</string>
+    <string name="new_Account">新用户</string>
+    <string name="nickname">昵称</string>
+    <string name="birthday">生日</string>
+    <string name="man">男</string>
+    <string name="woman">女</string>
+    <string name="confirm_password">再次确认密码</string>
+    <string name="back">返回</string>
+    <string name="cloth">衣服</string>
+    <string name="trousers">裤子</string>
+    <string name="shoes">鞋子</string>
+</resources>

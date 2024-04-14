@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/welcome_page"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:clipToOutline="true"
+    android:background="@color/welcome_background">
+
+
+    <TextView
+        android:id="@+id/title_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="44dp"
+        android:layout_marginTop="267dp"
+        android:layout_marginEnd="113dp"
+        android:layout_marginBottom="400dp"
+        android:gravity="left|top"
+        android:lineSpacingExtra="-7.6dp"
+        android:text="@string/title_welcome"
+        android:textAppearance="@style/titleFont"
+        android:textFontWeight="400" />
+
+    <TextView
+        android:id="@+id/oero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="171dp"
+        android:layout_marginTop="328dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginBottom="333dp"
+        android:gravity="left|top"
+        android:lineSpacingExtra="-7.6dp"
+        android:text="@string/title_oreo"
+        android:textAppearance="@style/titleFont"
+        android:textFontWeight="400" />
+
+    <View
+        android:id="@+id/ellipse8"
+        android:layout_width="92dp"
+        android:layout_height="98dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/ic_ellipse8"
+        android:clipToOutline="true"
+        android:rotation="180" />
+
+    <View
+        android:id="@+id/ellipse4"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-81dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="292dp"
+        android:layout_marginBottom="488dp"
+        android:background="@drawable/ic_ellipse4"
+        android:clipToOutline="true" />
+
+    <View
+        android:id="@+id/ellipse5"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="-85dp"
+        android:layout_marginEnd="212dp"
+        android:layout_marginBottom="616dp"
+        android:background="@drawable/ic_ellipse5"
+        android:clipToOutline="true" />
+</RelativeLayout>

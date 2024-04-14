@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/register_page"
+    android:layout_width=
+        "fill_parent"
+    android:layout_height=
+        "fill_parent"
+    android:clipToOutline=
+        "true"
+    android:background="@color/page_background">
+
+    <ImageButton
+        android:id="@+id/backToHomePage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="62dp"
+        android:layout_marginBottom="645dp"
+        android:background="@drawable/backtohomepage"
+        android:src="@drawable/arrow_circle_left" />
+
+    <TextView
+        android:id="@+id/new_Account"
+        android:layout_width="100dp"
+        android:layout_height="39dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="638dp"
+        android:gravity="left|top"
+        android:lineSpacingExtra="-7.6dp"
+        android:text="@string/new_Account"
+        android:textAppearance="@style/new_Account"
+        android:textFontWeight="400"
+        android:textSize="28dp" />
+
+    <EditText
+        android:id="@+id/nickname"
+        android:layout_width="400dp"
+        android:layout_height="41dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="123dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="535dp"
+        android:background="@drawable/log_in_box"
+        android:hint="@string/nickname"
+        android:padding="5dp"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/birthday"
+        android:layout_width="400dp"
+        android:layout_height="41dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="203dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="460dp"
+        android:background="@drawable/log_in_box"
+        android:gravity="center"
+        android:hint="@string/birthday"
+        android:maxLines="1" />
+
+    <View
+        android:id="@+id/birthdayView"
+        android:layout_width="29dp"
+        android:layout_height="28dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="211dp"
+        android:layout_marginEnd="245dp"
+        android:layout_marginBottom="463dp"
+        android:background="@drawable/birthdayview"
+        android:clipToOutline="true" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="265dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/womanBtn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/radiobutton"
+            android:checked="true"
+            android:gravity="center"
+            android:text="@string/man" />
+
+        <RadioButton
+            android:id="@+id/manBtn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/radiobutton"
+            android:gravity="center"
+            android:text="@string/woman" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/account"
+        android:layout_width="400dp"
+        android:layout_height="41dp"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:layout_marginTop="310dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="344dp"
+        android:background="@drawable/log_in_box"
+        android:hint="@string/input_user_account"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="400dp"
+        android:layout_height="41dp"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:layout_marginTop="375dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="280dp"
+        android:background="@drawable/log_in_box"
+        android:hint="@string/input_user_password"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/confirm_password"
+        android:layout_width="400dp"
+        android:layout_height="41dp"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:layout_marginTop="438dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="216dp"
+        android:background="@drawable/log_in_box"
+        android:hint="@string/confirm_password"
+        android:maxLines="1" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="329dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="504dp"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/homepage_botton"
+        android:text="@string/register"
+        android:textAppearance="@style/homepage_botton_font"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="112dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/register_button"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="591dp"
+        android:layout_marginEnd="256dp"
+        android:background="@drawable/homepage_botton"
+        android:text="@string/back"
+        android:textAppearance="@style/homepage_botton_font"
+        android:textSize="20dp" />
+
+    <View
+        android:id="@+id/ellipse5"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="-70dp"
+        android:background="@drawable/ic_ellipse5"
+        android:clipToOutline="true" />
+
+    <View
+        android:id="@+id/ellipse4"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-71dp"
+        android:layout_marginBottom="-1dp"
+        android:background="@drawable/ic_ellipse4"
+        android:clipToOutline="true" />
+
+</RelativeLayout>
