@@ -1,6 +1,9 @@
+
 plugins {
     alias(libs.plugins.androidApplication)
 }
+
+
 
 android {
     namespace = "com.example.ai_fashion"
@@ -40,4 +43,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }
+dependencies {
+    val room_version = "2.4.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+}
+
+
