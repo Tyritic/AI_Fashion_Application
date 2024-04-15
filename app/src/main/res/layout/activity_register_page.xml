@@ -88,17 +88,16 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/womanBtn"
+            android:id="@+id/manBtn"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:background="@drawable/radiobutton"
-            android:checked="true"
             android:gravity="center"
             android:text="@string/man" />
 
         <RadioButton
-            android:id="@+id/manBtn"
+            android:id="@+id/womanBtn"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"

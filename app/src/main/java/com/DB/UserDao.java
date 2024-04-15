@@ -1,4 +1,4 @@
-package com.DataBase;
+package com.DB;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -15,8 +15,8 @@ public interface UserDao {
     void insertUsers(User... users);//插入多个用户
     @Delete
     void deleteUser(User user);//删除用户
-    @Query("SELECT * FROM users WHERE username = :username AND password = :password")
+    @Query("SELECT * FROM Users WHERE user_account = :username AND user_password = :password")
     User findUser(String username, String password);//查找根据账号密码查找用户
-    @Query("SELECT * FROM users WHERE username = :username")
+    @Query("SELECT * FROM Users WHERE user_account = :username")
     User findUserByUsername(String username);//根据用户名查找用户
 }
