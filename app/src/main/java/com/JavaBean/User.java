@@ -1,13 +1,24 @@
 package com.JavaBean;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Users")
 public class User {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
     private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @ColumnInfo(name = "username")
     private String username;
     @ColumnInfo(name = "password")

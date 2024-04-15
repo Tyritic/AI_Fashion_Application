@@ -9,7 +9,7 @@
 
 
     <EditText
-        android:id="@+id/input_user_account"
+        android:id="@+id/input_user_name"
         android:layout_width="400dp"
         android:layout_height="41dp"
         android:layout_centerHorizontal="true"
