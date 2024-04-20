@@ -25,4 +25,5 @@
     <string name="account_information">账号信息</string>
     <string name="body_information">身材信息</string>
     <string name="setting">设置</string>
+    <string name="modify">修改</string>
 </resources>

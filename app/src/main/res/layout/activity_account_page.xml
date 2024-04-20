@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/page_background"
+    android:clipToOutline="true">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white">
+
+        <ImageButton
+            android:id="@+id/back_to_home_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:background="@drawable/backtohomepage"
+            android:src="@drawable/arrow_circle_left" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/account_information"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/head"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp">
+
+            <com.example.ai_fashion.CircleImage
+                android:id="@+id/head_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_picture">
+
+            </com.example.ai_fashion.CircleImage>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/account"
+            android:layout_width="103dp"
+            android:layout_height="41dp"
+            android:layout_toLeftOf="@id/account_input"
+            android:layout_alignTop="@id/account_input"
+            android:layout_alignBottom="@id/account_input"
+            android:text="账号："
+            android:textAppearance="@style/titleFont"
+            android:textSize="30dp"
+            />
+
+        <EditText
+            android:id="@+id/account_input"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:text=""
+            android:layout_marginBottom="489dp"
+            android:background="@drawable/log_in_box" />
+
+        <TextView
+            android:id="@+id/password"
+            android:layout_width="103dp"
+            android:layout_height="41dp"
+            android:layout_toLeftOf="@id/password_input"
+            android:layout_alignTop="@id/password_input"
+            android:layout_alignBottom="@id/password_input"
+            android:text="密码："
+            android:textAppearance="@style/titleFont"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/password_input"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="382dp"
+            android:background="@drawable/log_in_box"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/birthday"
+            android:layout_width="103dp"
+            android:layout_height="46dp"
+            android:layout_toLeftOf="@id/birthday_input"
+            android:layout_alignTop="@id/birthday_input"
+            android:layout_alignBottom="@id/birthday_input"
+            android:text="生日："
+            android:textAppearance="@style/titleFont"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/birthday_input"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="281dp"
+            android:background="@drawable/log_in_box"
+            android:text="" />
+
+        <Button
+            android:id="@+id/modify_button"
+            android:layout_width="106dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="170dp"
+            android:layout_marginTop="545dp"
+            android:layout_marginEnd="134dp"
+            android:layout_marginBottom="49dp"
+            android:background="@drawable/homepage_botton"
+            android:text="@string/modify"
+            android:textAppearance="@style/homepage_botton_font"
+            android:textSize="20dp" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>
