@@ -39,6 +39,16 @@ public class Home_Page extends AppCompatActivity {
                 return false;
             }
         });
+        int fragment_flag = getIntent().getIntExtra("fragment_flag", 0);
+        if(fragment_flag == 0) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_wardrobe);
+        }
+        else if(fragment_flag == 1) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_dressing);
+        }
+        else if(fragment_flag == 2) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_mine);
+        }
     }
     private void selectFragment(int position) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
