@@ -35,6 +35,8 @@ public class Log_in_Page extends AppCompatActivity {
                 Toast.makeText(Log_in_Page.this,"登录成功",Toast.LENGTH_SHORT).show();
                 new Thread(() -> {
                     Intent intent = new Intent(Log_in_Page.this, Home_Page.class);
+                    intent.putExtra("user_account",user_account);
+                    intent.putExtra("user_password",user_password);
                     startActivity(intent);
                 }).start();
             }

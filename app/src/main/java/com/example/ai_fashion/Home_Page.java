@@ -1,17 +1,24 @@
 package com.example.ai_fashion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.room.Room;
 
+import com.DB.AppDatabase;
+import com.JavaBean.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Home_Page extends AppCompatActivity {
 
+    private String user_account;
+    private String user_password;
     private BottomNavigationView bottomNavigationView;
     private Wardrobe_Fragment wardrobeFragment;
     private Dressing_Fragment dressingFragment;
@@ -24,7 +31,16 @@ public class Home_Page extends AppCompatActivity {
         //初始化
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         selectFragment(0);
-
+        AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
+                .allowMainThreadQueries().build();
+        Intent intent = getIntent();
+        user_account = intent.getStringExtra("user_account");
+        user_password = intent.getStringExtra("user_password");
+        User user = DB.userDao().findUser(user_account,user_password);
+        if(user!=null)
+        {
+            Toast.makeText(Home_Page.this,"欢迎"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
+        }
         //点击事件
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -71,6 +87,10 @@ public class Home_Page extends AppCompatActivity {
         }else if (position==2){
             if (mineFragment == null) {
                 mineFragment = new Mine_Fragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("user_account", user_account);
+                bundle.putString("user_password", user_password);
+                mineFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, mineFragment);
             } else {
                 fragmentTransaction.show(mineFragment);

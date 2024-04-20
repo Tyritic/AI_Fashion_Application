@@ -19,4 +19,6 @@ public interface UserDao {
     User findUser(String username, String password);//查找根据账号密码查找用户
     @Query("SELECT * FROM Users WHERE user_account = :username")
     User findUserByUsername(String username);//根据用户名查找用户
+
+
 }
