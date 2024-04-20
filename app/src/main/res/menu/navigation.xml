@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/navigation_wardrobe"
+        android:title="@string/title_wardrobe"
+        android:icon="@drawable/ic_wardrobe">
+    </item>
+    <item android:id="@+id/navigation_dressing"
+        android:title="@string/title_dressing"
+        android:icon="@drawable/ic_dressing">
+    </item>
+    <item android:id="@+id/navigation_mine"
+        android:title="@string/title_mine"
+        android:icon="@drawable/ic_mine">
+    </item>
+</menu>

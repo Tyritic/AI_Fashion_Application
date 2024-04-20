@@ -20,4 +20,9 @@
     <string name="trousers">裤子</string>
     <string name="shoes">鞋子</string>
     <string name="wardrobe">衣橱</string>
+    <string name="recommend">穿搭推荐</string>
+    <string name="mark">穿搭评分</string>
+    <string name="account_information">账号信息</string>
+    <string name="body_information">身材信息</string>
+    <string name="setting">设置</string>
 </resources>
