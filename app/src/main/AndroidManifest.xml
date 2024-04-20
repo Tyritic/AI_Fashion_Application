@@ -13,13 +13,13 @@
         android:theme="@style/Theme.AI_Fashion"
         tools:targetApi="31">
         <activity
-            android:name=".Wardrobe_Page"
+            android:name=".Home_Page"
             android:exported="false" />
         <activity
             android:name=".Register_Page"
             android:exported="false" />
         <activity
-            android:name=".Home_Page"
+            android:name=".Log_in_Page"
             android:exported="false" />
         <activity
             android:name=".Welcome_Page"

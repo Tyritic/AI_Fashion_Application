@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -25,10 +24,9 @@ public class Register_Page extends AppCompatActivity {
     EditText mEditTextConfirmPassword;
     Button back;
     ImageButton backTohomePage;
-
+    String user_gender;
     Button register;
     AppDatabase DB;
-    String user_gender;
     RadioGroup radioGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +55,6 @@ public class Register_Page extends AppCompatActivity {
                 }
             }
         });
-
         DB= Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         register.setOnClickListener(v -> {
@@ -91,17 +88,17 @@ public class Register_Page extends AppCompatActivity {
                 //在界面输出注册成功信息
                 DB.userDao().insertUser(user);
                 Toast.makeText(Register_Page.this, "注册成功", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(Register_Page.this, Home_Page.class);//设置切换对应activity
+                Intent intent=new Intent(Register_Page.this, Log_in_Page.class);//设置切换对应activity
                 startActivity(intent);//开始切换
             }
         });
         backTohomePage.setOnClickListener(v -> {
-            Intent intent=new Intent(Register_Page.this, Home_Page.class);//设置切换对应activity
+            Intent intent=new Intent(Register_Page.this, Log_in_Page.class);//设置切换对应activity
             startActivity(intent);//开始切换
         });
 
         back.setOnClickListener(v -> {
-            Intent intent=new Intent(Register_Page.this, Home_Page.class);//设置切换对应activity
+            Intent intent=new Intent(Register_Page.this, Log_in_Page.class);//设置切换对应activity
             startActivity(intent);//开始切换
         });
 

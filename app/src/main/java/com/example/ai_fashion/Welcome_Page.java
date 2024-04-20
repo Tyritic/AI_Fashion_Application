@@ -19,7 +19,7 @@ public class Welcome_Page extends AppCompatActivity {
         mhandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent=new Intent(Welcome_Page.this, Home_Page.class);
+                Intent intent=new Intent(Welcome_Page.this, Log_in_Page.class);
                 startActivity(intent);
             }
         },1000);
