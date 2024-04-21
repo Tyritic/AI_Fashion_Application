@@ -33,13 +33,14 @@ public class Home_Page extends AppCompatActivity {
         selectFragment(0);
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
+        //获取用户账号和密码，通过上一个页面传递过来的数据
         Intent intent = getIntent();
         user_account = intent.getStringExtra("user_account");
         user_password = intent.getStringExtra("user_password");
         User user = DB.userDao().findUser(user_account,user_password);
         if(user!=null)
         {
-            Toast.makeText(Home_Page.this,"欢迎"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
+            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
         }
         //点击事件
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -87,6 +88,7 @@ public class Home_Page extends AppCompatActivity {
         }else if (position==2){
             if (mineFragment == null) {
                 mineFragment = new Mine_Fragment();
+                //传递数据，将用户账号和密码包装成Bundle传递给Mine_Fragment
                 Bundle bundle = new Bundle();
                 bundle.putString("user_account", user_account);
                 bundle.putString("user_password", user_password);
