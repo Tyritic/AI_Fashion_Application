@@ -80,6 +80,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="31dp"
             android:layout_marginBottom="489dp"
+            android:maxLines="1"
             android:background="@drawable/log_in_box" />
 
         <TextView
@@ -101,6 +102,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="31dp"
             android:layout_marginBottom="389dp"
+            android:maxLines="1"
             android:background="@drawable/log_in_box"
             android:text="" />
 
@@ -123,6 +125,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="31dp"
             android:layout_marginBottom="289dp"
+            android:maxLines="1"
             android:background="@drawable/log_in_box"
             android:text="" />
 
