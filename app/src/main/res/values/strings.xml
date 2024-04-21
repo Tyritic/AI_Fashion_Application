@@ -26,4 +26,6 @@
     <string name="body_information">身材信息</string>
     <string name="setting">设置</string>
     <string name="modify">修改</string>
+    <string name="switch_account">切换账号</string>
+    <string name="log_out">退出登录</string>
 </resources>
