@@ -25,6 +25,9 @@ public class User {
         return user_birthday;
     }
 
+    public User() {
+    }
+
     public String getUser_nickname() {
         return user_nickname;
     }

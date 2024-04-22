@@ -68,14 +68,14 @@
         android:stateListAnimator="@null" />
 
     <Button
-        android:id="@+id/setting_button"
+        android:id="@+id/log_out_button"
         android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_below="@id/body_information_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:background="@drawable/mine_button"
-        android:text="@string/setting"
+        android:text="@string/log_out"
         android:gravity="start|center_vertical"
         android:padding="7dp"
         android:textSize="18sp" />

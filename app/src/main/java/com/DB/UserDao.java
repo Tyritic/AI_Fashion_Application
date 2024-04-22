@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.JavaBean.User;
 
@@ -19,4 +20,8 @@ public interface UserDao {
     User findUser(String username, String password);//查找根据账号密码查找用户
     @Query("SELECT * FROM Users WHERE user_account = :username")
     User findUserByUsername(String username);//根据用户名查找用户
+
+    @Update
+    void updateUser(User user);//更新用户信息
+
 }

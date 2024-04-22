@@ -79,8 +79,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="31dp"
-            android:text="123"
             android:layout_marginBottom="489dp"
+            android:maxLines="1"
             android:background="@drawable/log_in_box" />
 
         <TextView
@@ -101,7 +101,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="31dp"
-            android:layout_marginBottom="382dp"
+            android:layout_marginBottom="389dp"
+            android:maxLines="1"
             android:background="@drawable/log_in_box"
             android:text="" />
 
@@ -123,7 +124,32 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="31dp"
-            android:layout_marginBottom="281dp"
+            android:layout_marginBottom="289dp"
+            android:maxLines="1"
+            android:background="@drawable/log_in_box"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/nickname"
+            android:layout_width="103dp"
+            android:layout_height="46dp"
+            android:layout_toLeftOf="@id/nickname_input"
+            android:layout_alignTop="@id/nickname_input"
+            android:layout_alignBottom="@id/nickname_input"
+            android:text="昵称："
+            android:textAppearance="@style/titleFont"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/nickname_input"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="189dp"
             android:background="@drawable/log_in_box"
             android:text="" />
 
