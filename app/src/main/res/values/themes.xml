@@ -36,5 +36,23 @@
             #000000
         </item>
     </style>
+    <!-- Dialog 样式-->
+    <style name="dialogStyle" parent="@android:style/Theme.Holo.Dialog">
+        <!-- 是否有边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!--是否在悬浮Activity之上  -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--阴影  -->
+        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+        <!--背景透明-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <!--弹出框 动画-->
+    <style name="dialog_share" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_pop_up</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
 
 </resources>

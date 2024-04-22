@@ -13,6 +13,19 @@
         android:theme="@style/Theme.AI_Fashion"
         tools:targetApi="31">
         <activity
+            android:name=".Upload_Pictures"
+            android:exported="false"/>
+
+        <activity
+            android:name=".wardrobe_cloth"
+            android:exported="false" />
+        <activity
+            android:name=".wardrobe_trousers"
+            android:exported="false" />
+        <activity
+            android:name=".wardrobe_shoes"
+            android:exported="false" />
+        <activity
             android:name=".Account_Page"
             android:exported="false" />
         <activity
