@@ -16,7 +16,25 @@ import com.JavaBean.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
-
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+//目录结果
+//├── user_id
+//        └── wardrobe
+//           └── clothes
+//               ├── clothes_id.png
+//           └── trousers
+//               ├── trousers_id.png
+//           └── shoes
+//               ├── shoes_id.png
+//        └── dressing
+//           └── dressing_id
+//               ├── clothes_id.png
+//               ├── trousers_id.png
+//               ├── shoes_id.png
 public class Home_Page extends AppCompatActivity {
 
     private String user_account;
@@ -43,6 +61,31 @@ public class Home_Page extends AppCompatActivity {
         if(user!=null)
         {
             Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
+        }
+        String filename=""+user.getUser_id();
+        File directory=new File(getFilesDir(),filename);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+        File wardrobe=new File(directory,"wardrobe");
+        if (!wardrobe.exists()){
+            wardrobe.mkdir();
+        }
+        File clothes=new File(wardrobe,"clothes");
+        if (!clothes.exists()){
+            clothes.mkdir();
+        }
+        File trousers=new File(wardrobe,"trousers");
+        if (!trousers.exists()){
+            trousers.mkdir();
+        }
+        File shoes=new File(wardrobe,"shoes");
+        if (!shoes.exists()){
+            shoes.mkdir();
+        }
+        File dressing=new File(directory,"dressing");
+        if (!dressing.exists()){
+            dressing.mkdir();
         }
         //点击事件
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
