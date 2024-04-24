@@ -40,6 +40,7 @@ public class wardrobe_cloth extends AppCompatActivity
         window.setGravity(Gravity.BOTTOM);      //位于底部
         //window.setWindowAnimations(R.style.dialog_share);    //弹出动画
         View inflate = View.inflate(this, R.layout.dialog_retrieve_password, null);
+        //退出按钮
         inflate.findViewById(R.id.dialog_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

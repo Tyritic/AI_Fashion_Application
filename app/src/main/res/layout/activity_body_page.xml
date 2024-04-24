@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/page_background"
+    android:clipToOutline="true">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white">
+
+        <ImageButton
+            android:id="@+id/back_to_home_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:background="@drawable/backtohomepage"
+            android:src="@drawable/arrow_circle_left" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/account_information"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/height"
+            android:layout_width="103dp"
+            android:layout_height="41dp"
+            android:layout_toLeftOf="@id/height_input"
+            android:layout_alignTop="@id/height_input"
+            android:layout_alignBottom="@id/height_input"
+            android:text="身高："
+            android:textAppearance="@style/titleFont"
+            android:textSize="30dp"
+            />
+
+        <EditText
+            android:id="@+id/height_input"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="689dp"
+            android:maxLines="1"
+            android:background="@drawable/log_in_box" />
+
+        <TextView
+            android:id="@+id/weight"
+            android:layout_width="103dp"
+            android:layout_height="41dp"
+            android:layout_toLeftOf="@id/weight_input"
+            android:layout_alignTop="@id/weight_input"
+            android:layout_alignBottom="@id/weight_input"
+            android:text="体重："
+            android:textAppearance="@style/titleFont"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/weight_input"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="489dp"
+            android:maxLines="1"
+            android:background="@drawable/log_in_box"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/proportion"
+            android:layout_width="103dp"
+            android:layout_height="46dp"
+            android:layout_toLeftOf="@id/proportion_input"
+            android:layout_alignTop="@id/proportion_input"
+            android:layout_alignBottom="@id/proportion_input"
+            android:text="身材比例："
+            android:textAppearance="@style/titleFont"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/proportion_input"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="289dp"
+            android:maxLines="1"
+            android:background="@drawable/log_in_box"
+            android:text="" />
+
+        <Button
+            android:id="@+id/modify_button"
+            android:layout_width="106dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="170dp"
+            android:layout_marginTop="545dp"
+            android:layout_marginEnd="134dp"
+            android:layout_marginBottom="49dp"
+            android:background="@drawable/homepage_botton"
+            android:text="@string/modify"
+            android:textAppearance="@style/homepage_botton_font"
+            android:textSize="20dp" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

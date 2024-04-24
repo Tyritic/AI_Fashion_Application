@@ -34,6 +34,7 @@ public class Mine_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
         // Find the button and set the click listener
         Button accountInformationButton = view.findViewById(R.id.account_information_button);
+        Button bodyInformationButton = view.findViewById(R.id.body_information_button);
         Button log_out_button = view.findViewById(R.id.log_out_button);
         log_out_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +66,24 @@ public class Mine_Fragment extends Fragment {
                     startActivity(intent);
                 }
             });
-
+        bodyInformationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                //建立一个Intent对象，用于启动Body_Page
+                Intent intent = new Intent(getActivity(), Body_Page.class);
+                if(user_account!=null&&user_password!=null)
+                {
+                    intent.putExtra("user_account", user_account);
+                    intent.putExtra("user_password", user_password);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(),"空串",Toast.LENGTH_SHORT).show();
+                }
+                startActivity(intent);
+            }
+        });
             return view;
     }
 }

@@ -21,6 +21,38 @@ public class User {
     @ColumnInfo(name = "user_gender")
     private String user_gender;
 
+    public double getUser_height() {
+        return user_height;
+    }
+
+    public void setUser_height(double user_height) {
+        this.user_height = user_height;
+    }
+
+    public double getUser_weight() {
+        return user_weight;
+    }
+
+    public void setUser_weight(double user_weight) {
+        this.user_weight = user_weight;
+    }
+
+    public double getUser_proportion() {
+        return user_proportion;
+    }
+
+    public void setUser_proportion(double user_proportion) {
+        this.user_proportion = user_proportion;
+    }
+
+    @ColumnInfo(name = "user_height")
+    private double user_height;
+
+    @ColumnInfo(name = "user_weight")
+    private double user_weight;
+
+    @ColumnInfo(name="user_proportion")
+    private double user_proportion;
     public String getUser_birthday() {
         return user_birthday;
     }
