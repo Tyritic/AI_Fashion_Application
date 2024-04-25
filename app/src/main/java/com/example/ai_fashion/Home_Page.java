@@ -14,6 +14,7 @@ import androidx.room.Room;
 import com.DB.AppDatabase;
 import com.JavaBean.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,6 +71,10 @@ public class Home_Page extends AppCompatActivity {
         {
             Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
         }
+        Gson gson = new Gson();
+        String user_json = gson.toJson(user);
+
+        Toast.makeText(Home_Page.this,user_json,Toast.LENGTH_SHORT).show();
         String filename=""+user.getUser_id();
         File directory=new File(getFilesDir(),filename);
         if (!directory.exists()){
