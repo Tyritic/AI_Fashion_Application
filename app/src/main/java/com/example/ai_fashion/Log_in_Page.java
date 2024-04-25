@@ -38,7 +38,7 @@ public class Log_in_Page extends AppCompatActivity {
             if(DB.userDao().findUser(user_account,user_password)!=null)
             {
                 //登录成功，输出提示信息
-                Toast.makeText(Log_in_Page.this,"登录成功",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Log_in_Page.this,"登录成功",Toast.LENGTH_SHORT).show();
                 //跳转到主页面
                 new Thread(() -> {
                     Intent intent = new Intent(Log_in_Page.this, Home_Page.class);

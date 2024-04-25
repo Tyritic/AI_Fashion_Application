@@ -22,13 +22,13 @@ public class Mine_Fragment extends Fragment {
         Bundle bundle = getArguments();//接收从Home_Page和Account_Page传过来的Bundle
         if(bundle!=null)//判空
         {
-            //Toast.makeText(getActivity(),"接收成功",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Mine_Fragment成功接收数据",Toast.LENGTH_SHORT).show();
             user_account = bundle.getString("user_account");
             user_password = bundle.getString("user_password");
         }
         else
         {
-            Toast.makeText(getActivity(),"空",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Mine_Fragment未接收数据",Toast.LENGTH_SHORT).show();
         }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
@@ -56,16 +56,18 @@ public class Mine_Fragment extends Fragment {
                 //将用户账号和密码传递给Account_Page
                 if(user_account!=null&&user_password!=null)
                 {
+                    Toast.makeText(getActivity(),"Mine_Fragment向Account_Page发送成功",Toast.LENGTH_SHORT).show();
                     intent.putExtra("user_account", user_account);
                     intent.putExtra("user_password", user_password);
                 }
                 else
                 {
-                    Toast.makeText(getActivity(),"空串",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Mine_Fragment向Account_Page发送失败",Toast.LENGTH_SHORT).show();
                 }
-                    startActivity(intent);
+                startActivity(intent);
                 }
             });
+        //身材信息点击事件
         bodyInformationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -74,12 +76,13 @@ public class Mine_Fragment extends Fragment {
                 Intent intent = new Intent(getActivity(), Body_Page.class);
                 if(user_account!=null&&user_password!=null)
                 {
+                    Toast.makeText(getActivity(),"Mine_Fragment向Body_Page发送成功",Toast.LENGTH_SHORT).show();
                     intent.putExtra("user_account", user_account);
                     intent.putExtra("user_password", user_password);
                 }
                 else
                 {
-                    Toast.makeText(getActivity(),"空串",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Mine_Fragment向Body_Page发送失败",Toast.LENGTH_SHORT).show();
                 }
                 startActivity(intent);
             }

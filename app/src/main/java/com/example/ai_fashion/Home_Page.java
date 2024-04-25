@@ -57,11 +57,19 @@ public class Home_Page extends AppCompatActivity {
         Intent intent = getIntent();
         user_account = intent.getStringExtra("user_account");
         user_password = intent.getStringExtra("user_password");
+//        if(user_password==null||user_account==null)
+//        {
+//            Toast.makeText(Home_Page.this,"Home_Page未接收到数据",Toast.LENGTH_SHORT).show();
+//        }
+//        else if(user_account!=null&&user_password!=null)
+//        {
+//            Toast.makeText(Home_Page.this,"Home_Page成功接收到数据",Toast.LENGTH_SHORT).show();
+//        }
         User user = DB.userDao().findUser(user_account,user_password);
-        if(user!=null)
-        {
-            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
-        }
+//        if(user!=null)
+//        {
+//            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
+//        }
         String filename=""+user.getUser_id();
         File directory=new File(getFilesDir(),filename);
         if (!directory.exists()){
@@ -116,27 +124,63 @@ public class Home_Page extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         hideFragment(fragmentTransaction);
         //导航栏状态
-        if(position==0){
-            if(wardrobeFragment == null){
+        if(position==0)
+        {
+            if(wardrobeFragment == null)
+            {
                 wardrobeFragment = new Wardrobe_Fragment();
+                //传递数据，将用户账号和密码包装成Bundle传递给Wardrobe_Fragment
+                Intent intent=getIntent();
+                String default_account=intent.getStringExtra("user_account");
+                String default_password=intent.getStringExtra("user_password");
+                Bundle bundle = new Bundle();
+                if(default_account==null||default_password==null)
+                {
+                    //Toast.makeText(Home_Page.this,"Home_Page向Wardrobe_Fragment发送失败",Toast.LENGTH_SHORT).show();
+                }
+                else if(default_account!=null&&default_password!=null)
+                {
+                    bundle.putString("user_account", default_account);
+                    bundle.putString("user_password", default_password);
+                    //Toast.makeText(Home_Page.this,"Home_Page向Wardrobe_Fragment发送成功",Toast.LENGTH_SHORT).show();
+                }
+                wardrobeFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, wardrobeFragment);
-            }else{
+            }
+            else
+            {
                 fragmentTransaction.show(wardrobeFragment);
             }
-        }else if(position==1) {
-            if (dressingFragment == null) {
+        }
+        else if(position==1)
+        {
+            if (dressingFragment == null)
+            {
                 dressingFragment = new Dressing_Fragment();
                 fragmentTransaction.add(R.id.content, dressingFragment);
-            } else {
+            }
+            else
+            {
                 fragmentTransaction.show(dressingFragment);
             }
-        }else if (position==2){
-            if (mineFragment == null) {
+        }
+        else if (position==2)
+        {
+            if (mineFragment == null)
+            {
                 mineFragment = new Mine_Fragment();
                 //传递数据，将用户账号和密码包装成Bundle传递给Mine_Fragment
                 Bundle bundle = new Bundle();
-                bundle.putString("user_account", user_account);
-                bundle.putString("user_password", user_password);
+                if(user_account==null||user_password==null)
+                {
+                    //Toast.makeText(Home_Page.this,"Home_Page向Mine_Fragment发送失败",Toast.LENGTH_SHORT).show();
+                }
+                else if(user_account!=null&&user_password!=null)
+                {
+                    bundle.putString("user_account", user_account);
+                    bundle.putString("user_password", user_password);
+                    //Toast.makeText(Home_Page.this,"Home_Page向Mine_Fragment发送成功",Toast.LENGTH_SHORT).show();
+                }
                 mineFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, mineFragment);
             } else {

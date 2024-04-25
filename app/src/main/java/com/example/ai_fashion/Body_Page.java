@@ -40,6 +40,14 @@ public class Body_Page extends AppCompatActivity {
         Intent intent1 = getIntent();
         user_account = intent1.getStringExtra("user_account");
         user_password = intent1.getStringExtra("user_password");
+        if(user_account==null||user_password==null)
+        {
+            Toast.makeText(Body_Page.this,"Mine_Fragment接收失败",Toast.LENGTH_SHORT).show();
+        }
+        else if(user_account!=null&&user_password!=null)
+        {
+            //Toast.makeText(Body_Page.this,"Mine_Fragment接收成功",Toast.LENGTH_SHORT).show();
+        }
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         User user = DB.userDao().findUser(user_account,user_password);
@@ -82,12 +90,21 @@ public class Body_Page extends AppCompatActivity {
                 Toast.makeText(Body_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
             }
         });
+        //返回按钮
         backTohomePage = findViewById(R.id.back_to_home_page);
         backTohomePage.setOnClickListener(v -> {
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
             bundle.putString("user_account",user_account);
             bundle.putString("user_password",user_password);
+            if(user_account==null||user_password==null)
+            {
+                Toast.makeText(Body_Page.this,"Body_Fragment发送失败",Toast.LENGTH_SHORT).show();
+            }
+            else if(user_account!=null&&user_password!=null)
+            {
+                //Toast.makeText(Body_Page.this,"Body_Fragment发送成功",Toast.LENGTH_SHORT).show();
+            }
             intent.setClass(this, Home_Page.class);
             intent.putExtra("fragment_flag", 2);
             intent.putExtras(bundle);

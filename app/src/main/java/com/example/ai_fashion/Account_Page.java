@@ -41,6 +41,14 @@ public class Account_Page extends AppCompatActivity {
         Intent intent1 = getIntent();
         user_account = intent1.getStringExtra("user_account");
         user_password = intent1.getStringExtra("user_password");
+        if(user_account==null||user_password==null)
+        {
+            //Toast.makeText(Account_Page.this,"Account_Page接收失败",Toast.LENGTH_SHORT).show();
+        }
+        else if(user_account!=null&&user_password!=null)
+        {
+            Toast.makeText(Account_Page.this,"Account_Fragment接收成功",Toast.LENGTH_SHORT).show();
+        }
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         User user = DB.userDao().findUser(user_account,user_password);
@@ -94,11 +102,20 @@ public class Account_Page extends AppCompatActivity {
                 Bundle bundle=new Bundle();
                 bundle.putString("user_account",newAccount);
                 bundle.putString("user_password",newPassword);
-                Intent intent = new Intent();
-                intent.setClass(this, Home_Page.class);
-                intent.putExtra("fragment_flag", 2);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if(newPassword==null||newAccount==null)
+                {
+                    Toast.makeText(Account_Page.this,"Account_Page发送失败",Toast.LENGTH_SHORT).show();
+                }
+                else if(newPassword!=null&&newAccount!=null)
+                {
+                    //Toast.makeText(Account_Page.this,"Account_Page发送成功",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.setClass(this, Home_Page.class);
+                    intent.putExtra("fragment_flag", 2);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
             });
     }
 }
