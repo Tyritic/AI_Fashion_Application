@@ -66,10 +66,10 @@ public class Home_Page extends AppCompatActivity {
 //            Toast.makeText(Home_Page.this,"Home_Page成功接收到数据",Toast.LENGTH_SHORT).show();
 //        }
         User user = DB.userDao().findUser(user_account,user_password);
-//        if(user!=null)
-//        {
-//            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
-//        }
+        if(user!=null)
+        {
+            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
+        }
         String filename=""+user.getUser_id();
         File directory=new File(getFilesDir(),filename);
         if (!directory.exists()){

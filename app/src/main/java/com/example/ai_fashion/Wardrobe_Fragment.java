@@ -52,11 +52,21 @@ public class Wardrobe_Fragment extends Fragment {
             }
         });
         Button trousersButton = view.findViewById(R.id.trousers_button);
+        //裤子按钮点击
         trousersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Create an Intent to start Account_Page
                 Intent intent = new Intent(getActivity(), wardrobe_trousers.class);
+                if(user_account!=null&&user_password!=null)
+                {
+                    intent.putExtra("user_account", user_account);
+                    intent.putExtra("user_password", user_password);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(),"空",Toast.LENGTH_SHORT).show();
+                }
                 startActivity(intent);
             }
         });
@@ -66,6 +76,15 @@ public class Wardrobe_Fragment extends Fragment {
             public void onClick(View v) {
                 // Create an Intent to start Account_Page
                 Intent intent = new Intent(getActivity(), wardrobe_shoes.class);
+                if(user_account!=null&&user_password!=null)
+                {
+                    intent.putExtra("user_account", user_account);
+                    intent.putExtra("user_password", user_password);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(),"空",Toast.LENGTH_SHORT).show();
+                }
                 startActivity(intent);
             }
         });

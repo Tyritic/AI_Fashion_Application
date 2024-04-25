@@ -39,5 +39,14 @@
             android:layout_centerInParent="true"
             android:text="@string/trousers"
             android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/trousers_add_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/add" />
     </RelativeLayout>
 </LinearLayout>
