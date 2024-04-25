@@ -164,8 +164,9 @@ public class wardrobe_cloth extends AppCompatActivity
         }
         else if(requestCode == TAKE_PHOTO && resultCode == RESULT_OK && data != null)
         {
+            //Toast.makeText(wardrobe_cloth.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(wardrobe_cloth.this,""+requestCode,Toast.LENGTH_SHORT).show();
             int num=getNum();
-            //Toast.makeText(wardrobe_cloth.this,"拍照成功",Toast.LENGTH_SHORT).show();
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             // 获取你之前创建的文件夹的路径
