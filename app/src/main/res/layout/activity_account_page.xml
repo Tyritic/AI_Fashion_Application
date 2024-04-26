@@ -87,12 +87,12 @@
             android:id="@+id/password"
             android:layout_width="103dp"
             android:layout_height="41dp"
-            android:layout_toLeftOf="@id/password_input"
             android:layout_alignTop="@id/password_input"
             android:layout_alignBottom="@id/password_input"
+            android:layout_toLeftOf="@id/password_input"
             android:text="密码："
             android:textAppearance="@style/titleFont"
-            android:textSize="30dp" />
+            android:textSize="26sp" />
 
         <EditText
             android:id="@+id/password_input"

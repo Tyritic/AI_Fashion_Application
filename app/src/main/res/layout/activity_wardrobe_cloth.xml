@@ -6,6 +6,7 @@
     android:clipToOutline="true"
     android:orientation="vertical">
 
+
     <View
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -54,7 +55,20 @@
         android:layout_height="match_parent"
         android:background="@color/page_background">
 
-        <ImageView
+<!--展示框-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-7dp"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
+
+</LinearLayout>
+
+<!--        旧的ImageView
+            <ImageView
             android:id="@+id/image_cloth1"
             android:layout_width="110dp"
             android:layout_height="110dp"
@@ -81,6 +95,4 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:background="@color/white" />
-    </RelativeLayout>
-</LinearLayout>
+            android:background="@color/white" />-->
