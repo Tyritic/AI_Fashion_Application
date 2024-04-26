@@ -91,34 +91,31 @@
 
     <Button
         android:id="@+id/register_button"
-        android:layout_width="200dp"
+        android:layout_width="106dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="170dp"
         android:layout_marginTop="587dp"
         android:layout_marginEnd="134dp"
+        android:background="@drawable/homepage_botton"
         android:text="@string/register"
-        android:textSize="20dp"
         android:textAppearance="@style/homepage_botton_font"
-        android:background="@drawable/homepage_botton" />
+        android:textSize="20dp" />
 
     <Button
         android:id="@+id/login_button"
-        android:layout_width="200dp"
+        android:layout_width="106dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="170dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="502dp"
         android:layout_marginEnd="134dp"
         android:layout_marginBottom="181dp"
+        android:background="@drawable/homepage_botton"
         android:text="@string/login"
-        android:textSize="20dp"
         android:textAppearance="@style/homepage_botton_font"
-        android:background="@drawable/homepage_botton" />
+        android:textSize="20dp" />
 
 
 
