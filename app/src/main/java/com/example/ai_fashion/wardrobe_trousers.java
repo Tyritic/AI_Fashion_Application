@@ -1,7 +1,9 @@
 package com.example.ai_fashion;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import com.DB.AppDatabase;
@@ -33,6 +37,7 @@ public class wardrobe_trousers extends AppCompatActivity
     private static final int PICK_IMAGE = 1;
     private Dialog mDialog;
     private static final int TAKE_PHOTO = 2;
+    public static final int REQUSET_CAMERA_PERMISSION  = 5555;
     String user_account;
     String user_password;
     User user;
@@ -42,6 +47,10 @@ public class wardrobe_trousers extends AppCompatActivity
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_trousers);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // 如果没有权限，请求存储权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
+        }
         ImageButton backTohomePage = findViewById(R.id.trousers_back_to_home_page);
         //获取用户账号和密码，通过上一个页面传递过来的数据
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
