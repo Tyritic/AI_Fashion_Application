@@ -1,5 +1,6 @@
 package com.example.ai_fashion;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
@@ -45,7 +46,7 @@ public class wardrobe_cloth extends AppCompatActivity
     String user_account;
     String user_password;
     User user;
-
+    public static final int REQUSET_CAMERA_PERMISSION  = 5555;
 
     //cycleView更改
     private List<Uri> imageUris = new ArrayList<>();
@@ -54,7 +55,11 @@ public class wardrobe_cloth extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wardrobe_cloth);
-
+        //检查是否具有存储权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // 如果没有权限，请求存储权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
+        }
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_cloth);

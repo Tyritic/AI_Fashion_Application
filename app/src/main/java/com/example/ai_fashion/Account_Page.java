@@ -46,11 +46,11 @@ public class Account_Page extends AppCompatActivity {
         user_password = intent1.getStringExtra("user_password");
         if(user_account==null||user_password==null)
         {
-            //Toast.makeText(Account_Page.this,"Account_Page接收失败",Toast.LENGTH_SHORT).show();
+            Toast.makeText(Account_Page.this,"Account_Page接收失败",Toast.LENGTH_SHORT).show();
         }
         else if(user_account!=null&&user_password!=null)
         {
-            Toast.makeText(Account_Page.this,"Account_Fragment接收成功",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Account_Page.this,"Account_Fragment接收成功",Toast.LENGTH_SHORT).show();
         }
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
@@ -62,7 +62,7 @@ public class Account_Page extends AppCompatActivity {
         //设置输入框的默认值为用户的信息
         account_input.setText(user.getUser_account());
         password_input.setText(user.getUser_password());
-        birthday_input.setText(user.getUser_birthday());
+        birthday_input.setText(user.getUser_age());
         nickname_input.setText(user.getUser_nickname());
         Button modify = findViewById(R.id.modify_button);
         //修改按钮点击事件
@@ -73,7 +73,7 @@ public class Account_Page extends AppCompatActivity {
             birthday = birthday_input.getText().toString();
             nickname= nickname_input.getText().toString();
             //判断用户是否修改了信息
-            boolean not_modified=account.equals(user_account)&&password.equals(user_password)&&birthday.equals(user.getUser_birthday())&&nickname.equals(user.getUser_nickname());
+            boolean not_modified=account.equals(user_account)&&password.equals(user_password)&&birthday.equals(user.getUser_age())&&nickname.equals(user.getUser_nickname());
             if(not_modified)
             {
                 Toast.makeText(Account_Page.this,"未修改",Toast.LENGTH_SHORT).show();

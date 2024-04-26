@@ -76,7 +76,7 @@ public class Mine_Fragment extends Fragment {
                 Intent intent = new Intent(getActivity(), Body_Page.class);
                 if(user_account!=null&&user_password!=null)
                 {
-                    Toast.makeText(getActivity(),"Mine_Fragment向Body_Page发送成功",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(),"Mine_Fragment向Body_Page发送成功",Toast.LENGTH_SHORT).show();
                     intent.putExtra("user_account", user_account);
                     intent.putExtra("user_password", user_password);
                 }

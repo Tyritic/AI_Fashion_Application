@@ -51,7 +51,7 @@
         android:maxLines="1" />
 
     <EditText
-        android:id="@+id/birthday"
+        android:id="@+id/age"
         android:layout_width="400dp"
         android:layout_height="41dp"
         android:layout_centerHorizontal="true"
@@ -60,7 +60,7 @@
         android:layout_marginBottom="460dp"
         android:background="@drawable/log_in_box"
         android:gravity="center"
-        android:hint="@string/birthday"
+        android:hint="@string/age"
         android:maxLines="1" />
 
     <View
@@ -69,11 +69,12 @@
         android:layout_height="28dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="116dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="211dp"
         android:layout_marginEnd="245dp"
         android:layout_marginBottom="463dp"
         android:background="@drawable/birthdayview"
+
         android:clipToOutline="true" />
 
     <RadioGroup

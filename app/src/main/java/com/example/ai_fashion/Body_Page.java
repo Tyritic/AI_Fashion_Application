@@ -79,7 +79,7 @@ public class Body_Page extends AppCompatActivity {
                 User user1 = new User();
                 user1.setUser_account(user.getUser_account());
                 user1.setUser_password(user_password);
-                user1.setUser_birthday(user.getUser_birthday());
+                user1.setUser_birthday(user.getUser_age());
                 user1.setUser_nickname(user.getUser_nickname());
                 user1.setUser_id(user.getUser_id());
                 user1.setUser_gender(user.getUser_gender());

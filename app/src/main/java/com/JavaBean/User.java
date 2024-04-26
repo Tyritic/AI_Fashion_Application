@@ -16,8 +16,8 @@ public class User {
     private String user_account;
     @ColumnInfo(name = "user_password")
     private String user_password;
-    @ColumnInfo(name = "user_birthday")
-    private String user_birthday;
+    @ColumnInfo(name = "user_age")
+    private String user_age;
     @ColumnInfo(name = "user_gender")
     private String user_gender;
 
@@ -53,8 +53,8 @@ public class User {
 
     @ColumnInfo(name="user_proportion")
     private double user_proportion;
-    public String getUser_birthday() {
-        return user_birthday;
+    public String getUser_age() {
+        return user_age;
     }
 
     public User() {
@@ -68,8 +68,8 @@ public class User {
         this.user_nickname = user_nickname;
     }
 
-    public void setUser_birthday(String user_birthday) {
-        this.user_birthday = user_birthday;
+    public void setUser_birthday(String user_age) {
+        this.user_age = user_age;
     }
 
 
@@ -90,12 +90,16 @@ public class User {
         this.user_id = user_id;
     }
 
-    public User(String user_nickname,String user_account, String user_password, String user_birthday, String user_gender) {
+    public User(String user_nickname,String user_account, String user_password, String user_age, String user_gender) {
         this.user_account = user_account;
         this.user_password = user_password;
         this.user_nickname = user_nickname;
-        this.user_birthday = user_birthday;
+        this.user_age = user_age;
         this.user_gender=user_gender;
+    }
+
+    public void setUser_age(String user_age) {
+        this.user_age = user_age;
     }
 
     public String getUser_password() {

@@ -16,11 +16,13 @@ import androidx.room.Room;
 import com.DB.AppDatabase;
 import com.JavaBean.User;
 
+import java.util.regex.Pattern;
+
 public class Register_Page extends AppCompatActivity {
     EditText mEditTextAccount;
     EditText mEditTextPassword;
     EditText mEditTextNickname;
-    EditText mEditTextBirthday;
+    EditText mEditTextAge;
     EditText mEditTextConfirmPassword;
     Button back;
     ImageButton backTohomePage;
@@ -37,7 +39,7 @@ public class Register_Page extends AppCompatActivity {
         mEditTextAccount = findViewById(R.id.account);
         mEditTextPassword = findViewById(R.id.password);
         mEditTextNickname = findViewById(R.id.nickname);
-        mEditTextBirthday = findViewById(R.id.birthday);
+        mEditTextAge = findViewById(R.id.age);
         mEditTextConfirmPassword = findViewById(R.id.confirm_password);
         back= findViewById(R.id.back_button);
         register = findViewById(R.id.register_button);
@@ -61,17 +63,23 @@ public class Register_Page extends AppCompatActivity {
             String user_account = mEditTextAccount.getText().toString();
             String user_password = mEditTextPassword.getText().toString();
             String user_nickname = mEditTextNickname.getText().toString();
-            String user_birthday = mEditTextBirthday.getText().toString();
+            String user_age = mEditTextAge.getText().toString();
             String confirm_password = mEditTextConfirmPassword.getText().toString();
+            boolean isNull=user_gender==null;
+            if(isNull)
+            {
+                Toast.makeText(Register_Page.this, "请选择性别", Toast.LENGTH_SHORT).show();
+                return;
+            }
             //设置注册逻辑
-            User user = new User(user_nickname,user_account, user_password,user_birthday, user_gender);
+            User user = new User(user_nickname,user_account, user_password,user_age, user_gender);
             if(DB.userDao().findUserByUseraccount(user_account) != null)
             {
                 //在界面输出错误信息
                 mEditTextAccount.setError("用户名已存在");
                 return;
             }
-            else if(user_account.isEmpty() || user_password.isEmpty() || user_nickname.isEmpty() || user_birthday.isEmpty()||user_gender.isEmpty()||confirm_password.isEmpty())
+            else if(user_account.isEmpty() || user_password.isEmpty() || user_nickname.isEmpty() || user_age.isEmpty()||user_gender.isEmpty()||confirm_password.isEmpty())
             {
                 //在界面输出错误信息
                 Toast.makeText(Register_Page.this, "请填写完整信息", Toast.LENGTH_SHORT).show();
@@ -81,6 +89,12 @@ public class Register_Page extends AppCompatActivity {
             {
                 //在界面输出错误信息
                 mEditTextConfirmPassword.setError("两次密码不一致");
+                return;
+            }
+            else if(!Pattern.matches("^[0-9]*$", user_age))
+            {
+                //在界面输出错误信息
+                mEditTextAge.setError("年龄只能为数字");
                 return;
             }
             else
