@@ -3,6 +3,7 @@ package com.example.ai_fashion;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import com.DB.AppDatabase;
@@ -56,6 +59,7 @@ public class wardrobe_cloth extends AppCompatActivity
 //        else
 //            Toast.makeText(wardrobe_cloth.this,"用户名："+user_account,Toast.LENGTH_SHORT).show();
         user = DB.userDao().findUser(user_account,user_password);
+        //检查是否具有相机权限
         ImageButton backTohomePage = findViewById(R.id.cloth_back_to_home_page);
         backTohomePage.setOnClickListener(v -> {
             Bundle bundle=new Bundle();

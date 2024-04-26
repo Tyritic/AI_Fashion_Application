@@ -1,7 +1,12 @@
 package com.example.ai_fashion;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -13,8 +18,15 @@ import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
+import com.Utils.LocationUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
+import com.qweather.sdk.bean.base.Code;
+import com.qweather.sdk.bean.base.Lang;
+import com.qweather.sdk.bean.base.Unit;
+import com.qweather.sdk.bean.weather.WeatherNowBean;
+import com.qweather.sdk.view.HeConfig;
+import com.qweather.sdk.view.QWeather;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,11 +56,31 @@ public class Home_Page extends AppCompatActivity {
     private Wardrobe_Fragment wardrobeFragment;
     private Dressing_Fragment dressingFragment;
     private Mine_Fragment mineFragment;
+
+    private static final String TAG = "Home_Page";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
+        String api_name="HE2404252134531124";
+        String api_key="66f16e8945874a35a7cc40032eb4c7f8";
+        HeConfig.init(api_name, api_key);
+        HeConfig.switchToDevService();
+        // 获取定位信息
+        // 获取定位信息
+        LocationUtils.getInstance(this).getLocation(new LocationUtils.LocationCallBack() {
+            @Override
+            public void setLocation(Location location) {
+                if (location != null){
+                    String latitude = String.valueOf(location.getLatitude());
+                    String longitude = String.valueOf(location.getLongitude());
+                    Toast.makeText(Home_Page.this, "经度：" + latitude + "，纬度：" + longitude, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        });
+
         //初始化
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         selectFragment(0);
@@ -67,14 +99,14 @@ public class Home_Page extends AppCompatActivity {
 //            Toast.makeText(Home_Page.this,"Home_Page成功接收到数据",Toast.LENGTH_SHORT).show();
 //        }
         User user = DB.userDao().findUser(user_account,user_password);
-        if(user!=null)
-        {
-            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
-        }
+//        if(user!=null)
+//        {
+//            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
+//        }
         Gson gson = new Gson();
         String user_json = gson.toJson(user);
 
-        Toast.makeText(Home_Page.this,user_json,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Home_Page.this,user_json,Toast.LENGTH_SHORT).show();
         String filename=""+user.getUser_id();
         File directory=new File(getFilesDir(),filename);
         if (!directory.exists()){
@@ -207,4 +239,5 @@ public class Home_Page extends AppCompatActivity {
             fragmentTransaction.hide(mineFragment);
         }
     }
+    
 }

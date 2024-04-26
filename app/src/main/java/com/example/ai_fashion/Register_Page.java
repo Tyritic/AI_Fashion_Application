@@ -65,7 +65,7 @@ public class Register_Page extends AppCompatActivity {
             String confirm_password = mEditTextConfirmPassword.getText().toString();
             //设置注册逻辑
             User user = new User(user_nickname,user_account, user_password,user_birthday, user_gender);
-            if(DB.userDao().findUser(user_account, user_password) != null)
+            if(DB.userDao().findUserByUseraccount(user_account) != null)
             {
                 //在界面输出错误信息
                 mEditTextAccount.setError("用户名已存在");

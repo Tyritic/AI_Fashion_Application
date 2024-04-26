@@ -1,6 +1,8 @@
 package com.example.ai_fashion;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Insert;
 import androidx.room.Room;
@@ -75,7 +78,7 @@ public class Account_Page extends AppCompatActivity {
             {
                 Toast.makeText(Account_Page.this,"未修改",Toast.LENGTH_SHORT).show();
             }
-            else if(!account.equals(user_account)&&DB.userDao().findUserByUsername(account)!=null)
+            else if(!account.equals(user_account)&&DB.userDao().findUserByUseraccount(account)!=null)
             {
                 Toast.makeText(Account_Page.this,"用户名已存在",Toast.LENGTH_SHORT).show();
             }
@@ -117,5 +120,7 @@ public class Account_Page extends AppCompatActivity {
                 }
 
             });
+
     }
+
 }

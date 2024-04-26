@@ -22,7 +22,7 @@ public class Mine_Fragment extends Fragment {
         Bundle bundle = getArguments();//接收从Home_Page和Account_Page传过来的Bundle
         if(bundle!=null)//判空
         {
-            Toast.makeText(getActivity(),"Mine_Fragment成功接收数据",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(),"Mine_Fragment成功接收数据",Toast.LENGTH_SHORT).show();
             user_account = bundle.getString("user_account");
             user_password = bundle.getString("user_password");
         }
@@ -56,7 +56,7 @@ public class Mine_Fragment extends Fragment {
                 //将用户账号和密码传递给Account_Page
                 if(user_account!=null&&user_password!=null)
                 {
-                    Toast.makeText(getActivity(),"Mine_Fragment向Account_Page发送成功",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(),"Mine_Fragment向Account_Page发送成功",Toast.LENGTH_SHORT).show();
                     intent.putExtra("user_account", user_account);
                     intent.putExtra("user_password", user_password);
                 }

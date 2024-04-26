@@ -1,6 +1,8 @@
 package com.example.ai_fashion;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +10,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import java.util.Objects;
 
 
 public class Wardrobe_Fragment extends Fragment {
     String user_account;
     String user_password;
-
+    public static final int REQUEST_STORAGE_PERMISSION = 6666;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -28,6 +35,11 @@ public class Wardrobe_Fragment extends Fragment {
         else
         {
             Toast.makeText(getActivity(),"Wardrobe_Page接收失败",Toast.LENGTH_SHORT).show();
+        }
+        //检查是否具有存储权限
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // 如果没有权限，请求存储权限
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
         }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_wardrobe, container, false);
@@ -89,5 +101,20 @@ public class Wardrobe_Fragment extends Fragment {
             }
         });
         return view;
+    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_STORAGE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限已经被授予
+                Toast.makeText(getActivity(), "已授予存储权限", Toast.LENGTH_SHORT).show();
+            } else
+            {
+                // 权限被拒绝
+                Toast.makeText(getActivity(), "未授予存储权限", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

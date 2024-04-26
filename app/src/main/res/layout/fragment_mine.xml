@@ -36,10 +36,12 @@
         android:padding="7dp"
         android:text="@string/account_information"
         android:textSize="18sp" />
+
     <View
         android:layout_width="12dp"
         android:layout_height="16dp"
-        android:layout_marginStart="356dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="292dp"
         android:layout_marginTop="336dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/arrow_circle_right"
@@ -61,7 +63,8 @@
     <View
         android:layout_width="12dp"
         android:layout_height="16dp"
-        android:layout_marginStart="356dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="292dp"
         android:layout_marginTop="436dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/arrow_circle_right"
@@ -83,7 +86,8 @@
     <View
         android:layout_width="12dp"
         android:layout_height="16dp"
-        android:layout_marginStart="356dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="292dp"
         android:layout_marginTop="536dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/arrow_circle_right"
