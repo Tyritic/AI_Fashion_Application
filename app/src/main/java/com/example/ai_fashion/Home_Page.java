@@ -83,6 +83,8 @@ public class Home_Page extends AppCompatActivity {
     private String province;
     private String city;
     private String district;
+    private final String  api_key="b37606d49c5d3648e1ece38257fd057a";
+    private final String url_head="https://restapi.amap.com/v3/geocode/regeo?output=json&location=";
     private static final String TAG = "Home_Page";
     private static final int REQUEST_INTERNET_PERMISSION = 5555;
     @Override
@@ -90,10 +92,7 @@ public class Home_Page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
-        String api_name="HE2404252134531124";
-        String api_key="66f16e8945874a35a7cc40032eb4c7f8";
-        HeConfig.init(api_name, api_key);
-        HeConfig.switchToDevService();
+        String api_key="b37606d49c5d3648e1ece38257fd057a";
         //检查是否具有网络权限
         if (checkSelfPermission(android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求网络权限
@@ -307,7 +306,7 @@ public class Home_Page extends AppCompatActivity {
     }
 
     public String getAddress(String lon, String lat) {
-        String urlString = "https://restapi.amap.com/v3/geocode/regeo?output=json&location=" + lon + "," + lat + "&key=b37606d49c5d3648e1ece38257fd057a&radius=1000&extensions=base";
+        String urlString = url_head + lon + "," + lat + "&key="+api_key+"&radius=1000&extensions=base";
         try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
