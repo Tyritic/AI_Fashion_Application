@@ -1,21 +1,12 @@
 package com.example.ai_fashion;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.os.Looper;
-import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -30,28 +21,15 @@ import com.JavaBean.User;
 import com.Utils.LocationUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
-import com.qweather.sdk.bean.base.Code;
-import com.qweather.sdk.bean.base.Lang;
-import com.qweather.sdk.bean.base.Unit;
-import com.qweather.sdk.bean.weather.WeatherNowBean;
-import com.qweather.sdk.view.HeConfig;
-import com.qweather.sdk.view.QWeather;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Locale;
 
 //目录结果
 //├── user_id
@@ -78,13 +56,17 @@ public class Home_Page extends AppCompatActivity {
     private String latitude;
     private String longitude;
 
-    private String response;
+    private String location_response;
+    private String weather_response;
     private String address;
     private String province;
     private String city;
     private String district;
-    private final String  api_key="b37606d49c5d3648e1ece38257fd057a";
-    private final String url_head="https://restapi.amap.com/v3/geocode/regeo?output=json&location=";
+    private String township;
+    private String adcode;
+    private final String api_key="b37606d49c5d3648e1ece38257fd057a";
+    private final String location_url_head="https://restapi.amap.com/v3/geocode/regeo?output=json&location=";
+    private final String weather_url_head="https://restapi.amap.com/v3/weather/weatherInfo?city=";
     private static final String TAG = "Home_Page";
     private static final int REQUEST_INTERNET_PERMISSION = 5555;
     @Override
@@ -92,7 +74,6 @@ public class Home_Page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
-        String api_key="b37606d49c5d3648e1ece38257fd057a";
         //检查是否具有网络权限
         if (checkSelfPermission(android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求网络权限
@@ -103,25 +84,54 @@ public class Home_Page extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
-                    String response = (String) msg.obj;
+                    String location_response = (String) msg.obj;
                     // 在这里，你可以获取到 response 的值
-                    if(response==null)
+                    if(location_response==null)
                     {
-                        Toast.makeText(Home_Page.this, "response是空", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Home_Page.this, "location_response是空", Toast.LENGTH_SHORT).show();
                     }
-                    else {
+                    else
+                    {
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONObject regeocode = jsonObject.getJSONObject("regeocode");
+                            JSONObject location_json = new JSONObject(location_response);
+                            JSONObject regeocode = location_json.getJSONObject("regeocode");
                             JSONObject addressComponent = regeocode.getJSONObject("addressComponent");
                             province = addressComponent.getString("province");
                             city = addressComponent.getString("city");
+                            if(city.equals("[]"))city="";
                             district = addressComponent.getString("district");
-                            address = province + city + district;
-                        } catch (JSONException e) {
+                            township = addressComponent.getString("township");
+                            adcode = addressComponent.getString("adcode");
+                            address = province + city + district+township;
+                            Toast.makeText(Home_Page.this,address, Toast.LENGTH_SHORT).show();
+                            new Thread(() -> {
+                                weather_response = getWeather(adcode);
+                                if(weather_response==null)
+                                {
+                                    Looper.prepare();
+                                    Toast.makeText(Home_Page.this, "weather_response是空", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                }
+                                else
+                                {
+                                    try {
+                                        JSONObject weather_json = new JSONObject(weather_response);
+                                        JSONObject lives = weather_json.getJSONArray("lives").getJSONObject(0);
+                                        String weather = lives.getString("weather");
+                                        String temperature = lives.getString("temperature");
+                                        Looper.prepare();
+                                        Toast.makeText(Home_Page.this, "天气："+weather+" 温度："+temperature+"°C", Toast.LENGTH_SHORT).show();
+                                        Looper.loop();
+                                    }
+                                    catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        }
+                        catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(Home_Page.this,address, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -140,16 +150,23 @@ public class Home_Page extends AppCompatActivity {
                 {
                     Toast.makeText(Home_Page.this,"未获取到经纬度",Toast.LENGTH_SHORT).show();
                 }
-                new Thread(() -> {
-                    response = getAddress(longitude,latitude);
+                 new Thread(() -> {
+                    location_response = getAddress(longitude, latitude);
                     Message message = new Message();
                     message.what = 1;
-                    message.obj = response;
+                    message.obj = location_response;
                     handler.sendMessage(message);
                 }).start();
             }
         });
-        //Toast.makeText(Home_Page.this, "城市：" + address, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Home_Page.this,adcode, Toast.LENGTH_SHORT).show();
+//        new Thread(() -> {
+//            weather_response = getWeather(adcode);
+//            Message message = new Message();
+//            message.what = 1;
+//            message.obj = weather_response;
+//            handler.sendMessage(message);
+//        }).start();
             //初始化
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         selectFragment(0);
@@ -306,7 +323,7 @@ public class Home_Page extends AppCompatActivity {
     }
 
     public String getAddress(String lon, String lat) {
-        String urlString = url_head + lon + "," + lat + "&key="+api_key+"&radius=1000&extensions=base";
+        String urlString = location_url_head + lon + "," + lat + "&key="+api_key+"&radius=1000&extensions=base";
         try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -332,5 +349,31 @@ public class Home_Page extends AppCompatActivity {
         return null;
     }
 
+    public String getWeather (String adcode) {
+        String urlString = weather_url_head + "110101" + "&key="+api_key+"&output=json&extensions=base";
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            connection.connect();
+            if (connection.getResponseCode() == 200)
+            {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+                return response.toString();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
