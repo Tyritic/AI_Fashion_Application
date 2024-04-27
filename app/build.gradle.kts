@@ -54,7 +54,6 @@ dependencies {
 
 }
 dependencies {
-    implementation(files("..\\libs\\QWeather_Public_Android_V4.17.jar"))
     val room_version = "2.4.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
