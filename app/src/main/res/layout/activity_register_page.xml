@@ -143,20 +143,7 @@
         android:hint="@string/confirm_password"
         android:maxLines="1" />
 
-    <Button
-        android:id="@+id/register_button"
-        android:layout_width="329dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="504dp"
-        android:layout_marginEnd="48dp"
-        android:background="@drawable/homepage_botton"
-        android:text="@string/register"
-        android:textAppearance="@style/homepage_botton_font"
-        android:textSize="20dp" />
-
-    <Button
+    <!--<Button
         android:id="@+id/back_button"
         android:layout_width="112dp"
         android:layout_height="wrap_content"
@@ -168,28 +155,18 @@
         android:background="@drawable/homepage_botton"
         android:text="@string/back"
         android:textAppearance="@style/homepage_botton_font"
+        android:textSize="20dp" />-->
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="329dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/homepage_botton"
+        android:text="@string/register"
+        android:textAppearance="@style/homepage_botton_font"
         android:textSize="20dp" />
-
-    <View
-        android:id="@+id/ellipse5"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="-70dp"
-        android:background="@drawable/ic_ellipse5"
-        android:clipToOutline="true" />
-
-    <View
-        android:id="@+id/ellipse4"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-71dp"
-        android:layout_marginBottom="-1dp"
-        android:background="@drawable/ic_ellipse4"
-        android:clipToOutline="true" />
 
 </RelativeLayout>

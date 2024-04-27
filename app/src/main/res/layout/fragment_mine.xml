@@ -26,7 +26,7 @@
 
     <Button
         android:id="@+id/account_information_button"
-        android:layout_width="380dp"
+        android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_below="@id/head"
         android:layout_centerHorizontal="true"
@@ -36,20 +36,18 @@
         android:padding="7dp"
         android:text="@string/account_information"
         android:textSize="18sp" />
-
-    <View
+    <!--<View
         android:layout_width="12dp"
         android:layout_height="16dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="292dp"
+        android:layout_marginStart="356dp"
         android:layout_marginTop="336dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/arrow_circle_right"
-        android:stateListAnimator="@null" />
+        android:stateListAnimator="@null" />-->
 
     <Button
         android:id="@+id/body_information_button"
-        android:layout_width="380dp"
+        android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_below="@id/account_information_button"
         android:layout_centerHorizontal="true"
@@ -60,36 +58,34 @@
         android:text="@string/body_information"
         android:textSize="18sp" />
 
-    <View
+    <!--<View
         android:layout_width="12dp"
         android:layout_height="16dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="292dp"
+        android:layout_marginStart="356dp"
         android:layout_marginTop="436dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/arrow_circle_right"
-        android:stateListAnimator="@null" />
+        android:stateListAnimator="@null" />-->
 
     <Button
         android:id="@+id/log_out_button"
-        android:layout_width="380dp"
+        android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_below="@id/body_information_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:background="@drawable/mine_button"
-        android:text="@string/log_out"
         android:gravity="start|center_vertical"
         android:padding="7dp"
+        android:text="@string/log_out"
         android:textSize="18sp" />
 
-    <View
+    <!--<View
         android:layout_width="12dp"
         android:layout_height="16dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="292dp"
+        android:layout_marginStart="356dp"
         android:layout_marginTop="536dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/arrow_circle_right"
-        android:stateListAnimator="@null" />
+        android:stateListAnimator="@null" />-->
 </RelativeLayout>

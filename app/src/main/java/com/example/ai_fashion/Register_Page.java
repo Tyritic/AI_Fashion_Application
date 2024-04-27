@@ -41,7 +41,7 @@ public class Register_Page extends AppCompatActivity {
         mEditTextNickname = findViewById(R.id.nickname);
         mEditTextAge = findViewById(R.id.age);
         mEditTextConfirmPassword = findViewById(R.id.confirm_password);
-        back= findViewById(R.id.back_button);
+        //back= findViewById(R.id.back_button);
         register = findViewById(R.id.register_button);
         radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -111,10 +111,10 @@ public class Register_Page extends AppCompatActivity {
             startActivity(intent);//开始切换
         });
 
-        back.setOnClickListener(v -> {
+        /*back.setOnClickListener(v -> {
             Intent intent=new Intent(Register_Page.this, Log_in_Page.class);//设置切换对应activity
             startActivity(intent);//开始切换
-        });
+        });*/
 
     };
 }
