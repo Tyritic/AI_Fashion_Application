@@ -1,11 +1,20 @@
 package com.example.ai_fashion;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -28,12 +37,22 @@ import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.HeConfig;
 import com.qweather.sdk.view.QWeather;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Locale;
+
 //目录结果
 //├── user_id
 //        └── wardrobe
@@ -56,8 +75,16 @@ public class Home_Page extends AppCompatActivity {
     private Wardrobe_Fragment wardrobeFragment;
     private Dressing_Fragment dressingFragment;
     private Mine_Fragment mineFragment;
+    private String latitude;
+    private String longitude;
 
+    private String response;
+    private String address;
+    private String province;
+    private String city;
+    private String district;
     private static final String TAG = "Home_Page";
+    private static final int REQUEST_INTERNET_PERMISSION = 5555;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,21 +94,64 @@ public class Home_Page extends AppCompatActivity {
         String api_key="66f16e8945874a35a7cc40032eb4c7f8";
         HeConfig.init(api_name, api_key);
         HeConfig.switchToDevService();
+        //检查是否具有网络权限
+        if (checkSelfPermission(android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            // 如果没有权限，请求网络权限
+            requestPermissions(new String[]{android.Manifest.permission.INTERNET}, REQUEST_INTERNET_PERMISSION);
+        }
         // 获取定位信息
-        // 获取定位信息
+        Handler handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == 1) {
+                    String response = (String) msg.obj;
+                    // 在这里，你可以获取到 response 的值
+                    if(response==null)
+                    {
+                        Toast.makeText(Home_Page.this, "response是空", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONObject regeocode = jsonObject.getJSONObject("regeocode");
+                            JSONObject addressComponent = regeocode.getJSONObject("addressComponent");
+                            province = addressComponent.getString("province");
+                            city = addressComponent.getString("city");
+                            district = addressComponent.getString("district");
+                            address = province + city + district;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(Home_Page.this,address, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        };
         LocationUtils.getInstance(this).getLocation(new LocationUtils.LocationCallBack() {
             @Override
             public void setLocation(Location location) {
                 if (location != null){
-                    String latitude = String.valueOf(location.getLatitude());
-                    String longitude = String.valueOf(location.getLongitude());
-                    Toast.makeText(Home_Page.this, "经度：" + latitude + "，纬度：" + longitude, Toast.LENGTH_SHORT).show();
+                    latitude = String.valueOf(location.getLatitude());
+                    longitude = String.valueOf(location.getLongitude());
                 }
+                else {
+                    Toast.makeText(Home_Page.this, "location是空", Toast.LENGTH_SHORT).show();
+                }
+                if(latitude==null||longitude==null)
+                {
+                    Toast.makeText(Home_Page.this,"未获取到经纬度",Toast.LENGTH_SHORT).show();
+                }
+                new Thread(() -> {
+                    response = getAddress(longitude,latitude);
+                    Message message = new Message();
+                    message.what = 1;
+                    message.obj = response;
+                    handler.sendMessage(message);
+                }).start();
             }
-
         });
-
-        //初始化
+        //Toast.makeText(Home_Page.this, "城市：" + address, Toast.LENGTH_SHORT).show();
+            //初始化
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         selectFragment(0);
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
@@ -99,10 +169,6 @@ public class Home_Page extends AppCompatActivity {
 //            Toast.makeText(Home_Page.this,"Home_Page成功接收到数据",Toast.LENGTH_SHORT).show();
 //        }
         User user = DB.userDao().findUser(user_account,user_password);
-//        if(user!=null)
-//        {
-//            Toast.makeText(Home_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
-//        }
         Gson gson = new Gson();
         String user_json = gson.toJson(user);
 
@@ -239,5 +305,33 @@ public class Home_Page extends AppCompatActivity {
             fragmentTransaction.hide(mineFragment);
         }
     }
-    
+
+    public String getAddress(String lon, String lat) {
+        String urlString = "https://restapi.amap.com/v3/geocode/regeo?output=json&location=" + lon + "," + lat + "&key=b37606d49c5d3648e1ece38257fd057a&radius=1000&extensions=base";
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            connection.connect();
+            if (connection.getResponseCode() == 200)
+            {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+                return response.toString();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

@@ -20,6 +20,7 @@ import com.JavaBean.User;
 
 public class Log_in_Page extends AppCompatActivity {
     public static final int REQUEST_LOCATION_PERMISSION = 5555;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
