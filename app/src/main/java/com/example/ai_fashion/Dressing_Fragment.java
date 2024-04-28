@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -26,6 +28,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class Dressing_Fragment extends Fragment {
@@ -36,11 +42,9 @@ public class Dressing_Fragment extends Fragment {
     private String longitude;
     private String location_response;
     private String weather_response;
-    private String address;
-    private String province;
+    private String location;
     private String city;
     private String district;
-    private String township;
     private String adcode;
     private final String api_key="b37606d49c5d3648e1ece38257fd057a";
     private final String location_url_head="https://restapi.amap.com/v3/geocode/regeo?output=json&location=";
@@ -49,6 +53,15 @@ public class Dressing_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Map<String, List<String>> iconWeatherMap = new HashMap<>();
+        iconWeatherMap.put("风", Arrays.asList("有风", "平静", "微风", "和风", "清风", "强风/劲风", "疾风", "大风", "烈风", "风暴", "狂爆风", "飓风", "热带风暴", "龙卷风"));
+        iconWeatherMap.put("多云", Arrays.asList("阴","少云", "晴间多云", "多云"));
+        iconWeatherMap.put("雪", Arrays.asList("雪", "阵雪", "小雪", "中雪", "大雪", "暴雪", "小雪-中雪", "中雪-大雪", "大雪-暴雪", "冷"));
+        iconWeatherMap.put("雾", Arrays.asList("浮尘", "扬沙", "沙尘暴", "强沙尘暴", "雾", "浓雾", "强浓雾", "轻雾", "大雾", "特强浓雾"));
+        iconWeatherMap.put("晴", Arrays.asList("晴", "热"));
+        iconWeatherMap.put("雨夹雪", Arrays.asList("雨雪天气", "雨夹雪", "阵雨夹雪"));
+        iconWeatherMap.put("雨", Arrays.asList("阵雨", "雷阵雨", "雷阵雨并伴有冰雹", "小雨", "中雨", "大雨", "暴雨", "大暴雨", "特大暴雨", "强阵雨", "强雷阵雨", "极端降雨", "毛毛雨/细雨", "雨", "小雨-中雨", "中雨-大雨", "大雨-暴雨", "暴雨-大暴雨", "大暴雨-特大暴雨", "冻雨"));
+        iconWeatherMap.put("霾", Arrays.asList("霾", "中度霾", "重度霾", "严重霾", "未知"));
         Bundle bundle = getArguments();//接收从Home_Page和Account_Page传过来的Bundle
         if(bundle!=null)//判空
         {
@@ -63,6 +76,10 @@ public class Dressing_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dressing, container, false);
         // Find the button and set the click listener
+        TextView temperature_text = view.findViewById(R.id.temperature_text);
+        TextView location_text = view.findViewById(R.id.location_text);
+        TextView weather_text = view.findViewById(R.id.weather_text);
+        ImageView weather_icon = view.findViewById(R.id.weather_icon);
         //检查是否具有网络权限
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求网络权限
@@ -85,14 +102,19 @@ public class Dressing_Fragment extends Fragment {
                             JSONObject location_json = new JSONObject(location_response);
                             JSONObject regeocode = location_json.getJSONObject("regeocode");
                             JSONObject addressComponent = regeocode.getJSONObject("addressComponent");
-                            province = addressComponent.getString("province");
                             city = addressComponent.getString("city");
                             if(city.equals("[]"))city="";
                             district = addressComponent.getString("district");
-                            township = addressComponent.getString("township");
                             adcode = addressComponent.getString("adcode");
-                            address = province + city + district+township;
-                            Toast.makeText(getActivity(),address, Toast.LENGTH_SHORT).show();
+                            location =  city + ","+district;
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 更新UI操作
+                                    location_text.setText(location);
+                                }
+                            });
+                            //Toast.makeText(getActivity(),address, Toast.LENGTH_SHORT).show();
                             new Thread(() -> {
                                 weather_response = getWeather(adcode);
                                 if(weather_response==null)
@@ -109,9 +131,49 @@ public class Dressing_Fragment extends Fragment {
                                         JSONObject lives = weather_json.getJSONArray("lives").getJSONObject(0);
                                         String weather = lives.getString("weather");
                                         String temperature = lives.getString("temperature");
-                                        Looper.prepare();
-                                        Toast.makeText(getActivity(), "天气："+weather+" 温度："+temperature+"°C", Toast.LENGTH_SHORT).show();
-                                        Looper.loop();
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // 更新UI操作
+                                                    temperature_text.setText(temperature+"°C");
+                                                    weather_text.setText(weather);
+                                                if(iconWeatherMap.get("风").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.windy);
+                                                }
+                                                else if(iconWeatherMap.get("多云").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.cloudy);
+                                                }
+                                                else if(iconWeatherMap.get("雪").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.snowy);
+                                                }
+                                                else if(iconWeatherMap.get("雾").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.foggy);
+                                                }
+                                                else if(iconWeatherMap.get("晴").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.sunny);
+                                                }
+                                                else if(iconWeatherMap.get("雨夹雪").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.sleet);
+                                                }
+                                                else if(iconWeatherMap.get("雨").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.rainy);
+                                                }
+                                                else if(iconWeatherMap.get("霾").contains(weather))
+                                                {
+                                                    weather_icon.setImageResource(R.drawable.smog);
+                                                }
+                                            }
+                                        });
+//                                      Looper.prepare();
+//                                      Toast.makeText(getActivity(), "天气："+weather+" 温度："+temperature+"°C", Toast.LENGTH_SHORT).show();
+//                                      Looper.loop();
                                     }
                                     catch (JSONException e) {
                                         e.printStackTrace();

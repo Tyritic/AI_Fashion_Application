@@ -55,4 +55,42 @@
         <item name="android:windowExitAnimation">@anim/dialog_exit</item>
     </style>
 
+    <style name="temperature_font">
+        <item name=
+            "android:textSize">
+            64px
+        </item>
+        <item name=
+            "android:letterSpacing">
+            0.0037
+        </item>
+        <item name=
+            "android:textColor">
+            #FFFFFF
+        </item>
+    </style>
+    <style name="weather_font">
+        <item name=
+            "android:textSize">
+            13px
+        </item>
+        <item name=
+            "android:letterSpacing">
+            0.0037
+        </item>
+        <item name=
+            "android:textColor">
+            #FFFFFF
+        </item>
+    </style>
+    <style name=
+        "location_font">
+        <item name=
+            "android:textSize">
+            16px
+        </item>
+    </style>
+
+    /* strings.xml */
+
 </resources>

@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_centerHorizontal="false"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
     android:background="@color/page_background"
-    tools:context=".Mine_Fragment">
+    android:clipToOutline="true">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/title_mine"
+            android:textSize="20sp" />
+    </RelativeLayout>
     <FrameLayout
         android:id="@+id/head"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp">
+        android:layout_marginTop="90dp"
+        android:layout_gravity="center_horizontal">
 
         <com.example.ai_fashion.CircleImage
             android:id="@+id/head_image"
@@ -33,6 +55,7 @@
         android:layout_marginTop="80dp"
         android:background="@drawable/mine_button"
         android:gravity="start|center_vertical"
+        android:layout_gravity="center_horizontal"
         android:padding="7dp"
         android:text="@string/account_information"
         android:textSize="18sp" />
@@ -54,18 +77,10 @@
         android:layout_marginTop="50dp"
         android:background="@drawable/mine_button"
         android:gravity="start|center_vertical"
+        android:layout_gravity="center_horizontal"
         android:padding="7dp"
         android:text="@string/body_information"
         android:textSize="18sp" />
-
-    <!--<View
-        android:layout_width="12dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="356dp"
-        android:layout_marginTop="436dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/arrow_circle_right"
-        android:stateListAnimator="@null" />-->
 
     <Button
         android:id="@+id/log_out_button"
@@ -76,6 +91,7 @@
         android:layout_marginTop="50dp"
         android:background="@drawable/mine_button"
         android:gravity="start|center_vertical"
+        android:layout_gravity="center_horizontal"
         android:padding="7dp"
         android:text="@string/log_out"
         android:textSize="18sp" />
@@ -88,4 +104,4 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/arrow_circle_right"
         android:stateListAnimator="@null" />-->
-</RelativeLayout>
+</LinearLayout>
