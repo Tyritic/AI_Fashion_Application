@@ -9,7 +9,7 @@
 
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/recommend_button"
         android:layout_width="160dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
@@ -22,7 +22,7 @@
         android:id="@+id/button5"
         android:layout_width="160dp"
         android:layout_height="100dp"
-        android:layout_below="@id/button4"
+        android:layout_below="@id/recommend_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
         android:background="@drawable/homepage_botton"

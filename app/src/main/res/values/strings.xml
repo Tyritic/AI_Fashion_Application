@@ -30,4 +30,5 @@
     <string name="photo_library">从图库选择</string>
     <string name="take_photos">拍照</string>
     <string name="log_out">退出账号</string>
+
 </resources>

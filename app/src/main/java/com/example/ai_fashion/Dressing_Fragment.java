@@ -1,63 +1,57 @@
 package com.example.ai_fashion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Dressing_Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class Dressing_Fragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Dressing_Fragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DressingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Dressing_Fragment newInstance(String param1, String param2) {
-        Dressing_Fragment fragment = new Dressing_Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    String user_account;
+    String user_password;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle bundle = getArguments();//接收从Home_Page和Account_Page传过来的Bundle
+        if(bundle!=null)//判空
+        {
+            //Toast.makeText(getActivity(),"Dressing_Fragment成功接收数据",Toast.LENGTH_SHORT).show();
+            user_account = bundle.getString("user_account");
+            user_password = bundle.getString("user_password");
+        }
+        else
+        {
+            Toast.makeText(getActivity(),"Dressing_Fragment未接收数据",Toast.LENGTH_SHORT).show();
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dressing, container, false);
+        View view = inflater.inflate(R.layout.fragment_dressing, container, false);
+        // Find the button and set the click listener
+        Button recommend = view.findViewById(R.id.recommend_button);
+        recommend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                //建立一个Intent对象，用于启动Login_Page
+                Intent intent = new Intent(getActivity(), Recommend_Page.class);
+                if(user_account!=null&&user_password!=null)
+                {
+                    //Toast.makeText(getActivity(),"Dressing_Fragment向Recommend_Page发送成功",Toast.LENGTH_SHORT).show();
+                    intent.putExtra("user_account", user_account);
+                    intent.putExtra("user_password", user_password);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(),"Dressing_Fragment向Recommend_Page发送失败",Toast.LENGTH_SHORT).show();
+                }
+                startActivity(intent);
+            }
+        });
+
+        return view;
     }
 }

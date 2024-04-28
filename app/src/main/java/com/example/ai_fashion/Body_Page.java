@@ -99,11 +99,11 @@ public class Body_Page extends AppCompatActivity {
             bundle.putString("user_password",user_password);
             if(user_account==null||user_password==null)
             {
-                Toast.makeText(Body_Page.this,"Body_Fragment发送失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Body_Page.this,"Body_Page发送失败",Toast.LENGTH_SHORT).show();
             }
             else if(user_account!=null&&user_password!=null)
             {
-                //Toast.makeText(Body_Page.this,"Body_Fragment发送成功",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Body_Page.this,"Body_Page发送成功",Toast.LENGTH_SHORT).show();
             }
             intent.setClass(this, Home_Page.class);
             intent.putExtra("fragment_flag", 2);

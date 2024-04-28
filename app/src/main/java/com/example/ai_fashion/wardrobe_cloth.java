@@ -80,8 +80,16 @@ public class wardrobe_cloth extends AppCompatActivity
         backTohomePage.setOnClickListener(v -> {
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
-            bundle.putString("user_account",user_account);
-            bundle.putString("user_password",user_password);
+            if(user_account!=null&&user_password!=null)
+            {
+                //Toast.makeText(wardrobe_cloth.this,"wardrobe_cloth向Home_Page发送成功",Toast.LENGTH_SHORT).show();
+                bundle.putString("user_account",user_account);
+                bundle.putString("user_password",user_password);
+            }
+            else
+            {
+                Toast.makeText(wardrobe_cloth.this,"wardrobe_cloth向Home_Page发送失败",Toast.LENGTH_SHORT).show();
+            }
             intent.setClass(this, Home_Page.class);
             intent.putExtra("fragment_flag", 0);
             intent.putExtras(bundle);

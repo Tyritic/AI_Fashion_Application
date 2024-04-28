@@ -67,7 +67,6 @@ public class Home_Page extends AppCompatActivity {
     private final String api_key="b37606d49c5d3648e1ece38257fd057a";
     private final String location_url_head="https://restapi.amap.com/v3/geocode/regeo?output=json&location=";
     private final String weather_url_head="https://restapi.amap.com/v3/weather/weatherInfo?city=";
-    private static final String TAG = "Home_Page";
     private static final int REQUEST_INTERNET_PERMISSION = 5555;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +113,7 @@ public class Home_Page extends AppCompatActivity {
                                 }
                                 else
                                 {
+                                    //System.out.println(weather_response);
                                     try {
                                         JSONObject weather_json = new JSONObject(weather_response);
                                         JSONObject lives = weather_json.getJSONArray("lives").getJSONObject(0);
@@ -276,6 +276,22 @@ public class Home_Page extends AppCompatActivity {
             if (dressingFragment == null)
             {
                 dressingFragment = new Dressing_Fragment();
+                //传递数据，将用户账号和密码包装成Bundle传递给Wardrobe_Fragment
+                Intent intent=getIntent();
+                String default_account=intent.getStringExtra("user_account");
+                String default_password=intent.getStringExtra("user_password");
+                Bundle bundle = new Bundle();
+                if(default_account==null||default_password==null)
+                {
+                    Toast.makeText(Home_Page.this,"Home_Page向Dressing_Fragment发送失败",Toast.LENGTH_SHORT).show();
+                }
+                else if(default_account!=null&&default_password!=null)
+                {
+                    bundle.putString("user_account", default_account);
+                    bundle.putString("user_password", default_password);
+                    //Toast.makeText(Home_Page.this,"Home_Page向Dressing_Fragment发送成功",Toast.LENGTH_SHORT).show();
+                }
+                dressingFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, dressingFragment);
             }
             else
@@ -302,7 +318,9 @@ public class Home_Page extends AppCompatActivity {
                 }
                 mineFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, mineFragment);
-            } else {
+            }
+            else
+            {
                 fragmentTransaction.show(mineFragment);
             }
         }
@@ -350,7 +368,7 @@ public class Home_Page extends AppCompatActivity {
     }
 
     public String getWeather (String adcode) {
-        String urlString = weather_url_head + "110101" + "&key="+api_key+"&output=json&extensions=base";
+        String urlString = weather_url_head + adcode + "&key="+api_key+"&output=json&extensions=base";
         try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
