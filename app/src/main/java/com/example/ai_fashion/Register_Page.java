@@ -103,6 +103,8 @@ public class Register_Page extends AppCompatActivity {
                 DB.userDao().insertUser(user);
                 Toast.makeText(Register_Page.this, "注册成功", Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(Register_Page.this, Log_in_Page.class);//设置切换对应activity
+                intent.putExtra("user_account",user_account);
+                intent.putExtra("user_password",user_password);
                 startActivity(intent);//开始切换
             }
         });

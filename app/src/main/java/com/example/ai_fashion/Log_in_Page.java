@@ -20,17 +20,25 @@ import com.JavaBean.User;
 
 public class Log_in_Page extends AppCompatActivity {
     public static final int REQUEST_LOCATION_PERMISSION = 5555;
-
+    String user_account;
+    String user_password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_log_in_page);
+        Intent intent1 = getIntent();
+        user_account = intent1.getStringExtra("user_account");
+        user_password = intent1.getStringExtra("user_password");
         //初始化组件
         Button register = findViewById(R.id.register_button);
         Button login = findViewById(R.id.login_button);
         EditText account = findViewById(R.id.input_user_account);
         EditText password = findViewById(R.id.input_user_password);
+        if(user_account!=null&&user_password!=null) {
+            account.setText(user_account);
+            password.setText(user_password);
+        }
         // 检查是否具有定位权限
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求定位权限
