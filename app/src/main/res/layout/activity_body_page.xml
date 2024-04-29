@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/account_information"
+            android:text="@string/body_information"
             android:textSize="20sp" />
     </RelativeLayout>
 
@@ -46,17 +46,16 @@
 
         <TextView
             android:id="@+id/height"
-            android:layout_width="122dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignTop="@id/height_input"
             android:layout_alignBottom="@id/height_input"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_toLeftOf="@id/height_input"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="0dp"
             android:text="身高："
+            android:padding="5dp"
             android:textAppearance="@style/titleFont"
-            android:textSize="25dp" />
+            android:textSize="20dp" />
 
         <EditText
             android:id="@+id/height_input"
@@ -64,24 +63,22 @@
             android:layout_height="41dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="40dp"
-            android:layout_marginBottom="385dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="500dp"
             android:background="@drawable/log_in_box"
             android:maxLines="1"
-            android:padding="5dp"
-            android:text="" />
-
+            android:padding="5dp" />
         <TextView
             android:id="@+id/weight"
-            android:layout_width="122dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignTop="@id/weight_input"
             android:layout_alignBottom="@id/weight_input"
-            android:layout_marginBottom="3dp"
-            android:layout_toLeftOf="@id/weight_input"
+            android:layout_marginStart="10dp"
             android:text="体重："
+            android:padding="5dp"
             android:textAppearance="@style/titleFont"
-            android:textSize="25dp" />
+            android:textSize="20dp" />
 
         <EditText
             android:id="@+id/weight_input"
@@ -89,26 +86,25 @@
             android:layout_height="41dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="39dp"
-            android:layout_marginBottom="498dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="385dp"
             android:background="@drawable/log_in_box"
+            android:maxLines="1"
             android:padding="5dp"
-            android:maxLines="1" />
+            android:text="" />
 
         <TextView
             android:id="@+id/proportion"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_alignTop="@id/proportion_input"
             android:layout_alignBottom="@id/proportion_input"
-            android:layout_marginTop="1dp"
-            android:layout_marginRight="-2dp"
-            android:layout_marginBottom="0dp"
-            android:layout_toLeftOf="@id/proportion_input"
+            android:layout_marginStart="10dp"
+            android:padding="3dp"
             android:text="身材比例："
             android:singleLine="true"
             android:textAppearance="@style/titleFont"
-            android:textSize="25dp" />
+            android:textSize="20dp" />
 
         <EditText
             android:id="@+id/proportion_input"
@@ -116,7 +112,7 @@
             android:layout_height="39dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="38dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="252dp"
             android:background="@drawable/log_in_box"
             android:padding="5dp"
@@ -125,7 +121,7 @@
 
         <Button
             android:id="@+id/modify_button"
-            android:layout_width="106dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"

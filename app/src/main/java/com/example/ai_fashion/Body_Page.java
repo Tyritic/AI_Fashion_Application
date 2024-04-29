@@ -57,6 +57,13 @@ public class Body_Page extends AppCompatActivity {
         user_height = ""+user.getUser_height();
         user_weight = ""+user.getUser_weight();
         user_proportion = ""+user.getUser_proportion();
+        //如果用户没有填写信息，则设置为空
+        if(user_height.equals("0.0")&&user_weight.equals("0.0"))
+        {
+            user_height="";
+            user_weight="";
+            user_proportion="";
+        }
         //设置输入框的默认值为用户的信息
         height_input.setText(user_height);
         weight_input.setText(user_weight);
@@ -93,6 +100,7 @@ public class Body_Page extends AppCompatActivity {
         //返回按钮
         backTohomePage = findViewById(R.id.back_to_home_page);
         backTohomePage.setOnClickListener(v -> {
+            //将用户账号和密码传递给下一个页面
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
             bundle.putString("user_account",user_account);
