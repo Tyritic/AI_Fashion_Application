@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -65,6 +67,16 @@ public class Account_Page extends AppCompatActivity {
         birthday_input.setText(user.getUser_age());
         nickname_input.setText(user.getUser_nickname());
         Button modify = findViewById(R.id.modify_button);
+        CircleImage circleImage = findViewById(R.id.head_image);
+        //设置头像
+        circleImage.setClickable(true);
+        circleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Account_Page.this,"头像",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //修改按钮点击事件
         modify.setOnClickListener(v -> {
             //获取用户输入的信息

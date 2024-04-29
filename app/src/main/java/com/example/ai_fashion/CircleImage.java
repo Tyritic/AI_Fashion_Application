@@ -10,6 +10,8 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Toast;
 
 /*
  * 重写CircleImage，继承ImageView
@@ -17,6 +19,7 @@ import android.util.AttributeSet;
 public class CircleImage extends androidx.appcompat.widget.AppCompatImageView {
     public CircleImage(Context context) {
         super(context);
+        this.setClickable(true);
         // TODO Auto-generated constructor stub
     }
 
@@ -137,5 +140,6 @@ public class CircleImage extends androidx.appcompat.widget.AppCompatImageView {
 
         return (result + 2);
     }
+
 
 }
