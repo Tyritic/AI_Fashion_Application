@@ -107,6 +107,10 @@ public class Home_Page extends AppCompatActivity {
         if (!dressing.exists()){
             dressing.mkdir();
         }
+        File icon=new File(directory,"icon");
+        if (!icon.exists()){
+            icon.mkdir();
+        }
         //点击事件
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
