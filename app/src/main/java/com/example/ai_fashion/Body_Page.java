@@ -93,6 +93,7 @@ public class Body_Page extends AppCompatActivity {
                 user1.setUser_height(Double.parseDouble(height));
                 user1.setUser_weight(Double.parseDouble(weight));
                 user1.setUser_proportion(Double.parseDouble(proportion));
+                user1.setUser_icon(user.getUser_icon());
                 DB.userDao().updateUser(user1);
                 Toast.makeText(Body_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
             }
