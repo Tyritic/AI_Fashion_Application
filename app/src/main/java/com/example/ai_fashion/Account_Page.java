@@ -54,6 +54,8 @@ public class Account_Page extends AppCompatActivity {
     String newPassword;
     User user;
     CircleImage circleImage;
+    String user_icon;
+    String new_user_icon;
     private static final int PICK_IMAGE = 1;
     private static final int TAKE_PHOTO = 2;
     public static final int REQUSET_CAMERA_PERMISSION  = 5555;
@@ -84,6 +86,7 @@ public class Account_Page extends AppCompatActivity {
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         user = DB.userDao().findUser(user_account,user_password);
+        user_icon=user.getUser_icon();
         account_input = findViewById(R.id.account_input);
         password_input = findViewById(R.id.password_input);
         birthday_input = findViewById(R.id.birthday_input);
@@ -103,7 +106,13 @@ public class Account_Page extends AppCompatActivity {
                 showDialog();
             }
         });
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap = BitmapFactory.decodeFile(user.getUser_icon());
+                circleImage.setImageBitmap(bitmap);
+            }
+        }).start();
         //修改按钮点击事件
         modify.setOnClickListener(v -> {
             //获取用户输入的信息
@@ -126,10 +135,14 @@ public class Account_Page extends AppCompatActivity {
                 User user1 = new User();
                 user1.setUser_account(account);
                 user1.setUser_password(password);
-                user1.setUser_birthday(birthday);
+                user1.setUser_age(birthday);
                 user1.setUser_nickname(nickname);
                 user1.setUser_id(user.getUser_id());
                 user1.setUser_gender(user.getUser_gender());
+                user1.setUser_height(user.getUser_height());
+                user1.setUser_weight(user.getUser_weight());
+                user1.setUser_proportion(user.getUser_proportion());
+                user1.setUser_icon(user.getUser_icon());
                 DB.userDao().updateUser(user1);
                 Toast.makeText(Account_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
             }
@@ -243,6 +256,25 @@ public class Account_Page extends AppCompatActivity {
                 // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
                 selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.close();
+                String user_icon=imageFile.getAbsolutePath();
+                circleImage.setImageBitmap(selectedBitmap);
+                String account = account_input.getText().toString();
+                String password = password_input.getText().toString();
+                AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
+                        .allowMainThreadQueries().build();
+                User user = DB.userDao().findUser(account,password);
+                User user1 = new User();
+                user1.setUser_account(account);
+                user1.setUser_password(password);
+                user1.setUser_age(user.getUser_age());
+                user1.setUser_nickname(user.getUser_nickname());
+                user1.setUser_id(user.getUser_id());
+                user1.setUser_height(user.getUser_height());
+                user1.setUser_weight(user.getUser_weight());
+                user1.setUser_proportion(user.getUser_proportion());
+                user1.setUser_icon(user_icon);
+                user1.setUser_gender(user.getUser_gender());
+                DB.userDao().updateUser(user1);
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
                 //Toast.makeText(wardrobe_cloth.this,"第"+i+"张",Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
@@ -256,7 +288,7 @@ public class Account_Page extends AppCompatActivity {
             //Toast.makeText(wardrobe_cloth.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
             //Toast.makeText(wardrobe_cloth.this,""+requestCode,Toast.LENGTH_SHORT).show();
             int num=getNum();
-            Log.d("Image Save", "Image saved to " + num);
+            //Log.d("Image Save", "Image saved to " + num);
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             // 获取你之前创建的文件夹的路径
@@ -273,8 +305,26 @@ public class Account_Page extends AppCompatActivity {
                 // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.close();
+                String user_icon=imageFile.getAbsolutePath();
+                circleImage.setImageBitmap(imageBitmap);
+                String account = account_input.getText().toString();
+                String password = password_input.getText().toString();
+                AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
+                        .allowMainThreadQueries().build();
+                User user = DB.userDao().findUser(account,password);
+                User user1 = new User();
+                user1.setUser_account(account);
+                user1.setUser_password(password);
+                user1.setUser_age(user.getUser_age());
+                user1.setUser_nickname(user.getUser_nickname());
+                user1.setUser_id(user.getUser_id());
+                user1.setUser_height(user.getUser_height());
+                user1.setUser_weight(user.getUser_weight());
+                user1.setUser_proportion(user.getUser_proportion());
+                user1.setUser_icon(user_icon);
+                user1.setUser_gender(user.getUser_gender());
+                DB.userDao().updateUser(user1);
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
