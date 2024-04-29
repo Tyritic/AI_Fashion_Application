@@ -31,6 +31,7 @@ public class Body_Page extends AppCompatActivity {
     String height;
     String weight;
     String proportion;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +51,7 @@ public class Body_Page extends AppCompatActivity {
         }
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
-        User user = DB.userDao().findUser(user_account,user_password);
+        user = DB.userDao().findUser(user_account,user_password);
         height_input = findViewById(R.id.height_input);
         weight_input = findViewById(R.id.weight_input);
         proportion_input = findViewById(R.id.proportion_input);
@@ -65,15 +66,15 @@ public class Body_Page extends AppCompatActivity {
             user_proportion="";
         }
         //设置输入框的默认值为用户的信息
-        height_input.setText(user_height);
-        weight_input.setText(user_weight);
+        height_input.setText(user_height+"cm");
+        weight_input.setText(user_weight+"kg");
         proportion_input.setText(user_proportion);
         Button modify = findViewById(R.id.modify_button);
         //修改按钮点击事件
         modify.setOnClickListener(v -> {
             //获取用户输入的信息
-            height = height_input.getText().toString();
-            weight = weight_input.getText().toString();
+            height = height_input.getText().toString().substring(0,height_input.getText().toString().length()-2);
+            weight = weight_input.getText().toString().substring(0,weight_input.getText().toString().length()-2);
             proportion = proportion_input.getText().toString();
             //判断用户是否修改了信息
             boolean not_modified=height.equals(user_height)&&weight.equals(user_weight)&&proportion.equals(user_proportion);
@@ -83,18 +84,22 @@ public class Body_Page extends AppCompatActivity {
             }
             else
             {
-                User user1 = new User();
-                user1.setUser_account(user.getUser_account());
-                user1.setUser_password(user_password);
-                user1.setUser_age(user.getUser_age());
-                user1.setUser_nickname(user.getUser_nickname());
-                user1.setUser_id(user.getUser_id());
-                user1.setUser_gender(user.getUser_gender());
-                user1.setUser_height(Double.parseDouble(height));
-                user1.setUser_weight(Double.parseDouble(weight));
-                user1.setUser_proportion(Double.parseDouble(proportion));
-                user1.setUser_icon(user.getUser_icon());
-                DB.userDao().updateUser(user1);
+//                User user1 = new User();
+//                user1.setUser_account(user.getUser_account());
+//                user1.setUser_password(user_password);
+//                user1.setUser_age(user.getUser_age());
+//                user1.setUser_nickname(user.getUser_nickname());
+//                user1.setUser_id(user.getUser_id());
+//                user1.setUser_gender(user.getUser_gender());
+//                user1.setUser_height(Double.parseDouble(height));
+//                user1.setUser_weight(Double.parseDouble(weight));
+//                user1.setUser_proportion(Double.parseDouble(proportion));
+//                user1.setUser_icon(user.getUser_icon());
+//                DB.userDao().updateUser(user1);
+                user.setUser_height(Double.parseDouble(height));
+                user.setUser_weight(Double.parseDouble(weight));
+                user.setUser_proportion(Double.parseDouble(proportion));
+                DB.userDao().updateUser(user);
                 Toast.makeText(Body_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
             }
         });

@@ -127,18 +127,23 @@ public class Account_Page extends AppCompatActivity {
             }
             else
             {
-                User user1 = new User();
-                user1.setUser_account(account);
-                user1.setUser_password(password);
-                user1.setUser_age(birthday);
-                user1.setUser_nickname(nickname);
-                user1.setUser_id(user.getUser_id());
-                user1.setUser_gender(user.getUser_gender());
-                user1.setUser_height(user.getUser_height());
-                user1.setUser_weight(user.getUser_weight());
-                user1.setUser_proportion(user.getUser_proportion());
-                user1.setUser_icon(user.getUser_icon());
-                DB.userDao().updateUser(user1);
+//                User user1 = new User();
+//                user1.setUser_account(account);
+//                user1.setUser_password(password);
+//                user1.setUser_age(birthday);
+//                user1.setUser_nickname(nickname);
+//                user1.setUser_id(user.getUser_id());
+//                user1.setUser_gender(user.getUser_gender());
+//                user1.setUser_height(user.getUser_height());
+//                user1.setUser_weight(user.getUser_weight());
+//                user1.setUser_proportion(user.getUser_proportion());
+//                user1.setUser_icon(user.getUser_icon());
+//                DB.userDao().updateUser(user1);
+                user.setUser_account(account);
+                user.setUser_password(password);
+                user.setUser_age(birthday);
+                user.setUser_nickname(nickname);
+                DB.userDao().updateUser(user);
                 Toast.makeText(Account_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
             }
         });
@@ -253,23 +258,25 @@ public class Account_Page extends AppCompatActivity {
                 fos.close();
                 String user_icon=imageFile.getAbsolutePath();
                 circleImage.setImageBitmap(selectedBitmap);
-                String account = account_input.getText().toString();
-                String password = password_input.getText().toString();
                 AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                         .allowMainThreadQueries().build();
-                User user = DB.userDao().findUser(account,password);
-                User user1 = new User();
-                user1.setUser_account(account);
-                user1.setUser_password(password);
-                user1.setUser_age(user.getUser_age());
-                user1.setUser_nickname(user.getUser_nickname());
-                user1.setUser_id(user.getUser_id());
-                user1.setUser_height(user.getUser_height());
-                user1.setUser_weight(user.getUser_weight());
-                user1.setUser_proportion(user.getUser_proportion());
-                user1.setUser_icon(user_icon);
-                user1.setUser_gender(user.getUser_gender());
-                DB.userDao().updateUser(user1);
+//                String account = account_input.getText().toString();
+//                String password = password_input.getText().toString();
+//                User user = DB.userDao().findUser(account,password);
+//                User user1 = new User();
+//                user1.setUser_account(account);
+//                user1.setUser_password(password);
+//                user1.setUser_age(user.getUser_age());
+//                user1.setUser_nickname(user.getUser_nickname());
+//                user1.setUser_id(user.getUser_id());
+//                user1.setUser_height(user.getUser_height());
+//                user1.setUser_weight(user.getUser_weight());
+//                user1.setUser_proportion(user.getUser_proportion());
+//                user1.setUser_icon(user_icon);
+//                user1.setUser_gender(user.getUser_gender());
+//                DB.userDao().updateUser(user1);
+                user.setUser_icon(user_icon);
+                DB.userDao().updateUser(user);
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
                 //Toast.makeText(wardrobe_cloth.this,"第"+i+"张",Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
@@ -302,23 +309,25 @@ public class Account_Page extends AppCompatActivity {
                 fos.close();
                 String user_icon=imageFile.getAbsolutePath();
                 circleImage.setImageBitmap(imageBitmap);
-                String account = account_input.getText().toString();
-                String password = password_input.getText().toString();
                 AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                         .allowMainThreadQueries().build();
-                User user = DB.userDao().findUser(account,password);
-                User user1 = new User();
-                user1.setUser_account(account);
-                user1.setUser_password(password);
-                user1.setUser_age(user.getUser_age());
-                user1.setUser_nickname(user.getUser_nickname());
-                user1.setUser_id(user.getUser_id());
-                user1.setUser_height(user.getUser_height());
-                user1.setUser_weight(user.getUser_weight());
-                user1.setUser_proportion(user.getUser_proportion());
-                user1.setUser_icon(user_icon);
-                user1.setUser_gender(user.getUser_gender());
-                DB.userDao().updateUser(user1);
+//                String account = account_input.getText().toString();
+//                String password = password_input.getText().toString();
+//                User user = DB.userDao().findUser(account,password);
+//                User user1 = new User();
+//                user1.setUser_account(account);
+//                user1.setUser_password(password);
+//                user1.setUser_age(user.getUser_age());
+//                user1.setUser_nickname(user.getUser_nickname());
+//                user1.setUser_id(user.getUser_id());
+//                user1.setUser_height(user.getUser_height());
+//                user1.setUser_weight(user.getUser_weight());
+//                user1.setUser_proportion(user.getUser_proportion());
+//                user1.setUser_icon(user_icon);
+//                user1.setUser_gender(user.getUser_gender());
+//                DB.userDao().updateUser(user1);
+                user.setUser_icon(user_icon);
+                DB.userDao().updateUser(user);
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

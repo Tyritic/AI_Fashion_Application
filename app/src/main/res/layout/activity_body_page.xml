@@ -52,7 +52,7 @@
             android:layout_alignBottom="@id/height_input"
             android:layout_marginStart="10dp"
             android:layout_marginTop="0dp"
-            android:text="身高："
+            android:text="身高/cm："
             android:padding="5dp"
             android:textAppearance="@style/titleFont"
             android:textSize="20dp" />
@@ -75,7 +75,7 @@
             android:layout_alignTop="@id/weight_input"
             android:layout_alignBottom="@id/weight_input"
             android:layout_marginStart="10dp"
-            android:text="体重："
+            android:text="体重/kg："
             android:padding="5dp"
             android:textAppearance="@style/titleFont"
             android:textSize="20dp" />
