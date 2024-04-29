@@ -53,6 +53,7 @@ public class Account_Page extends AppCompatActivity {
     String newAccount;
     String newPassword;
     User user;
+    CircleImage circleImage;
     private static final int PICK_IMAGE = 1;
     private static final int TAKE_PHOTO = 2;
     public static final int REQUSET_CAMERA_PERMISSION  = 5555;
@@ -93,7 +94,7 @@ public class Account_Page extends AppCompatActivity {
         birthday_input.setText(user.getUser_age());
         nickname_input.setText(user.getUser_nickname());
         Button modify = findViewById(R.id.modify_button);
-        CircleImage circleImage = findViewById(R.id.head_image);
+        circleImage = findViewById(R.id.head_image);
         //设置头像
         circleImage.setClickable(true);
         circleImage.setOnClickListener(new View.OnClickListener() {
@@ -272,8 +273,8 @@ public class Account_Page extends AppCompatActivity {
                 // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.close();
-
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
