@@ -106,13 +106,8 @@ public class Account_Page extends AppCompatActivity {
                 showDialog();
             }
         });
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap bitmap = BitmapFactory.decodeFile(user.getUser_icon());
-                circleImage.setImageBitmap(bitmap);
-            }
-        }).start();
+        Bitmap bitmap = BitmapFactory.decodeFile(user.getUser_icon());
+        circleImage.setImageBitmap(bitmap);
         //修改按钮点击事件
         modify.setOnClickListener(v -> {
             //获取用户输入的信息
