@@ -2,6 +2,8 @@ package com.example.ai_fashion;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +29,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -53,6 +58,7 @@ public class Home_Page extends AppCompatActivity {
     private Wardrobe_Fragment wardrobeFragment;
     private Dressing_Fragment dressingFragment;
     private Mine_Fragment mineFragment;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +83,7 @@ public class Home_Page extends AppCompatActivity {
 //        {
 //            Toast.makeText(Home_Page.this,"Home_Page成功接收到数据",Toast.LENGTH_SHORT).show();
 //        }
-        User user = DB.userDao().findUser(user_account,user_password);
+        user = DB.userDao().findUser(user_account,user_password);
         Gson gson = new Gson();
         String user_json = gson.toJson(user);
 
@@ -111,7 +117,40 @@ public class Home_Page extends AppCompatActivity {
         if (!icon.exists()){
             icon.mkdir();
         }
-        //点击事件
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_icon);
+        File defaule_icon=new File(icon,"default_icon.jpg");
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    // 创建一个FileOutputStream来写入图片
+                    FileOutputStream fos = new FileOutputStream(defaule_icon);
+                    // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+        if(user.getUser_icon()==null)
+        {
+            User user1 = new User();
+            user1.setUser_id(user.getUser_id());
+            user1.setUser_account(user.getUser_account());
+            user1.setUser_password(user.getUser_password());
+            user1.setUser_icon(defaule_icon.getAbsolutePath());
+            user1.setUser_nickname(user.getUser_nickname());
+            user1.setUser_age(user.getUser_age());
+            user1.setUser_height(user.getUser_height());
+            user1.setUser_weight(user.getUser_weight());
+            user1.setUser_gender(user.getUser_gender());
+            user1.setUser_proportion(user.getUser_proportion());
+            DB.userDao().updateUser(user1);
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
