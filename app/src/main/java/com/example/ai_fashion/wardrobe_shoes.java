@@ -21,16 +21,21 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
+import com.adapter.ImagesAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class wardrobe_shoes extends AppCompatActivity
 {
@@ -41,6 +46,7 @@ public class wardrobe_shoes extends AppCompatActivity
     String user_account;
     String user_password;
     User user;
+    private List<Uri> imageUris = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -79,6 +85,28 @@ public class wardrobe_shoes extends AppCompatActivity
         uploadPictures.setOnClickListener(v -> {
             showDialog();
         });
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //导入图片到recyclerView
+        if(imageUris.isEmpty()) {
+            for (int i = 0; i < getNum(); i++) {
+                String string = "" + getPath() + "/shoes_" + i + ".jpg";
+                Uri uri = Uri.fromFile(new File(string));
+                imageUris.add((uri));
+            }
+        }
+        //布局中recyclerView实例化
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        //将适配器初始化构造并实例化
+        ImagesAdapter imagesAdapter = new ImagesAdapter(imageUris);
+        //将实例化的适配器设置给recyclerView
+        recyclerView.setAdapter(imagesAdapter);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //一行多个测试
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(layoutManager);
     }
     private void initShareDialog() {
         mDialog = new Dialog(this, R.style.dialogStyle);
@@ -199,6 +227,12 @@ public class wardrobe_shoes extends AppCompatActivity
                 e.printStackTrace();
             }
         }
+        //上传图片后同步到RecyclerView
+        for(int i=imageUris.size();i<getNum();i++) {
+            String string= ""+getPath() +"/shoes_"+i+".jpg";
+            Uri uri = Uri.fromFile(new File(string));
+            imageUris.add((uri));
+        }
     }
     private void showDialog() {
         if (mDialog ==null){
@@ -217,6 +251,18 @@ public class wardrobe_shoes extends AppCompatActivity
         File shoes = new File(wardrobe, "shoes");
         File[] files = shoes.listFiles();
         return files.length;
+    }
+    private String getPath()
+    {
+        String user_frame_name=""+user.getUser_id();
+        // 获取你之前创建的文件夹的路径
+        File directory = getFilesDir();
+        // 访问多级目录
+        File user_frame = new File(directory, user_frame_name);
+        File wardrobe = new File(user_frame, "wardrobe");
+        File shoes = new File(wardrobe, "shoes");
+        //File[] files = shoes.listFiles();
+        return shoes.getPath();
     }
 }
 

@@ -21,16 +21,21 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
+import com.adapter.ImagesAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class wardrobe_trousers extends AppCompatActivity
 {
@@ -41,6 +46,7 @@ public class wardrobe_trousers extends AppCompatActivity
     String user_account;
     String user_password;
     User user;
+    private List<Uri> imageUris = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -79,6 +85,28 @@ public class wardrobe_trousers extends AppCompatActivity
         uploadPictures.setOnClickListener(v -> {
             showDialog();
         });
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //导入图片到recyclerView
+        if(imageUris.isEmpty()) {
+            for (int i = 0; i < getNum(); i++) {
+                String string = "" + getPath() + "/trousers_" + i + ".jpg";
+                Uri uri = Uri.fromFile(new File(string));
+                imageUris.add((uri));
+            }
+        }
+        //布局中recyclerView实例化
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        //将适配器初始化构造并实例化
+        ImagesAdapter imagesAdapter = new ImagesAdapter(imageUris);
+        //将实例化的适配器设置给recyclerView
+        recyclerView.setAdapter(imagesAdapter);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //一行多个测试
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(layoutManager);
     }
     private void initShareDialog() {
         mDialog = new Dialog(this, R.style.dialogStyle);
@@ -131,8 +159,8 @@ public class wardrobe_trousers extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null)
         {
-            //Toast.makeText(wardrobe_cloth.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(wardrobe_cloth.this,""+requestCode,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(wardrobe_trousers.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(wardrobe_trousers.this,""+requestCode,Toast.LENGTH_SHORT).show();
             int num=getNum();
             Uri selectedImage = data.getData();
             try {
@@ -146,13 +174,13 @@ public class wardrobe_trousers extends AppCompatActivity
                 // 访问多级目录
                 File user_frame = new File(directory, user_frame_name);
                 File wardrobe = new File(user_frame, "wardrobe");
-                File clothes = new File(wardrobe, "trousers");
-//                if(clothes.exists())
+                File trousers = new File(wardrobe, "trousers");
+//                if(trouserses.exists())
 //                {
-//                    Toast.makeText(wardrobe_cloth.this,"衣柜文件夹已存在",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(wardrobe_trousers.this,"衣柜文件夹已存在",Toast.LENGTH_SHORT).show();
 //                }
                 // 在这个文件夹中创建一个新的文件来保存图片
-                File imageFile = new File(clothes, "trousers_"+num+".jpg");
+                File imageFile = new File(trousers, "trousers_"+num+".jpg");
                 if(imageFile.exists())
                 {
                     Toast.makeText(wardrobe_trousers.this,"上传成功",Toast.LENGTH_SHORT).show();
@@ -163,7 +191,7 @@ public class wardrobe_trousers extends AppCompatActivity
                 selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.close();
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
-                //Toast.makeText(wardrobe_cloth.this,"第"+i+"张",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(wardrobe_trousers.this,"第"+i+"张",Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -172,8 +200,8 @@ public class wardrobe_trousers extends AppCompatActivity
         }
         else if(requestCode == TAKE_PHOTO && resultCode == RESULT_OK && data != null)
         {
-            //Toast.makeText(wardrobe_cloth.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(wardrobe_cloth.this,""+requestCode,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(wardrobe_trousers.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(wardrobe_trousers.this,""+requestCode,Toast.LENGTH_SHORT).show();
             int num=getNum();
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -183,8 +211,8 @@ public class wardrobe_trousers extends AppCompatActivity
             // 访问多级目录
             File user_frame = new File(directory, user_frame_name);
             File wardrobe = new File(user_frame, "wardrobe");
-            File clothes = new File(wardrobe, "trousers");
-            File imageFile = new File(clothes, "trousers_"+num+".jpg");
+            File trouserses = new File(wardrobe, "trousers");
+            File imageFile = new File(trouserses, "trousers_"+num+".jpg");
             try {
                 // 创建一个FileOutputStream来写入图片
                 FileOutputStream fos = new FileOutputStream(imageFile);
@@ -198,6 +226,12 @@ public class wardrobe_trousers extends AppCompatActivity
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        //上传图片后同步到RecyclerView
+        for(int i=imageUris.size();i<getNum();i++) {
+            String string= ""+getPath() +"/trousers_"+i+".jpg";
+            Uri uri = Uri.fromFile(new File(string));
+            imageUris.add((uri));
         }
     }
     private void showDialog() {
@@ -217,6 +251,18 @@ public class wardrobe_trousers extends AppCompatActivity
         File trousers = new File(wardrobe, "trousers");
         File[] files = trousers.listFiles();
         return files.length;
+    }
+    private String getPath()
+    {
+        String user_frame_name=""+user.getUser_id();
+        // 获取你之前创建的文件夹的路径
+        File directory = getFilesDir();
+        // 访问多级目录
+        File user_frame = new File(directory, user_frame_name);
+        File wardrobe = new File(user_frame, "wardrobe");
+        File trousers = new File(wardrobe, "trousers");
+        //File[] files = trousers.listFiles();
+        return trousers.getPath();
     }
 }
 

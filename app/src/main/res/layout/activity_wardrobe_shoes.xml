@@ -48,4 +48,19 @@
             android:layout_marginRight="17dp"
             android:background="@drawable/add" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/page_background">
+
+        <!--展示框-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-7dp"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
 </LinearLayout>
