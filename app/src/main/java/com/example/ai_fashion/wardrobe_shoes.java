@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
@@ -47,6 +48,8 @@ public class wardrobe_shoes extends AppCompatActivity
     String user_password;
     User user;
     private List<Uri> imageUris = new ArrayList<>();
+    private List<Boolean> checkedStatus=new ArrayList<>();
+    ImagesAdapter imagesAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -95,15 +98,16 @@ public class wardrobe_shoes extends AppCompatActivity
                 String string = "" + getPath() + "/shoes_" + i + ".jpg";
                 Uri uri = Uri.fromFile(new File(string));
                 imageUris.add((uri));
+                checkedStatus.add(false);
             }
         }
         //布局中recyclerView实例化
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         //将适配器初始化构造并实例化
-        ImagesAdapter imagesAdapter = new ImagesAdapter(imageUris);
+        imagesAdapter = new ImagesAdapter(imageUris,checkedStatus);
         //将实例化的适配器设置给recyclerView
         recyclerView.setAdapter(imagesAdapter);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //一行多个测试
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
@@ -232,6 +236,7 @@ public class wardrobe_shoes extends AppCompatActivity
             String string= ""+getPath() +"/shoes_"+i+".jpg";
             Uri uri = Uri.fromFile(new File(string));
             imageUris.add((uri));
+            checkedStatus.add(false);
         }
     }
     private void showDialog() {

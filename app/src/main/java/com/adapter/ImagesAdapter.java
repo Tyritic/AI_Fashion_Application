@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -12,14 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ai_fashion.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     @NonNull
     private List<Uri> imageUris;
-
-    public ImagesAdapter(List<Uri> imageUris) {
+    private List<Boolean> checkedStatus;
+    private boolean showCheckBoxes = false;
+    public ImagesAdapter(List<Uri> imageUris, List<Boolean> checkedStatus) {
         this.imageUris = imageUris;
+        this.checkedStatus = checkedStatus;
     }
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,7 +35,22 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
 
 @Override
 public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    if (position < 0 || position >= imageUris.size()) {
+        return;
+    }
     holder.imageView.setImageURI(imageUris.get(position));
+    holder.checkBox.setChecked(checkedStatus.get(position));
+    holder.checkBox.setVisibility(showCheckBoxes ? View.VISIBLE : View.GONE);
+    holder.itemView.setOnLongClickListener(v -> {
+        showCheckBoxes = true;
+        notifyDataSetChanged();
+        return true;
+    });
+
+    holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        checkedStatus.set(position, isChecked);
+    });
+
 }
     //获取图片列表的大小
     @Override
@@ -40,13 +60,17 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
-
+        CheckBox checkBox;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
-
+    public void hideCheckBoxes() {
+        showCheckBoxes = false;
+        notifyDataSetChanged();
+    }
 
 
 

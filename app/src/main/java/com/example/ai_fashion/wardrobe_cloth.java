@@ -50,6 +50,8 @@ public class wardrobe_cloth extends AppCompatActivity
 
     //cycleView更改
     private List<Uri> imageUris = new ArrayList<>();
+    private List<Boolean> checkedStatus=new ArrayList<>();
+    ImagesAdapter imagesAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -60,7 +62,6 @@ public class wardrobe_cloth extends AppCompatActivity
             // 如果没有权限，请求存储权限
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
         }
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_cloth);
         //获取用户账号和密码，通过上一个页面传递过来的数据
@@ -111,12 +112,13 @@ public class wardrobe_cloth extends AppCompatActivity
                 String string = "" + getPath() + "/clothes_" + i + ".jpg";
                 Uri uri = Uri.fromFile(new File(string));
                 imageUris.add((uri));
+                checkedStatus.add(false);
             }
         }
         //布局中recyclerView实例化
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         //将适配器初始化构造并实例化
-        ImagesAdapter imagesAdapter = new ImagesAdapter(imageUris);
+        imagesAdapter = new ImagesAdapter(imageUris,checkedStatus);
         //将实例化的适配器设置给recyclerView
         recyclerView.setAdapter(imagesAdapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -233,7 +235,6 @@ public class wardrobe_cloth extends AppCompatActivity
             try {
                 // 创建一个FileOutputStream来写入图片
                 FileOutputStream fos = new FileOutputStream(imageFile);
-
                 // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.close();
@@ -250,6 +251,7 @@ public class wardrobe_cloth extends AppCompatActivity
             String string= ""+getPath() +"/clothes_"+i+".jpg";
             Uri uri = Uri.fromFile(new File(string));
             imageUris.add((uri));
+            checkedStatus.add(false);
         }
     }
 
