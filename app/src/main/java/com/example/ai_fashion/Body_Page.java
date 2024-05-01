@@ -17,6 +17,8 @@ import androidx.room.Room;
 import com.DB.AppDatabase;
 import com.JavaBean.User;
 
+import java.util.regex.Pattern;
+
 public class Body_Page extends AppCompatActivity {
 
     ImageButton backTohomePage;
@@ -58,24 +60,82 @@ public class Body_Page extends AppCompatActivity {
         user_height = ""+user.getUser_height();
         user_weight = ""+user.getUser_weight();
         user_proportion = ""+user.getUser_proportion();
-        //如果用户没有填写信息，则设置为空
+        //如果用户没有填写信息，则设置为未填写
         if(user_height.equals("0.0")&&user_weight.equals("0.0"))
         {
-            user_height="";
-            user_weight="";
-            user_proportion="";
+            user_height="未填写";
+            user_weight="未填写";
+            user_proportion="未填写";
         }
-        //设置输入框的默认值为用户的信息
-        height_input.setText(user_height+"cm");
-        weight_input.setText(user_weight+"kg");
-        proportion_input.setText(user_proportion);
+
+        //设置输入框的默认值为用户的信息并加上单位
+        if(user_height.equals("未填写"))
+        {
+            height_input.setText(user_height);
+        }
+        else
+        {
+            height_input.setText(user_height+"cm");
+        }
+        if(user_weight.equals("未填写"))
+        {
+            weight_input.setText(user_weight);
+        }
+        else
+        {
+            weight_input.setText(user_weight+"kg");
+        }
+        if(user_proportion.equals("未填写"))
+        {
+            proportion_input.setText(user_proportion);
+        }
+        else
+        {
+            proportion_input.setText(user_proportion);
+        }
+
         Button modify = findViewById(R.id.modify_button);
         //修改按钮点击事件
         modify.setOnClickListener(v -> {
             //获取用户输入的信息
-            height = height_input.getText().toString().substring(0,height_input.getText().toString().length()-2);
-            weight = weight_input.getText().toString().substring(0,weight_input.getText().toString().length()-2);
+            height = height_input.getText().toString();
+            weight = weight_input.getText().toString();
             proportion = proportion_input.getText().toString();
+            //去掉单位
+            height = height.replace("cm","");
+            weight = weight.replace("kg","");
+            if(height.equals("未填写"))
+            {
+                height="0.0";
+            }
+            if(weight.equals("未填写"))
+            {
+                weight="0.0";
+            }
+            if(proportion.equals("未填写"))
+            {
+                proportion="0.0";
+            }
+            if(height.equals("")||weight.equals("")||proportion.equals(""))
+            {
+                Toast.makeText(Body_Page.this,"请填写完整信息",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(!Pattern.matches("^[0-9]*\\.?[0-9]+$", height))
+            {
+                height_input.setError("请输入正确的身高");
+                return;
+            }
+            if(!Pattern.matches("^[0-9]*\\.?[0-9]+$", weight))
+            {
+                weight_input.setError("请输入正确的体重");
+                return;
+            }
+            if(!Pattern.matches("^0\\.[0-9]+$", proportion))
+            {
+                proportion_input.setError("请输入正确的身材比例");
+                return;
+            }
             //判断用户是否修改了信息
             boolean not_modified=height.equals(user_height)&&weight.equals(user_weight)&&proportion.equals(user_proportion);
             if(not_modified)
