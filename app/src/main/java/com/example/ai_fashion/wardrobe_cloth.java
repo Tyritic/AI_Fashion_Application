@@ -67,13 +67,12 @@ public class wardrobe_cloth extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wardrobe_cloth);
-        //检查是否具有存储权限
+        //检查是否具有相机权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求存储权限
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
         }
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_wardrobe_cloth);
         cloth_title = findViewById(R.id.cloth_title);
         //获取用户账号和密码，通过上一个页面传递过来的数据
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")

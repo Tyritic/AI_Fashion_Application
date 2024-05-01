@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +52,13 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         wardrobe_cloth.uploadPictures.setVisibility(View.INVISIBLE);
         wardrobe_cloth.cloth_cancel.setVisibility(View.VISIBLE);
         wardrobe_cloth.cloth_confirm.setVisibility(View.VISIBLE);
+
+
+//        wardrobe_trousers.trousers_backTohomePage.setVisibility(View.INVISIBLE);
+//        wardrobe_trousers.trousers_title.setText("删除");
+//        wardrobe_trousers.trousers_uploadPictures.setVisibility(View.INVISIBLE);
+//        wardrobe_trousers.trousers_cancel.setVisibility(View.VISIBLE);
+//        wardrobe_trousers.trousers_confirm.setVisibility(View.VISIBLE);
 
 
         showCheckBoxes = true;

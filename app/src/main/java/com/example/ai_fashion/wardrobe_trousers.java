@@ -1,8 +1,12 @@
 package com.example.ai_fashion;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,12 +47,18 @@ import java.util.List;
 public class wardrobe_trousers extends AppCompatActivity
 {
     private static final int PICK_IMAGE = 1;
-    private Dialog mDialog;
     private static final int TAKE_PHOTO = 2;
-    public static final int REQUSET_CAMERA_PERMISSION  = 5555;
+    private Dialog mDialog;
     String user_account;
     String user_password;
     User user;
+    public static final int REQUSET_CAMERA_PERMISSION  = 5555;
+    public static ImageButton trousers_backTohomePage;
+    public static TextView trousers_title;
+    public static ImageButton trousers_uploadPictures;
+    //cycleView更改
+    public static TextView trousers_cancel;
+    public static TextView trousers_confirm;
     private List<Uri> imageUris = new ArrayList<>();
     private List<Boolean> checkedStatus=new ArrayList<>();
     ImagesAdapter imagesAdapter;
@@ -55,13 +66,14 @@ public class wardrobe_trousers extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_trousers);
+        //检查是否具有相机权限
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            // 如果没有权限，请求存储权限
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
+        // 如果没有权限，请求存储权限
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
         }
-        ImageButton backTohomePage = findViewById(R.id.trousers_back_to_home_page);
+        EdgeToEdge.enable(this);
+        trousers_title = findViewById(R.id.trousers_title);
         //获取用户账号和密码，通过上一个页面传递过来的数据
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
@@ -75,23 +87,53 @@ public class wardrobe_trousers extends AppCompatActivity
 //        else
 //            Toast.makeText(wardrobe_trousers.this,"用户名："+user_account, Toast.LENGTH_SHORT).show();
         user = DB.userDao().findUser(user_account,user_password);
-        backTohomePage.setOnClickListener(v -> {
+        trousers_backTohomePage = findViewById(R.id.trousers_back_to_home_page);
+        trousers_backTohomePage.setOnClickListener(v -> {
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
-            bundle.putString("user_account",user_account);
-            bundle.putString("user_password",user_password);
+            if(user_account!=null&&user_password!=null)
+            {
+                //Toast.makeText(wardrobe_cloth.this,"wardrobe_cloth向Home_Page发送成功",Toast.LENGTH_SHORT).show();
+                bundle.putString("user_account",user_account);
+                bundle.putString("user_password",user_password);
+            }
+            else
+            {
+                Toast.makeText(wardrobe_trousers.this,"wardrobe_cloth向Home_Page发送失败",Toast.LENGTH_SHORT).show();
+            }
             intent.setClass(this, Home_Page.class);
             intent.putExtra("fragment_flag", 0);
             intent.putExtras(bundle);
             startActivity(intent);
         });
-        ImageButton uploadPictures = findViewById(R.id.trousers_add_image);
-        uploadPictures.setOnClickListener(v -> {
+        trousers_uploadPictures = findViewById(R.id.trousers_add_image);
+        trousers_uploadPictures.setOnClickListener(v -> {
             showDialog();
         });
+        trousers_cancel = findViewById(R.id.trousers_cancel);
+        trousers_cancel.setVisibility(View.INVISIBLE);
+        trousers_cancel.setOnClickListener(v -> {
+            imagesAdapter.hideCheckBoxes();
+            trousers_backTohomePage.setVisibility(View.VISIBLE);
+            trousers_title.setText("衣服");
+            trousers_uploadPictures.setVisibility(View.VISIBLE);
+            trousers_cancel.setVisibility(View.INVISIBLE);
+            trousers_confirm.setVisibility(View.INVISIBLE);
 
-
+        });
+        trousers_confirm = findViewById(R.id.trousers_confirm);
+        trousers_confirm.setVisibility(View.INVISIBLE);
+        trousers_confirm.setOnClickListener(v -> {
+            imagesAdapter.deleteSelectedImages();
+            trousers_backTohomePage.setVisibility(View.VISIBLE);
+            trousers_title.setText("衣服");
+            imagesAdapter.hideCheckBoxes();
+            trousers_uploadPictures.setVisibility(View.VISIBLE);
+            trousers_cancel.setVisibility(View.INVISIBLE);
+            trousers_confirm.setVisibility(View.INVISIBLE);
+        });
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -115,6 +157,7 @@ public class wardrobe_trousers extends AppCompatActivity
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
     }
+
     private void initShareDialog() {
         mDialog = new Dialog(this, R.style.dialogStyle);
         mDialog.setCanceledOnTouchOutside(true);
