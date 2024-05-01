@@ -27,6 +27,16 @@
             android:background="@drawable/backtohomepage"
             android:src="@drawable/arrow_circle_left" />
 
+        <TextView
+            android:id="@+id/shoes_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="取消"
+            />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -34,11 +44,13 @@
             android:background="@drawable/divider" />
 
         <TextView
+            android:id="@+id/shoes_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/shoes"
             android:textSize="20sp" />
+
         <ImageButton
             android:id="@+id/shoes_add_image"
             android:layout_width="wrap_content"
@@ -47,6 +59,15 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="17dp"
             android:background="@drawable/add" />
+
+        <TextView
+            android:id="@+id/shoes_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:text="确定" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -35,6 +35,7 @@ import androidx.room.Room;
 import com.DB.AppDatabase;
 import com.JavaBean.User;
 import com.adapter.ImagesAdapter;
+import com.adapter.Trousers_Images_Adapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,7 +62,7 @@ public class wardrobe_trousers extends AppCompatActivity
     public static TextView trousers_confirm;
     private List<Uri> imageUris = new ArrayList<>();
     private List<Boolean> checkedStatus=new ArrayList<>();
-    ImagesAdapter imagesAdapter;
+    Trousers_Images_Adapter imagesAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -115,7 +116,7 @@ public class wardrobe_trousers extends AppCompatActivity
         trousers_cancel.setOnClickListener(v -> {
             imagesAdapter.hideCheckBoxes();
             trousers_backTohomePage.setVisibility(View.VISIBLE);
-            trousers_title.setText("衣服");
+            trousers_title.setText("裤子");
             trousers_uploadPictures.setVisibility(View.VISIBLE);
             trousers_cancel.setVisibility(View.INVISIBLE);
             trousers_confirm.setVisibility(View.INVISIBLE);
@@ -126,7 +127,7 @@ public class wardrobe_trousers extends AppCompatActivity
         trousers_confirm.setOnClickListener(v -> {
             imagesAdapter.deleteSelectedImages();
             trousers_backTohomePage.setVisibility(View.VISIBLE);
-            trousers_title.setText("衣服");
+            trousers_title.setText("裤子");
             imagesAdapter.hideCheckBoxes();
             trousers_uploadPictures.setVisibility(View.VISIBLE);
             trousers_cancel.setVisibility(View.INVISIBLE);
@@ -149,7 +150,7 @@ public class wardrobe_trousers extends AppCompatActivity
         //布局中recyclerView实例化
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         //将适配器初始化构造并实例化
-        imagesAdapter = new ImagesAdapter(imageUris,checkedStatus);
+        imagesAdapter = new Trousers_Images_Adapter(imageUris,checkedStatus);
         //将实例化的适配器设置给recyclerView
         recyclerView.setAdapter(imagesAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
