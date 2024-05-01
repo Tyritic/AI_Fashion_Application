@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -29,6 +30,7 @@ import androidx.room.Room;
 import com.DB.AppDatabase;
 import com.JavaBean.User;
 import com.adapter.ImagesAdapter;
+import com.adapter.Shoes_Images_Adapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,9 +49,15 @@ public class wardrobe_shoes extends AppCompatActivity
     String user_account;
     String user_password;
     User user;
+    public static ImageButton shoes_backTohomePage;
+    public static TextView shoes_title;
+    public static ImageButton shoes_uploadPictures;
+    //cycleView更改
+    public static TextView shoes_cancel;
+    public static TextView shoes_confirm;
     private List<Uri> imageUris = new ArrayList<>();
     private List<Boolean> checkedStatus=new ArrayList<>();
-    ImagesAdapter imagesAdapter;
+    Shoes_Images_Adapter imagesAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -60,7 +68,8 @@ public class wardrobe_shoes extends AppCompatActivity
             // 如果没有权限，请求存储权限
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
         }
-        ImageButton backTohomePage = findViewById(R.id.shoes_back_to_home_page);
+        shoes_title = findViewById(R.id.shoes_title);
+        shoes_backTohomePage = findViewById(R.id.shoes_back_to_home_page);
         //获取用户账号和密码，通过上一个页面传递过来的数据
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
@@ -74,7 +83,7 @@ public class wardrobe_shoes extends AppCompatActivity
 //        else
 //            Toast.makeText(wardrobe_shoes.this,"用户名："+user_account, Toast.LENGTH_SHORT).show();
         user = DB.userDao().findUser(user_account,user_password);
-        backTohomePage.setOnClickListener(v -> {
+        shoes_backTohomePage.setOnClickListener(v -> {
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
             bundle.putString("user_account",user_account);
@@ -84,9 +93,31 @@ public class wardrobe_shoes extends AppCompatActivity
             intent.putExtras(bundle);
             startActivity(intent);
         });
-        ImageButton uploadPictures = findViewById(R.id.shoes_add_image);
-        uploadPictures.setOnClickListener(v -> {
+        shoes_uploadPictures = findViewById(R.id.shoes_add_image);
+        shoes_uploadPictures.setOnClickListener(v -> {
             showDialog();
+        });
+        shoes_cancel = findViewById(R.id.shoes_cancel);
+        shoes_cancel.setVisibility(View.INVISIBLE);
+        shoes_cancel.setOnClickListener(v -> {
+            imagesAdapter.hideCheckBoxes();
+            shoes_backTohomePage.setVisibility(View.VISIBLE);
+            shoes_title.setText("裤子");
+            shoes_uploadPictures.setVisibility(View.VISIBLE);
+            shoes_cancel.setVisibility(View.INVISIBLE);
+            shoes_confirm.setVisibility(View.INVISIBLE);
+
+        });
+        shoes_confirm = findViewById(R.id.shoes_confirm);
+        shoes_confirm.setVisibility(View.INVISIBLE);
+        shoes_confirm.setOnClickListener(v -> {
+            imagesAdapter.deleteSelectedImages();
+            shoes_backTohomePage.setVisibility(View.VISIBLE);
+            shoes_title.setText("裤子");
+            imagesAdapter.hideCheckBoxes();
+            shoes_uploadPictures.setVisibility(View.VISIBLE);
+            shoes_cancel.setVisibility(View.INVISIBLE);
+            shoes_confirm.setVisibility(View.INVISIBLE);
         });
     }
     @Override
@@ -104,7 +135,7 @@ public class wardrobe_shoes extends AppCompatActivity
         //布局中recyclerView实例化
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         //将适配器初始化构造并实例化
-        imagesAdapter = new ImagesAdapter(imageUris,checkedStatus);
+        imagesAdapter = new Shoes_Images_Adapter(imageUris,checkedStatus);
         //将实例化的适配器设置给recyclerView
         recyclerView.setAdapter(imagesAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
