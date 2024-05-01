@@ -9,9 +9,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
 import com.DB.AppDatabase;
@@ -21,10 +18,12 @@ import java.util.regex.Pattern;
 
 public class Body_Page extends AppCompatActivity {
 
-    ImageButton backTohomePage;
-    EditText height_input;
-    EditText weight_input;
-    EditText proportion_input;
+    ImageButton ImageButton_backTohomePage;
+    EditText mEditTextHeight;
+    EditText mEditTextWeight;
+    EditText mEditTextProportion;
+    Button button_modify;
+    AppDatabase DB;
     String user_account;
     String user_password;
     String user_height;
@@ -47,19 +46,21 @@ public class Body_Page extends AppCompatActivity {
         {
             Toast.makeText(Body_Page.this,"Mine_Fragment接收失败",Toast.LENGTH_SHORT).show();
         }
-        else if(user_account!=null&&user_password!=null)
-        {
-            //Toast.makeText(Body_Page.this,"Mine_Fragment接收成功",Toast.LENGTH_SHORT).show();
-        }
-        AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
+        DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         user = DB.userDao().findUser(user_account,user_password);
-        height_input = findViewById(R.id.height_input);
-        weight_input = findViewById(R.id.weight_input);
-        proportion_input = findViewById(R.id.proportion_input);
+        //初始化组件
+        mEditTextHeight = findViewById(R.id.height_input);
+        mEditTextWeight = findViewById(R.id.weight_input);
+        mEditTextProportion = findViewById(R.id.proportion_input);
+        button_modify = findViewById(R.id.modify_button);
+        ImageButton_backTohomePage = findViewById(R.id.back_to_home_page);
+
+        //获取用户的信息
         user_height = ""+user.getUser_height();
         user_weight = ""+user.getUser_weight();
         user_proportion = ""+user.getUser_proportion();
+
         //如果用户没有填写信息，则设置为未填写
         if(user_height.equals("0.0")&&user_weight.equals("0.0"))
         {
@@ -71,39 +72,41 @@ public class Body_Page extends AppCompatActivity {
         //设置输入框的默认值为用户的信息并加上单位
         if(user_height.equals("未填写"))
         {
-            height_input.setText(user_height);
+            mEditTextHeight.setText(user_height);
         }
         else
         {
-            height_input.setText(user_height+"cm");
+            mEditTextHeight.setText(user_height+"cm");
         }
         if(user_weight.equals("未填写"))
         {
-            weight_input.setText(user_weight);
+            mEditTextWeight.setText(user_weight);
         }
         else
         {
-            weight_input.setText(user_weight+"kg");
+            mEditTextWeight.setText(user_weight+"kg");
         }
         if(user_proportion.equals("未填写"))
         {
-            proportion_input.setText(user_proportion);
+            mEditTextProportion.setText(user_proportion);
         }
         else
         {
-            proportion_input.setText(user_proportion);
+            mEditTextProportion.setText(user_proportion);
         }
 
-        Button modify = findViewById(R.id.modify_button);
         //修改按钮点击事件
-        modify.setOnClickListener(v -> {
+        button_modify.setOnClickListener(v -> {
             //获取用户输入的信息
-            height = height_input.getText().toString();
-            weight = weight_input.getText().toString();
-            proportion = proportion_input.getText().toString();
+            height = mEditTextHeight.getText().toString();
+            weight = mEditTextWeight.getText().toString();
+            proportion = mEditTextProportion.getText().toString();
+
             //去掉单位
             height = height.replace("cm","");
             weight = weight.replace("kg","");
+
+            //如果用户没有填写信息，则设置为0.0
             if(height.equals("未填写"))
             {
                 height="0.0";
@@ -116,24 +119,24 @@ public class Body_Page extends AppCompatActivity {
             {
                 proportion="0.0";
             }
-            if(height.equals("")||weight.equals("")||proportion.equals(""))
+            if(height.isEmpty() || weight.isEmpty() || proportion.isEmpty())
             {
                 Toast.makeText(Body_Page.this,"请填写完整信息",Toast.LENGTH_SHORT).show();
                 return;
             }
             if(!Pattern.matches("^[0-9]*\\.?[0-9]+$", height))
             {
-                height_input.setError("请输入正确的身高");
+                mEditTextHeight.setError("请输入正确的身高");
                 return;
             }
             if(!Pattern.matches("^[0-9]*\\.?[0-9]+$", weight))
             {
-                weight_input.setError("请输入正确的体重");
+                mEditTextWeight.setError("请输入正确的体重");
                 return;
             }
             if(!Pattern.matches("^0\\.[0-9]+$", proportion))
             {
-                proportion_input.setError("请输入正确的身材比例");
+                mEditTextProportion.setError("请输入正确的身材比例");
                 return;
             }
             //判断用户是否修改了信息
@@ -144,18 +147,6 @@ public class Body_Page extends AppCompatActivity {
             }
             else
             {
-//                User user1 = new User();
-//                user1.setUser_account(user.getUser_account());
-//                user1.setUser_password(user_password);
-//                user1.setUser_age(user.getUser_age());
-//                user1.setUser_nickname(user.getUser_nickname());
-//                user1.setUser_id(user.getUser_id());
-//                user1.setUser_gender(user.getUser_gender());
-//                user1.setUser_height(Double.parseDouble(height));
-//                user1.setUser_weight(Double.parseDouble(weight));
-//                user1.setUser_proportion(Double.parseDouble(proportion));
-//                user1.setUser_icon(user.getUser_icon());
-//                DB.userDao().updateUser(user1);
                 user.setUser_height(Double.parseDouble(height));
                 user.setUser_weight(Double.parseDouble(weight));
                 user.setUser_proportion(Double.parseDouble(proportion));
@@ -163,9 +154,9 @@ public class Body_Page extends AppCompatActivity {
                 Toast.makeText(Body_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
             }
         });
+
         //返回按钮
-        backTohomePage = findViewById(R.id.back_to_home_page);
-        backTohomePage.setOnClickListener(v -> {
+        ImageButton_backTohomePage.setOnClickListener(v -> {
             //将用户账号和密码传递给下一个页面
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
@@ -174,10 +165,6 @@ public class Body_Page extends AppCompatActivity {
             if(user_account==null||user_password==null)
             {
                 Toast.makeText(Body_Page.this,"Body_Page发送失败",Toast.LENGTH_SHORT).show();
-            }
-            else if(user_account!=null&&user_password!=null)
-            {
-                //Toast.makeText(Body_Page.this,"Body_Page发送成功",Toast.LENGTH_SHORT).show();
             }
             intent.setClass(this, Home_Page.class);
             intent.putExtra("fragment_flag", 2);

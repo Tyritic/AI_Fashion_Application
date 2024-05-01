@@ -2,6 +2,7 @@ package com.example.ai_fashion;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -51,9 +52,9 @@ public class wardrobe_trousers extends AppCompatActivity
     public static ImageButton trousers_backTohomePage;
     public static TextView trousers_title;
     public static ImageButton trousers_uploadPictures;
-    //cycleView更改
     public static TextView trousers_cancel;
     public static TextView trousers_confirm;
+    AppDatabase DB;
     private List<Uri> imageUris = new ArrayList<>();
     private List<Boolean> checkedStatus=new ArrayList<>();
     Trousers_Images_Adapter imagesAdapter;
@@ -62,33 +63,36 @@ public class wardrobe_trousers extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wardrobe_trousers);
+
         //检查是否具有相机权限
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
         // 如果没有权限，请求存储权限
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
         }
+
         EdgeToEdge.enable(this);
+        //初始化组件
         trousers_title = findViewById(R.id.trousers_title);
+        trousers_backTohomePage = findViewById(R.id.trousers_back_to_home_page);
+        trousers_uploadPictures = findViewById(R.id.trousers_add_image);
+        trousers_cancel = findViewById(R.id.trousers_cancel);
+        trousers_confirm = findViewById(R.id.trousers_confirm);
+
         //获取用户账号和密码，通过上一个页面传递过来的数据
-        AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
+        DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         Intent intent1 = getIntent();
         user_account = intent1.getStringExtra("user_account");
         user_password = intent1.getStringExtra("user_password");
-//        if(user_account!=null)
-//        {
-//            Toast.makeText(wardrobe_trousers.this,"用户名："+user_account,Toast.LENGTH_SHORT).show();
-//        }
-//        else
-//            Toast.makeText(wardrobe_trousers.this,"用户名："+user_account, Toast.LENGTH_SHORT).show();
         user = DB.userDao().findUser(user_account,user_password);
-        trousers_backTohomePage = findViewById(R.id.trousers_back_to_home_page);
+
+        //返回主页点击事件
         trousers_backTohomePage.setOnClickListener(v -> {
+            //创建一个Intent对象，启动Home_Page页面，传递用户账号和密码
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
             if(user_account!=null&&user_password!=null)
             {
-                //Toast.makeText(wardrobe_cloth.this,"wardrobe_cloth向Home_Page发送成功",Toast.LENGTH_SHORT).show();
                 bundle.putString("user_account",user_account);
                 bundle.putString("user_password",user_password);
             }
@@ -101,11 +105,13 @@ public class wardrobe_trousers extends AppCompatActivity
             intent.putExtras(bundle);
             startActivity(intent);
         });
-        trousers_uploadPictures = findViewById(R.id.trousers_add_image);
+
+        //上传图片点击事件
         trousers_uploadPictures.setOnClickListener(v -> {
             showDialog();
         });
-        trousers_cancel = findViewById(R.id.trousers_cancel);
+
+        //取消按钮点击事件
         trousers_cancel.setVisibility(View.INVISIBLE);
         trousers_cancel.setOnClickListener(v -> {
             imagesAdapter.hideCheckBoxes();
@@ -116,7 +122,8 @@ public class wardrobe_trousers extends AppCompatActivity
             trousers_confirm.setVisibility(View.INVISIBLE);
 
         });
-        trousers_confirm = findViewById(R.id.trousers_confirm);
+
+        //确认按钮点击事件
         trousers_confirm.setVisibility(View.INVISIBLE);
         trousers_confirm.setOnClickListener(v -> {
             imagesAdapter.deleteSelectedImages();
@@ -175,6 +182,7 @@ public class wardrobe_trousers extends AppCompatActivity
             public void onClick(View v) {
                 //调用本地相册
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // 允许选择多张图片
                 startActivityForResult(intent, PICK_IMAGE);    //访问本地相册
                 //访问选中的图片
                 if (mDialog != null && mDialog.isShowing()){
@@ -198,79 +206,51 @@ public class wardrobe_trousers extends AppCompatActivity
         //横向充满
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null)
         {
-            //Toast.makeText(wardrobe_trousers.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(wardrobe_trousers.this,""+requestCode,Toast.LENGTH_SHORT).show();
-            int num=getNum();
-            Uri selectedImage = data.getData();
-            try {
-                // 获取图片的输入流
-                InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                // 将输入流解码为Bitmap
-                Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
-                String user_frame_name=""+user.getUser_id();
-                // 获取你之前创建的文件夹的路径
-                File directory = getFilesDir();
-                // 访问多级目录
-                File user_frame = new File(directory, user_frame_name);
-                File wardrobe = new File(user_frame, "wardrobe");
-                File trousers = new File(wardrobe, "trousers");
-//                if(trouserses.exists())
-//                {
-//                    Toast.makeText(wardrobe_trousers.this,"衣柜文件夹已存在",Toast.LENGTH_SHORT).show();
-//                }
-                // 在这个文件夹中创建一个新的文件来保存图片
-                File imageFile = new File(trousers, "trousers_"+num+".jpg");
-                if(imageFile.exists())
-                {
-                    Toast.makeText(wardrobe_trousers.this,"上传成功",Toast.LENGTH_SHORT).show();
+            if (data.getClipData() != null) {
+                // 用户选择了多张图片
+                ClipData clipData = data.getClipData();
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    Uri imageUri = clipData.getItemAt(i).getUri();
+                    // 处理每一张图片
+                    try {
+                        // 获取图片的输入流
+                        InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                        // 将输入流解码为Bitmap
+                        Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
+                        // 保存图片
+                        saveImage(selectedBitmap);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
-                // 创建一个FileOutputStream来写入图片
-                FileOutputStream fos = new FileOutputStream(imageFile);
-                // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
-                selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.close();
-                Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
-                //Toast.makeText(wardrobe_trousers.this,"第"+i+"张",Toast.LENGTH_SHORT).show();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else if (data.getData() != null) {
+                // 用户只选择了一张图片
+                Uri imageUri = data.getData();
+                try {
+                    // 获取图片的输入流
+                    InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    // 将输入流解码为Bitmap
+                    Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
+                    // 保存图片
+                    saveImage(selectedBitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
         else if(requestCode == TAKE_PHOTO && resultCode == RESULT_OK && data != null)
         {
-            //Toast.makeText(wardrobe_trousers.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(wardrobe_trousers.this,""+requestCode,Toast.LENGTH_SHORT).show();
-            int num=getNum();
+            //获取拍摄的图片
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            // 获取你之前创建的文件夹的路径
-            File directory = getFilesDir();
-            String user_frame_name=""+user.getUser_id();
-            // 访问多级目录
-            File user_frame = new File(directory, user_frame_name);
-            File wardrobe = new File(user_frame, "wardrobe");
-            File trouserses = new File(wardrobe, "trousers");
-            File imageFile = new File(trouserses, "trousers_"+num+".jpg");
-            try {
-                // 创建一个FileOutputStream来写入图片
-                FileOutputStream fos = new FileOutputStream(imageFile);
-
-                // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
-                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.close();
-                Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            saveImage(imageBitmap);
         }
         //上传图片后同步到RecyclerView
         for(int i=imageUris.size();i<getNum();i++) {
@@ -280,12 +260,15 @@ public class wardrobe_trousers extends AppCompatActivity
             checkedStatus.add(false);
         }
     }
+
     private void showDialog() {
         if (mDialog ==null){
             initShareDialog();
         }
         mDialog.show();
     }
+
+    //获取图片数量
     private int getNum()
     {
         String user_frame_name=""+user.getUser_id();
@@ -296,8 +279,13 @@ public class wardrobe_trousers extends AppCompatActivity
         File wardrobe = new File(user_frame, "wardrobe");
         File trousers = new File(wardrobe, "trousers");
         File[] files = trousers.listFiles();
-        return files.length;
+        if (files != null) {
+            return files.length;
+        }
+        return 0;
     }
+
+    //获取图片保存路径
     private String getPath()
     {
         String user_frame_name=""+user.getUser_id();
@@ -309,6 +297,25 @@ public class wardrobe_trousers extends AppCompatActivity
         File trousers = new File(wardrobe, "trousers");
         //File[] files = trousers.listFiles();
         return trousers.getPath();
+    }
+
+    private void saveImage(Bitmap bitmap) {
+        int num=getNum();
+        // 获取本地保存路径
+        File trousers = new File(getPath());
+        File imageFile = new File(trousers, "trousers_"+num+".jpg");
+        try {
+            // 创建一个FileOutputStream来写入图片
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+            Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -53,6 +53,7 @@ public class Dressing_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //定义天气图标和天气的对应关系
         Map<String, List<String>> iconWeatherMap = new HashMap<>();
         iconWeatherMap.put("风", Arrays.asList("有风", "平静", "微风", "和风", "清风", "强风/劲风", "疾风", "大风", "烈风", "风暴", "狂爆风", "飓风", "热带风暴", "龙卷风"));
         iconWeatherMap.put("多云", Arrays.asList("阴","少云", "晴间多云", "多云"));
@@ -62,10 +63,11 @@ public class Dressing_Fragment extends Fragment {
         iconWeatherMap.put("雨夹雪", Arrays.asList("雨雪天气", "雨夹雪", "阵雨夹雪"));
         iconWeatherMap.put("雨", Arrays.asList("阵雨", "雷阵雨", "雷阵雨并伴有冰雹", "小雨", "中雨", "大雨", "暴雨", "大暴雨", "特大暴雨", "强阵雨", "强雷阵雨", "极端降雨", "毛毛雨/细雨", "雨", "小雨-中雨", "中雨-大雨", "大雨-暴雨", "暴雨-大暴雨", "大暴雨-特大暴雨", "冻雨"));
         iconWeatherMap.put("霾", Arrays.asList("霾", "中度霾", "重度霾", "严重霾", "未知"));
+
+        //接收从Home_Page和Account_Page传过来的Bundle
         Bundle bundle = getArguments();//接收从Home_Page和Account_Page传过来的Bundle
         if(bundle!=null)//判空
         {
-            //Toast.makeText(getActivity(),"Dressing_Fragment成功接收数据",Toast.LENGTH_SHORT).show();
             user_account = bundle.getString("user_account");
             user_password = bundle.getString("user_password");
         }
@@ -80,6 +82,7 @@ public class Dressing_Fragment extends Fragment {
         TextView location_text = view.findViewById(R.id.location_text);
         TextView weather_text = view.findViewById(R.id.weather_text);
         ImageView weather_icon = view.findViewById(R.id.weather_icon);
+
         //检查是否具有网络权限
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求网络权限
@@ -91,7 +94,6 @@ public class Dressing_Fragment extends Fragment {
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
                     String location_response = (String) msg.obj;
-                    // 在这里，你可以获取到 response 的值
                     if(location_response==null)
                     {
                         Toast.makeText(getActivity(), "location_response是空", Toast.LENGTH_SHORT).show();
@@ -99,6 +101,7 @@ public class Dressing_Fragment extends Fragment {
                     else
                     {
                         try {
+                            //解析定位信息
                             JSONObject location_json = new JSONObject(location_response);
                             JSONObject regeocode = location_json.getJSONObject("regeocode");
                             JSONObject addressComponent = regeocode.getJSONObject("addressComponent");
@@ -114,7 +117,8 @@ public class Dressing_Fragment extends Fragment {
                                     location_text.setText(location);
                                 }
                             });
-                            //Toast.makeText(getActivity(),address, Toast.LENGTH_SHORT).show();
+
+                            // 获取天气信息
                             new Thread(() -> {
                                 weather_response = getWeather(adcode);
                                 if(weather_response==null)
@@ -125,7 +129,6 @@ public class Dressing_Fragment extends Fragment {
                                 }
                                 else
                                 {
-                                    //System.out.println(weather_response);
                                     try {
                                         JSONObject weather_json = new JSONObject(weather_response);
                                         JSONObject lives = weather_json.getJSONArray("lives").getJSONObject(0);
@@ -171,9 +174,6 @@ public class Dressing_Fragment extends Fragment {
                                                 }
                                             }
                                         });
-//                                      Looper.prepare();
-//                                      Toast.makeText(getActivity(), "天气："+weather+" 温度："+temperature+"°C", Toast.LENGTH_SHORT).show();
-//                                      Looper.loop();
                                     }
                                     catch (JSONException e) {
                                         e.printStackTrace();
@@ -188,6 +188,7 @@ public class Dressing_Fragment extends Fragment {
                 }
             }
         };
+
         LocationUtils.getInstance(getActivity()).getLocation(new LocationUtils.LocationCallBack() {
             @Override
             public void setLocation(Location location) {
@@ -213,6 +214,8 @@ public class Dressing_Fragment extends Fragment {
         });
         return view;
     }
+
+    //获取地址信息
     public String getAddress(String lon, String lat) {
         String urlString = location_url_head + lon + "," + lat + "&key="+api_key+"&radius=1000&extensions=base";
         try {
@@ -240,6 +243,7 @@ public class Dressing_Fragment extends Fragment {
         return null;
     }
 
+    //获取天气信息
     public String getWeather (String adcode) {
         String urlString = weather_url_head + adcode + "&key="+api_key+"&output=json&extensions=base";
         try {

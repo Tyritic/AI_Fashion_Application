@@ -3,14 +3,12 @@ package com.example.ai_fashion;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.health.connect.datatypes.units.Length;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +23,11 @@ public class Mine_Fragment extends Fragment {
     String user_password;
     String imagePath;
     CircleImage circleImage;
+    AppDatabase DB;
+    Button button_accountInformation;
+    Button button_bodyInformation;
+    Button button_log_out;
+    User user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,14 +44,15 @@ public class Mine_Fragment extends Fragment {
         }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
-        // Find the button and set the click listener
-        Button accountInformationButton = view.findViewById(R.id.account_information_button);
-        Button bodyInformationButton = view.findViewById(R.id.body_information_button);
-        Button log_out_button = view.findViewById(R.id.log_out_button);
+
+        // 初始化组件
+        button_accountInformation = view.findViewById(R.id.account_information_button);
+        button_bodyInformation = view.findViewById(R.id.body_information_button);
+        button_log_out = view.findViewById(R.id.log_out_button);
         circleImage = view.findViewById(R.id.head_image);
-        AppDatabase DB = Room.databaseBuilder(getActivity(), AppDatabase.class,"Database")
+        DB = Room.databaseBuilder(getActivity(), AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
-        User user = DB.userDao().findUser(user_account,user_password);
+        user = DB.userDao().findUser(user_account,user_password);
         if(user!=null)
         {
             imagePath=user.getUser_icon();
@@ -61,7 +65,7 @@ public class Mine_Fragment extends Fragment {
             }
 
         }
-        log_out_button.setOnClickListener(new View.OnClickListener() {
+        button_log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -71,8 +75,9 @@ public class Mine_Fragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         //账号信息点击事件
-        accountInformationButton.setOnClickListener(new View.OnClickListener() {
+        button_accountInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -92,8 +97,9 @@ public class Mine_Fragment extends Fragment {
                 startActivity(intent);
                 }
             });
+
         //身材信息点击事件
-        bodyInformationButton.setOnClickListener(new View.OnClickListener() {
+        button_bodyInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
