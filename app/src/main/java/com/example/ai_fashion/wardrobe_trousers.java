@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -88,6 +89,8 @@ public class wardrobe_trousers extends AppCompatActivity
         uploadPictures.setOnClickListener(v -> {
             showDialog();
         });
+
+
     }
     @Override
     protected void onStart() {

@@ -3,7 +3,10 @@ package com.example.ai_fashion;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +18,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
@@ -47,8 +53,12 @@ public class wardrobe_cloth extends AppCompatActivity
     String user_password;
     User user;
     public static final int REQUSET_CAMERA_PERMISSION  = 5555;
-
+    public static ImageButton backTohomePage;
+    public static TextView cloth_title;
+    public static ImageButton uploadPictures;
     //cycleView更改
+    public static TextView cloth_cancel;
+    public static TextView cloth_confirm;
     private List<Uri> imageUris = new ArrayList<>();
     private List<Boolean> checkedStatus=new ArrayList<>();
     ImagesAdapter imagesAdapter;
@@ -64,6 +74,7 @@ public class wardrobe_cloth extends AppCompatActivity
         }
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_cloth);
+        cloth_title = findViewById(R.id.cloth_title);
         //获取用户账号和密码，通过上一个页面传递过来的数据
         AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
@@ -77,7 +88,7 @@ public class wardrobe_cloth extends AppCompatActivity
 //        else
 //            Toast.makeText(wardrobe_cloth.this,"用户名："+user_account,Toast.LENGTH_SHORT).show();
         user = DB.userDao().findUser(user_account,user_password);
-        ImageButton backTohomePage = findViewById(R.id.cloth_back_to_home_page);
+        backTohomePage = findViewById(R.id.cloth_back_to_home_page);
         backTohomePage.setOnClickListener(v -> {
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
@@ -96,11 +107,32 @@ public class wardrobe_cloth extends AppCompatActivity
             intent.putExtras(bundle);
             startActivity(intent);
         });
-        ImageButton uploadPictures = findViewById(R.id.cloth_add_image);
+        uploadPictures = findViewById(R.id.cloth_add_image);
         uploadPictures.setOnClickListener(v -> {
             showDialog();
         });
+        cloth_cancel = findViewById(R.id.cloth_cancel);
+        cloth_cancel.setVisibility(View.INVISIBLE);
+        cloth_cancel.setOnClickListener(v -> {
+            imagesAdapter.hideCheckBoxes();
+            backTohomePage.setVisibility(View.VISIBLE);
+            cloth_title.setText("衣服");
+            uploadPictures.setVisibility(View.VISIBLE);
+            cloth_cancel.setVisibility(View.INVISIBLE);
+            cloth_confirm.setVisibility(View.INVISIBLE);
 
+        });
+        cloth_confirm = findViewById(R.id.cloth_confirm);
+        cloth_confirm.setVisibility(View.INVISIBLE);
+        cloth_confirm.setOnClickListener(v -> {
+            imagesAdapter.deleteSelectedImages();
+            backTohomePage.setVisibility(View.VISIBLE);
+            cloth_title.setText("衣服");
+            imagesAdapter.hideCheckBoxes();
+            uploadPictures.setVisibility(View.VISIBLE);
+            cloth_cancel.setVisibility(View.INVISIBLE);
+            cloth_confirm.setVisibility(View.INVISIBLE);
+        });
     }
 
     @Override
@@ -286,6 +318,8 @@ public class wardrobe_cloth extends AppCompatActivity
         //File[] files = clothes.listFiles();
         return clothes.getPath();
     }
+
+
     //更改
     /*
     public void updateImageUris(List<Uri> newImageUris) {
