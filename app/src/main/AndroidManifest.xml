@@ -37,7 +37,7 @@
             android:name=".Body_Page"
             android:exported="false" />
         <activity
-            android:name=".wardrobe_cloth"
+            android:name=".wardrobe_clothes"
             android:exported="false" />
         <activity
             android:name=".wardrobe_trousers"

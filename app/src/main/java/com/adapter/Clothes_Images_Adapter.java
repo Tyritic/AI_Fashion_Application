@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ai_fashion.R;
-import com.example.ai_fashion.wardrobe_cloth;
+import com.example.ai_fashion.wardrobe_clothes;
 
 import java.io.File;
 import java.util.List;
@@ -42,11 +42,11 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     holder.checkBox.setChecked(checkedStatus.get(position));
     holder.checkBox.setVisibility(showCheckBoxes ? View.VISIBLE : View.GONE);
     holder.itemView.setOnLongClickListener(v -> {
-        wardrobe_cloth.backTohomePage.setVisibility(View.INVISIBLE);
-        wardrobe_cloth.cloth_title.setText("删除");
-        wardrobe_cloth.uploadPictures.setVisibility(View.INVISIBLE);
-        wardrobe_cloth.cloth_cancel.setVisibility(View.VISIBLE);
-        wardrobe_cloth.cloth_confirm.setVisibility(View.VISIBLE);
+        wardrobe_clothes.backTohomePage.setVisibility(View.INVISIBLE);
+        wardrobe_clothes.cloth_title.setText("删除");
+        wardrobe_clothes.uploadPictures.setVisibility(View.INVISIBLE);
+        wardrobe_clothes.cloth_cancel.setVisibility(View.VISIBLE);
+        wardrobe_clothes.cloth_confirm.setVisibility(View.VISIBLE);
 
 
 //        wardrobe_trousers.trousers_backTohomePage.setVisibility(View.INVISIBLE);

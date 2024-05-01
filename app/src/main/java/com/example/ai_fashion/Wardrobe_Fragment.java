@@ -15,20 +15,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import java.util.Objects;
-
 
 public class Wardrobe_Fragment extends Fragment {
     String user_account;
     String user_password;
+    //初始化组件
+    Button button_clothes;
+    Button button_trousers;
+    Button button_shoes;
     public static final int REQUEST_STORAGE_PERMISSION = 6666;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle bundle = getArguments();//接收从Home_Page和Account_Page传过来的Bundle
+        //接收从Home_Page和Account_Page传过来的Bundle
+        Bundle bundle = getArguments();
         if(bundle!=null)//判空
         {
-            //Toast.makeText(getActivity(),"Wardrobe_Page接收成功",Toast.LENGTH_SHORT).show();
             user_account = bundle.getString("user_account");
             user_password = bundle.getString("user_password");
         }
@@ -36,21 +38,25 @@ public class Wardrobe_Fragment extends Fragment {
         {
             Toast.makeText(getActivity(),"Wardrobe_Page接收失败",Toast.LENGTH_SHORT).show();
         }
+
         //检查是否具有存储权限
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求存储权限
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
         }
-        // Inflate the layout for this fragment
+
+        //将fragment_wardrobe.xml布局文件加载到当前fragment中
         View view = inflater.inflate(R.layout.fragment_wardrobe, container, false);
-        // Find the button and set the click listener
-        Button clothButton = view.findViewById(R.id.cloth_button);
+        //初始化组件
+        button_clothes = view.findViewById(R.id.cloth_button);
+        button_trousers = view.findViewById(R.id.trousers_button);
+        button_shoes = view.findViewById(R.id.shoes_button);
         //衣服按钮点击
-        clothButton.setOnClickListener(new View.OnClickListener() {
+        button_clothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to start Account_Page
-                Intent intent = new Intent(getActivity(), wardrobe_cloth.class);
+                //创建一个Intent对象，启动wardrobe_cloth页面，传递用户账号和密码
+                Intent intent = new Intent(getActivity(), wardrobe_clothes.class);
                 if(user_account!=null&&user_password!=null)
                 {
                     intent.putExtra("user_account", user_account);
@@ -58,17 +64,17 @@ public class Wardrobe_Fragment extends Fragment {
                 }
                 else
                 {
-                    Toast.makeText(getActivity(),"空",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Wardrobe_Fragment向wardrobe_cloth传递失败",Toast.LENGTH_SHORT).show();
                 }
                 startActivity(intent);
             }
         });
-        Button trousersButton = view.findViewById(R.id.trousers_button);
+
         //裤子按钮点击
-        trousersButton.setOnClickListener(new View.OnClickListener() {
+        button_trousers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to start Account_Page
+                //创建一个Intent对象，启动wardrobe_trousers页面，传递用户账号和密码
                 Intent intent = new Intent(getActivity(), wardrobe_trousers.class);
                 if(user_account!=null&&user_password!=null)
                 {
@@ -77,16 +83,17 @@ public class Wardrobe_Fragment extends Fragment {
                 }
                 else
                 {
-                    Toast.makeText(getActivity(),"空",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Wardrobe_Fragment向wardrobe_trousers传递失败",Toast.LENGTH_SHORT).show();
                 }
                 startActivity(intent);
             }
         });
-        Button shoesButton = view.findViewById(R.id.shoes_button);
-        shoesButton.setOnClickListener(new View.OnClickListener() {
+
+        //鞋子按钮点击
+        button_shoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to start Account_Page
+                //创建一个Intent对象，启动wardrobe_shoes页面，传递用户账号和密码
                 Intent intent = new Intent(getActivity(), wardrobe_shoes.class);
                 if(user_account!=null&&user_password!=null)
                 {
@@ -95,7 +102,7 @@ public class Wardrobe_Fragment extends Fragment {
                 }
                 else
                 {
-                    Toast.makeText(getActivity(),"空",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Wardrobe_Fragment向wardrobe_shoes传递失败",Toast.LENGTH_SHORT).show();
                 }
                 startActivity(intent);
             }

@@ -54,7 +54,6 @@ public class Account_Page extends AppCompatActivity {
     String newPassword;
     User user;
     CircleImage circleImage;
-    String user_icon;
     private static final int PICK_IMAGE = 1;
     private static final int TAKE_PHOTO = 2;
     public static final int REQUSET_CAMERA_PERMISSION  = 5555;

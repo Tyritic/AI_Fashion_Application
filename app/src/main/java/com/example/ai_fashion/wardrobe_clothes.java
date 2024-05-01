@@ -38,7 +38,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class wardrobe_cloth extends AppCompatActivity
+public class wardrobe_clothes extends AppCompatActivity
 {
     private static final int PICK_IMAGE = 1;
     private static final int TAKE_PHOTO = 2;
@@ -93,7 +93,7 @@ public class wardrobe_cloth extends AppCompatActivity
             }
             else
             {
-                Toast.makeText(wardrobe_cloth.this,"wardrobe_cloth向Home_Page发送失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(wardrobe_clothes.this,"wardrobe_cloth向Home_Page发送失败",Toast.LENGTH_SHORT).show();
             }
             intent.setClass(this, Home_Page.class);
             intent.putExtra("fragment_flag", 0);
@@ -227,7 +227,7 @@ public class wardrobe_cloth extends AppCompatActivity
                 File imageFile = new File(clothes, "clothes_"+num+".jpg");
                 if(imageFile.exists())
                 {
-                    Toast.makeText(wardrobe_cloth.this,"上传成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(wardrobe_clothes.this,"上传成功",Toast.LENGTH_SHORT).show();
                 }
                 // 创建一个FileOutputStream来写入图片
                 FileOutputStream fos = new FileOutputStream(imageFile);

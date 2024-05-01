@@ -58,6 +58,7 @@ public class Home_Page extends AppCompatActivity {
     private Wardrobe_Fragment wardrobeFragment;
     private Dressing_Fragment dressingFragment;
     private Mine_Fragment mineFragment;
+    AppDatabase DB;
     User user;
 
     @Override
@@ -66,28 +67,22 @@ public class Home_Page extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
 
-            //初始化
+        //初始化组件
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         selectFragment(0);
-        AppDatabase DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
+        DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         //获取用户账号和密码，通过上一个页面传递过来的数据
         Intent intent = getIntent();
         user_account = intent.getStringExtra("user_account");
         user_password = intent.getStringExtra("user_password");
-//        if(user_password==null||user_account==null)
-//        {
-//            Toast.makeText(Home_Page.this,"Home_Page未接收到数据",Toast.LENGTH_SHORT).show();
-//        }
-//        else if(user_account!=null&&user_password!=null)
-//        {
-//            Toast.makeText(Home_Page.this,"Home_Page成功接收到数据",Toast.LENGTH_SHORT).show();
-//        }
+        //获取对应的用户信息
         user = DB.userDao().findUser(user_account,user_password);
         Gson gson = new Gson();
         String user_json = gson.toJson(user);
-
         //Toast.makeText(Home_Page.this,user_json,Toast.LENGTH_SHORT).show();
+
+        //创建用户文件夹
         String filename=""+user.getUser_id();
         File directory=new File(getFilesDir(),filename);
         if (!directory.exists()){
@@ -117,6 +112,8 @@ public class Home_Page extends AppCompatActivity {
         if (!icon.exists()){
             icon.mkdir();
         }
+
+        //下载默认头像
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_icon);
         File defaule_icon=new File(icon,"default_icon.jpg");
         new Thread(){
@@ -136,24 +133,19 @@ public class Home_Page extends AppCompatActivity {
                 }
             }
         }.start();
+
+        //如果用户没有头像，则设置默认头像
         if(user.getUser_icon()==null)
         {
-            User user1 = new User();
-            user1.setUser_id(user.getUser_id());
-            user1.setUser_account(user.getUser_account());
-            user1.setUser_password(user.getUser_password());
-            user1.setUser_icon(defaule_icon.getAbsolutePath());
-            user1.setUser_nickname(user.getUser_nickname());
-            user1.setUser_age(user.getUser_age());
-            user1.setUser_height(user.getUser_height());
-            user1.setUser_weight(user.getUser_weight());
-            user1.setUser_gender(user.getUser_gender());
-            user1.setUser_proportion(user.getUser_proportion());
-            DB.userDao().updateUser(user1);
+            user.setUser_icon(defaule_icon.getAbsolutePath());
+            DB.userDao().updateUser(user);
         }
+
+        //底部导航栏的点击事件
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                //判断点击的是哪个按钮
                 if(menuItem.getItemId()==R.id.navigation_wardrobe){
                     selectFragment(0);
                 } else if (menuItem.getItemId() ==R.id.navigation_dressing) {
@@ -164,6 +156,7 @@ public class Home_Page extends AppCompatActivity {
                 return false;
             }
         });
+        //获取上一个页面传递过来的fragment_flag，跳转回对应的页面
         int fragment_flag = getIntent().getIntExtra("fragment_flag", 0);
         if(fragment_flag == 0) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_wardrobe);
@@ -175,6 +168,8 @@ public class Home_Page extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.navigation_mine);
         }
     }
+
+    //选择Fragment
     private void selectFragment(int position) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         hideFragment(fragmentTransaction);
@@ -191,13 +186,12 @@ public class Home_Page extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 if(default_account==null||default_password==null)
                 {
-                    //Toast.makeText(Home_Page.this,"Home_Page向Wardrobe_Fragment发送失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home_Page.this,"Home_Page向Wardrobe_Fragment发送失败",Toast.LENGTH_SHORT).show();
                 }
                 else if(default_account!=null&&default_password!=null)
                 {
                     bundle.putString("user_account", default_account);
                     bundle.putString("user_password", default_password);
-                    //Toast.makeText(Home_Page.this,"Home_Page向Wardrobe_Fragment发送成功",Toast.LENGTH_SHORT).show();
                 }
                 wardrobeFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, wardrobeFragment);
@@ -225,7 +219,6 @@ public class Home_Page extends AppCompatActivity {
                 {
                     bundle.putString("user_account", default_account);
                     bundle.putString("user_password", default_password);
-                    //Toast.makeText(Home_Page.this,"Home_Page向Dressing_Fragment发送成功",Toast.LENGTH_SHORT).show();
                 }
                 dressingFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, dressingFragment);
@@ -244,13 +237,12 @@ public class Home_Page extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 if(user_account==null||user_password==null)
                 {
-                    //Toast.makeText(Home_Page.this,"Home_Page向Mine_Fragment发送失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home_Page.this,"Home_Page向Mine_Fragment发送失败",Toast.LENGTH_SHORT).show();
                 }
                 else if(user_account!=null&&user_password!=null)
                 {
                     bundle.putString("user_account", user_account);
                     bundle.putString("user_password", user_password);
-                    //Toast.makeText(Home_Page.this,"Home_Page向Mine_Fragment发送成功",Toast.LENGTH_SHORT).show();
                 }
                 mineFragment.setArguments(bundle);
                 fragmentTransaction.add(R.id.content, mineFragment);
@@ -264,6 +256,7 @@ public class Home_Page extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    //隐藏Fragment
     private void hideFragment(FragmentTransaction fragmentTransaction) {
         if(wardrobeFragment != null){
             fragmentTransaction.hide(wardrobeFragment);

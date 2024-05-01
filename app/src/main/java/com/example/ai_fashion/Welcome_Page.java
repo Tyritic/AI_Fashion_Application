@@ -9,13 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Welcome_Page extends AppCompatActivity {
 
-    Handler mhandler=new Handler();
+    Handler mhandler=new Handler();//创建一个Handler对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_welcome_page);
+        //延时1秒后跳转到登录页面
         mhandler.postDelayed(new Runnable() {
             @Override
             public void run() {
