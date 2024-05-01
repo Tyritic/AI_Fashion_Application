@@ -29,7 +29,6 @@ import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
-import com.adapter.ImagesAdapter;
 import com.adapter.Shoes_Images_Adapter;
 
 import java.io.File;
@@ -102,7 +101,7 @@ public class wardrobe_shoes extends AppCompatActivity
         shoes_cancel.setOnClickListener(v -> {
             imagesAdapter.hideCheckBoxes();
             shoes_backTohomePage.setVisibility(View.VISIBLE);
-            shoes_title.setText("裤子");
+            shoes_title.setText("鞋子");
             shoes_uploadPictures.setVisibility(View.VISIBLE);
             shoes_cancel.setVisibility(View.INVISIBLE);
             shoes_confirm.setVisibility(View.INVISIBLE);
@@ -113,7 +112,7 @@ public class wardrobe_shoes extends AppCompatActivity
         shoes_confirm.setOnClickListener(v -> {
             imagesAdapter.deleteSelectedImages();
             shoes_backTohomePage.setVisibility(View.VISIBLE);
-            shoes_title.setText("裤子");
+            shoes_title.setText("鞋子");
             imagesAdapter.hideCheckBoxes();
             shoes_uploadPictures.setVisibility(View.VISIBLE);
             shoes_cancel.setVisibility(View.INVISIBLE);

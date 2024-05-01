@@ -1,33 +1,28 @@
 package com.adapter;
 
 
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ai_fashion.R;
 import com.example.ai_fashion.wardrobe_cloth;
-import com.example.ai_fashion.wardrobe_trousers;
-import com.example.ai_fashion.wardrobe_shoes;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
+public class Clothes_Images_Adapter extends RecyclerView.Adapter<Clothes_Images_Adapter.ViewHolder> {
     @NonNull
     private List<Uri> imageUris;
     private List<Boolean> checkedStatus;
     private boolean showCheckBoxes = false;
-    public ImagesAdapter(List<Uri> imageUris, List<Boolean> checkedStatus) {
+    public Clothes_Images_Adapter(List<Uri> imageUris, List<Boolean> checkedStatus) {
         this.imageUris = imageUris;
         this.checkedStatus = checkedStatus;
     }

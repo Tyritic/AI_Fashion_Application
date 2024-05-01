@@ -1,12 +1,8 @@
 package com.example.ai_fashion;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +14,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +29,6 @@ import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
-import com.adapter.ImagesAdapter;
 import com.adapter.Trousers_Images_Adapter;
 
 import java.io.File;

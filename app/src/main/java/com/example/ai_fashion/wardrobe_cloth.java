@@ -1,12 +1,8 @@
 package com.example.ai_fashion;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +14,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,13 +23,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
-import com.adapter.ImagesAdapter;
+import com.adapter.Clothes_Images_Adapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,7 +55,7 @@ public class wardrobe_cloth extends AppCompatActivity
     public static TextView cloth_confirm;
     private List<Uri> imageUris = new ArrayList<>();
     private List<Boolean> checkedStatus=new ArrayList<>();
-    ImagesAdapter imagesAdapter;
+    Clothes_Images_Adapter clothesImagesAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -113,7 +107,7 @@ public class wardrobe_cloth extends AppCompatActivity
         cloth_cancel = findViewById(R.id.cloth_cancel);
         cloth_cancel.setVisibility(View.INVISIBLE);
         cloth_cancel.setOnClickListener(v -> {
-            imagesAdapter.hideCheckBoxes();
+            clothesImagesAdapter.hideCheckBoxes();
             backTohomePage.setVisibility(View.VISIBLE);
             cloth_title.setText("衣服");
             uploadPictures.setVisibility(View.VISIBLE);
@@ -124,10 +118,10 @@ public class wardrobe_cloth extends AppCompatActivity
         cloth_confirm = findViewById(R.id.cloth_confirm);
         cloth_confirm.setVisibility(View.INVISIBLE);
         cloth_confirm.setOnClickListener(v -> {
-            imagesAdapter.deleteSelectedImages();
+            clothesImagesAdapter.deleteSelectedImages();
             backTohomePage.setVisibility(View.VISIBLE);
             cloth_title.setText("衣服");
-            imagesAdapter.hideCheckBoxes();
+            clothesImagesAdapter.hideCheckBoxes();
             uploadPictures.setVisibility(View.VISIBLE);
             cloth_cancel.setVisibility(View.INVISIBLE);
             cloth_confirm.setVisibility(View.INVISIBLE);
@@ -149,9 +143,9 @@ public class wardrobe_cloth extends AppCompatActivity
         //布局中recyclerView实例化
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         //将适配器初始化构造并实例化
-        imagesAdapter = new ImagesAdapter(imageUris,checkedStatus);
+        clothesImagesAdapter = new Clothes_Images_Adapter(imageUris,checkedStatus);
         //将实例化的适配器设置给recyclerView
-        recyclerView.setAdapter(imagesAdapter);
+        recyclerView.setAdapter(clothesImagesAdapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //一行多个测试
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
