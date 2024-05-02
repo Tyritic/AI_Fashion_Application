@@ -40,13 +40,6 @@ public class Trousers_Images_Adapter extends RecyclerView.Adapter<Trousers_Image
         holder.checkBox.setChecked(checkedStatus.get(position));
         holder.checkBox.setVisibility(showCheckBoxes ? View.VISIBLE : View.GONE);
         holder.itemView.setOnLongClickListener(v -> {
-//            wardrobe_cloth.backTohomePage.setVisibility(View.INVISIBLE);
-//            wardrobe_cloth.cloth_title.setText("删除");
-//            wardrobe_cloth.uploadPictures.setVisibility(View.INVISIBLE);
-//            wardrobe_cloth.cloth_cancel.setVisibility(View.VISIBLE);
-//            wardrobe_cloth.cloth_confirm.setVisibility(View.VISIBLE);
-
-
             wardrobe_trousers.trousers_backTohomePage.setVisibility(View.INVISIBLE);
             wardrobe_trousers.trousers_title.setText("删除");
             wardrobe_trousers.trousers_uploadPictures.setVisibility(View.INVISIBLE);

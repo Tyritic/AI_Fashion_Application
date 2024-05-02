@@ -100,12 +100,7 @@ public class Account_Page extends AppCompatActivity {
 
         //设置头像
         circleImage.setClickable(true);
-        circleImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
-            }
-        });
+        circleImage.setOnClickListener(v -> showDialog());
         Bitmap bitmap = BitmapFactory.decodeFile(user.getUser_icon());
         circleImage.setImageBitmap(bitmap);
 
@@ -152,7 +147,6 @@ public class Account_Page extends AppCompatActivity {
                 }
                 else if(newPassword!=null&&newAccount!=null)
                 {
-                    //Toast.makeText(Account_Page.this,"Account_Page发送成功",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setClass(this, Home_Page.class);
                     intent.putExtra("fragment_flag", 2);
@@ -169,45 +163,42 @@ public class Account_Page extends AppCompatActivity {
         mDialog.setCanceledOnTouchOutside(true);
         mDialog.setCancelable(true);            //点击框外，框退出
         Window window = mDialog.getWindow();
-        window.setGravity(Gravity.BOTTOM);      //位于底部
+        if (window != null) {
+            window.setGravity(Gravity.BOTTOM);      //位于底部
+        }
         //window.setWindowAnimations(R.style.dialog_share);    //弹出动画
         View inflate = View.inflate(this, R.layout.dialog_retrieve_password, null);
         //退出按钮
-        inflate.findViewById(R.id.dialog_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mDialog != null && mDialog.isShowing()){
-                    mDialog.dismiss();      //消失，退出
-                }
+        inflate.findViewById(R.id.dialog_cancel).setOnClickListener(v -> {
+            if (mDialog != null && mDialog.isShowing()){
+                mDialog.dismiss();      //消失，退出
             }
         });
-        inflate.findViewById(R.id.dialog_photo_library).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //调用本地相册
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, PICK_IMAGE);    //访问本地相册
-                //访问选中的图片
-                if (mDialog != null && mDialog.isShowing()){
-                    mDialog.dismiss();      //消失，退出
-                }
+        inflate.findViewById(R.id.dialog_photo_library).setOnClickListener(v -> {
+            //调用本地相册
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE);    //访问本地相册
+            //访问选中的图片
+            if (mDialog != null && mDialog.isShowing()){
+                mDialog.dismiss();      //消失，退出
             }
         });
-        inflate.findViewById(R.id.dialog_take_photos).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //调用相机
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, TAKE_PHOTO);    //访问相机
-                //访问拍摄的图片
-                if (mDialog != null && mDialog.isShowing()){
-                    mDialog.dismiss();      //消失，退出
-                }
+        inflate.findViewById(R.id.dialog_take_photos).setOnClickListener(v -> {
+            //调用相机
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, TAKE_PHOTO);    //访问相机
+            //访问拍摄的图片
+            if (mDialog != null && mDialog.isShowing()){
+                mDialog.dismiss();      //消失，退出
             }
         });
-        window.setContentView(inflate);
+        if (window != null) {
+            window.setContentView(inflate);
+        }
         //横向充满
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        if (window != null) {
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -221,7 +212,10 @@ public class Account_Page extends AppCompatActivity {
             Uri selectedImage = data.getData();
             try {
                 // 获取图片的输入流
-                InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+                InputStream imageStream = null;
+                if (selectedImage != null) {
+                    imageStream = getContentResolver().openInputStream(selectedImage);
+                }
                 // 将输入流解码为Bitmap
                 Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
                 String user_frame_name=""+user.getUser_id();
@@ -261,7 +255,10 @@ public class Account_Page extends AppCompatActivity {
         {
             int num=getNum();
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Bitmap imageBitmap = null;
+            if (extras != null) {
+                imageBitmap = (Bitmap) extras.get("data");
+            }
             // 获取你之前创建的文件夹的路径
             File directory = getFilesDir();
             String user_frame_name=""+user.getUser_id();
@@ -273,7 +270,9 @@ public class Account_Page extends AppCompatActivity {
                 // 创建一个FileOutputStream来写入图片
                 FileOutputStream fos = new FileOutputStream(imageFile);
                 // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
-                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                if (imageBitmap != null) {
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                }
                 fos.close();
                 String user_icon=imageFile.getAbsolutePath();
                 circleImage.setImageBitmap(imageBitmap);
@@ -297,7 +296,10 @@ public class Account_Page extends AppCompatActivity {
         File user_frame = new File(directory, user_frame_name);
         File icon = new File(user_frame, "icon");
         File[] files = icon.listFiles();
-        return files.length;
+        if (files != null) {
+            return files.length;
+        }
+        return 0;
     }
 
     private void showDialog() {

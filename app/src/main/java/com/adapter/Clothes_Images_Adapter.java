@@ -47,15 +47,6 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         wardrobe_clothes.uploadPictures.setVisibility(View.INVISIBLE);
         wardrobe_clothes.cloth_cancel.setVisibility(View.VISIBLE);
         wardrobe_clothes.cloth_confirm.setVisibility(View.VISIBLE);
-
-
-//        wardrobe_trousers.trousers_backTohomePage.setVisibility(View.INVISIBLE);
-//        wardrobe_trousers.trousers_title.setText("删除");
-//        wardrobe_trousers.trousers_uploadPictures.setVisibility(View.INVISIBLE);
-//        wardrobe_trousers.trousers_cancel.setVisibility(View.VISIBLE);
-//        wardrobe_trousers.trousers_confirm.setVisibility(View.VISIBLE);
-
-
         showCheckBoxes = true;
         notifyDataSetChanged();
         return true;

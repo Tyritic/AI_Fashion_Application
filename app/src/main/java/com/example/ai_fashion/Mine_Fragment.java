@@ -31,7 +31,8 @@ public class Mine_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle bundle = getArguments();//接收从Home_Page和Account_Page传过来的Bundle
+        //接收从Home_Page和Account_Page传过来的Bundle
+        Bundle bundle = getArguments();
         if(bundle!=null)//判空
         {
             //Toast.makeText(getActivity(),"Mine_Fragment成功接收数据",Toast.LENGTH_SHORT).show();
@@ -65,6 +66,8 @@ public class Mine_Fragment extends Fragment {
             }
 
         }
+
+        //退出登录点击事件
         button_log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
