@@ -16,13 +16,11 @@ public class Welcome_Page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_welcome_page);
+
         //延时1秒后跳转到登录页面
-        mhandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent=new Intent(Welcome_Page.this, Log_in_Page.class);
-                startActivity(intent);
-            }
+        mhandler.postDelayed(() -> {
+            Intent intent=new Intent(Welcome_Page.this, Log_in_Page.class);
+            startActivity(intent);
         },1000);
-    };
+    }
 }

@@ -10,8 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.Toast;
 
 /*
  * 重写CircleImage，继承ImageView
@@ -101,7 +99,7 @@ public class CircleImage extends androidx.appcompat.widget.AppCompatImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = measureWidth(widthMeasureSpec);
-        int height = measureHeight(heightMeasureSpec, widthMeasureSpec);
+        int height = measureHeight(heightMeasureSpec);
 
         viewWidth = width - (borderWidth * 2);
         viewHeight = height - (borderWidth * 2);
@@ -125,8 +123,8 @@ public class CircleImage extends androidx.appcompat.widget.AppCompatImageView {
         return result;
     }
 
-    private int measureHeight(int measureSpecHeight, int measureSpecWidth) {
-        int result = 0;
+    private int measureHeight(int measureSpecHeight) {
+        int result=0;
         int specMode = MeasureSpec.getMode(measureSpecHeight);
         int specSize = MeasureSpec.getSize(measureSpecHeight);
 

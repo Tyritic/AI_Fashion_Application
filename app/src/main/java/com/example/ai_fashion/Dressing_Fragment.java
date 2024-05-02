@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class Dressing_Fragment extends Fragment {
@@ -88,6 +89,7 @@ public class Dressing_Fragment extends Fragment {
             // 如果没有权限，请求网络权限
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.INTERNET}, REQUEST_INTERNET_PERMISSION);
         }
+
         // 获取定位信息
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -140,35 +142,35 @@ public class Dressing_Fragment extends Fragment {
                                                 // 更新UI操作
                                                     temperature_text.setText(temperature+"°C");
                                                     weather_text.setText(weather);
-                                                if(iconWeatherMap.get("风").contains(weather))
+                                                if(Objects.requireNonNull(iconWeatherMap.get("风")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.windy);
                                                 }
-                                                else if(iconWeatherMap.get("多云").contains(weather))
+                                                else if(Objects.requireNonNull(iconWeatherMap.get("多云")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.cloudy);
                                                 }
-                                                else if(iconWeatherMap.get("雪").contains(weather))
+                                                else if(Objects.requireNonNull(iconWeatherMap.get("雪")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.snowy);
                                                 }
-                                                else if(iconWeatherMap.get("雾").contains(weather))
+                                                else if(Objects.requireNonNull(iconWeatherMap.get("雾")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.foggy);
                                                 }
-                                                else if(iconWeatherMap.get("晴").contains(weather))
+                                                else if(Objects.requireNonNull(iconWeatherMap.get("晴")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.sunny);
                                                 }
-                                                else if(iconWeatherMap.get("雨夹雪").contains(weather))
+                                                else if(Objects.requireNonNull(iconWeatherMap.get("雨夹雪")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.sleet);
                                                 }
-                                                else if(iconWeatherMap.get("雨").contains(weather))
+                                                else if(Objects.requireNonNull(iconWeatherMap.get("雨")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.rainy);
                                                 }
-                                                else if(iconWeatherMap.get("霾").contains(weather))
+                                                else if(Objects.requireNonNull(iconWeatherMap.get("霾")).contains(weather))
                                                 {
                                                     weather_icon.setImageResource(R.drawable.smog);
                                                 }
