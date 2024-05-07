@@ -72,15 +72,16 @@ public class Home_Page extends AppCompatActivity {
         selectFragment(0);
         DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
+
         //获取用户账号和密码，通过上一个页面传递过来的数据
         Intent intent = getIntent();
         user_account = intent.getStringExtra("user_account");
         user_password = intent.getStringExtra("user_password");
+
         //获取对应的用户信息
         user = DB.userDao().findUser(user_account,user_password);
         Gson gson = new Gson();
         String user_json = gson.toJson(user);
-        //Toast.makeText(Home_Page.this,user_json,Toast.LENGTH_SHORT).show();
 
         //创建用户文件夹
         String filename=""+user.getUser_id();
@@ -153,9 +154,10 @@ public class Home_Page extends AppCompatActivity {
                 } else if (menuItem.getItemId() ==R.id.navigation_mine) {
                     selectFragment(2);
                 }
-                return false;
+                return true;
             }
         });
+
         //获取上一个页面传递过来的fragment_flag，跳转回对应的页面
         int fragment_flag = getIntent().getIntExtra("fragment_flag", 0);
         if(fragment_flag == 0) {
@@ -206,6 +208,7 @@ public class Home_Page extends AppCompatActivity {
             if (dressingFragment == null)
             {
                 dressingFragment = new Dressing_Fragment();
+
                 //传递数据，将用户账号和密码包装成Bundle传递给Wardrobe_Fragment
                 Intent intent=getIntent();
                 String default_account=intent.getStringExtra("user_account");
@@ -233,6 +236,7 @@ public class Home_Page extends AppCompatActivity {
             if (mineFragment == null)
             {
                 mineFragment = new Mine_Fragment();
+
                 //传递数据，将用户账号和密码包装成Bundle传递给Mine_Fragment
                 Bundle bundle = new Bundle();
                 if(user_account==null||user_password==null)

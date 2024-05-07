@@ -1,3 +1,4 @@
+
 package com.example.ai_fashion;
 
 import android.Manifest;
@@ -32,6 +33,7 @@ import androidx.room.Room;
 import com.DB.AppDatabase;
 import com.JavaBean.User;
 import com.Utils.ImageProcessor;
+import com.adapter.Shoes_Images_Adapter;
 import com.adapter.Trousers_Images_Adapter;
 import com.google.gson.Gson;
 
@@ -48,17 +50,21 @@ import java.util.Map;
 
 public class wardrobe_trousers extends AppCompatActivity
 {
-    private String serverUrl = "http://10.196.27.132:8010";
+    private String serverUrl = "https://47cd-58-82-220-12.ngrok-free.app/upload_image";
     private static final int PICK_IMAGE = 1;
     private static final int TAKE_PHOTO = 2;
+    public static final int REQUSET_CAMERA_PERMISSION  = 5555;
     private Dialog mDialog;
     String user_account;
     String user_password;
     User user;
-    public static final int REQUSET_CAMERA_PERMISSION  = 5555;
+    String image_type="pants";
+
+    //初始化组件
     public static ImageButton trousers_backTohomePage;
     public static TextView trousers_title;
     public static ImageButton trousers_uploadPictures;
+    //cycleView更改
     public static TextView trousers_cancel;
     public static TextView trousers_confirm;
     AppDatabase DB;
@@ -69,15 +75,15 @@ public class wardrobe_trousers extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_trousers);
 
-        //检查是否具有相机权限
+        // 检查是否具有相机权限
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-        // 如果没有权限，请求存储权限
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
+            // 如果没有权限，请求存储权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUSET_CAMERA_PERMISSION);
         }
 
-        EdgeToEdge.enable(this);
         //初始化组件
         trousers_title = findViewById(R.id.trousers_title);
         trousers_backTohomePage = findViewById(R.id.trousers_back_to_home_page);
@@ -93,32 +99,24 @@ public class wardrobe_trousers extends AppCompatActivity
         user_password = intent1.getStringExtra("user_password");
         user = DB.userDao().findUser(user_account,user_password);
 
-        //返回主页点击事件
+        //返回到主页
         trousers_backTohomePage.setOnClickListener(v -> {
-            //创建一个Intent对象，启动Home_Page页面，传递用户账号和密码
             Bundle bundle=new Bundle();
             Intent intent = new Intent();
-            if(user_account!=null&&user_password!=null)
-            {
-                bundle.putString("user_account",user_account);
-                bundle.putString("user_password",user_password);
-            }
-            else
-            {
-                Toast.makeText(wardrobe_trousers.this,"wardrobe_cloth向Home_Page发送失败",Toast.LENGTH_SHORT).show();
-            }
+            bundle.putString("user_account",user_account);
+            bundle.putString("user_password",user_password);
             intent.setClass(this, Home_Page.class);
             intent.putExtra("fragment_flag", 0);
             intent.putExtras(bundle);
             startActivity(intent);
         });
 
-        //上传图片点击事件
+        //上传图片
         trousers_uploadPictures.setOnClickListener(v -> {
             showDialog();
         });
 
-        //取消按钮点击事件
+        //取消按钮
         trousers_cancel.setVisibility(View.INVISIBLE);
         trousers_cancel.setOnClickListener(v -> {
             imagesAdapter.hideCheckBoxes();
@@ -130,7 +128,7 @@ public class wardrobe_trousers extends AppCompatActivity
 
         });
 
-        //确认按钮点击事件
+        //确认按钮
         trousers_confirm.setVisibility(View.INVISIBLE);
         trousers_confirm.setOnClickListener(v -> {
             imagesAdapter.deleteSelectedImages();
@@ -149,7 +147,7 @@ public class wardrobe_trousers extends AppCompatActivity
         //导入图片到recyclerView
         if(imageUris.isEmpty()) {
             for (int i = 0; i < getNum(); i++) {
-                String string = "" + getPath() + "/trousers_" + i + ".jpg";
+                String string = "" + getPath() + "/trousers_" + i + ".png";
                 Uri uri = Uri.fromFile(new File(string));
                 imageUris.add((uri));
                 checkedStatus.add(false);
@@ -225,115 +223,104 @@ public class wardrobe_trousers extends AppCompatActivity
                 ClipData clipData = data.getClipData();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri selectedImage = clipData.getItemAt(i).getUri();
-                    // 处理每一张图片
 
                     //切入口获取到Uri，还未作出处理
                     ImageProcessor imageProcessor = new ImageProcessor();
                     String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
                     Map<String, String> dataMap = new HashMap<>();
                     dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
+                    int num=getNum();
+                    String user_id = String.valueOf(user.getUser_id());
+                    dataMap.put("image_data", jsonString); // 将 encodedImage 字符串存储在 "image_data" 键下
+                    dataMap.put("image_name", "trousers_"+num+".png");//图片名如何？
+                    dataMap.put("image_type", image_type);
+                    dataMap.put("user_id", user_id);
                     Gson gson = new Gson();
                     String jsonstring = gson.toJson(dataMap);
                     imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                         @Override
-                        public void onUploadSuccess(byte[] processedImageBytes) {
-                            byte[] temp=processedImageBytes;
+                        public void onUploadSuccess(Bitmap bitmap) {
+                            Bitmap temp=bitmap;
+                            saveImage(temp);
                         }
 
                         @Override
                         public void onUploadFailure(Exception e) {
-                            // 处理上传失败的情况
                             e.printStackTrace();
-                            // ...
                         }
                     });
-                    try {
-                        // 获取图片的输入流
-                        InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                        // 将输入流解码为Bitmap
-                        Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
-                        // 保存图片
-                        saveImage(selectedBitmap);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
                 }
             } else if (data.getData() != null) {
                 // 用户只选择了一张图片
                 Uri selectedImage = data.getData();
-                //切入口获取到Uri，还未作出处理
                 ImageProcessor imageProcessor = new ImageProcessor();
                 String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
                 Map<String, String> dataMap = new HashMap<>();
+                int num=getNum();
+                String user_id = String.valueOf(user.getUser_id());
+                dataMap.put("image_data", jsonString); // 将 encodedImage 字符串存储在 "image_data" 键下
+                dataMap.put("image_name", "trousers_"+num+".png");//图片名如何？
+                dataMap.put("image_type", image_type);
+                dataMap.put("user_id", user_id);
                 dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
                 Gson gson = new Gson();
                 String jsonstring = gson.toJson(dataMap);
                 imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                     @Override
-                    public void onUploadSuccess(byte[] processedImageBytes) {
-                        byte[] temp=processedImageBytes;
+                    public void onUploadSuccess(Bitmap bitmap ) {
+                        Bitmap temp=bitmap;
+                        saveImage(temp);
                     }
 
                     @Override
                     public void onUploadFailure(Exception e) {
-                        // 处理上传失败的情况
                         e.printStackTrace();
-                        // ...
                     }
                 });
-                try {
-                    // 获取图片的输入流
-                    InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                    // 将输入流解码为Bitmap
-                    Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
-                    // 保存图片
-                    saveImage(selectedBitmap);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
             }
         }
         else if(requestCode == TAKE_PHOTO && resultCode == RESULT_OK && data != null)
         {
-            //获取拍摄的图片
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream); // 使用PNG格式，100表示无压缩
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream); // 使用PNG格式，100表示无压缩
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             // 将Bitmap转换为Base64字符串
             String encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
             //切入口获取到Uri，还未作出处理
             ImageProcessor imageProcessor = new ImageProcessor();
             Map<String, String> dataMap = new HashMap<>();
-            dataMap.put("image", encodedString); // 将 encodedImage 字符串存储在 "image" 键下
+            int num=getNum();
+            String user_id = String.valueOf(user.getUser_id());
+            dataMap.put("image_name", "trousers_"+num+".png");//图片名如何？
+            dataMap.put("image_type", image_type);
+            dataMap.put("user_id", user_id);
+            dataMap.put("image_data", encodedString); // 将 encodedImage 字符串存储在 "image" 键下
             Gson gson = new Gson();
             String jsonstring = gson.toJson(dataMap);
 
             imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                 @Override
-                public void onUploadSuccess(byte[] processedImageBytes) {
-                    byte[] temp=processedImageBytes;
+                public void onUploadSuccess(Bitmap bitmap ) {
+                    Bitmap temp=bitmap;
+                    saveImage(temp);
                 }
 
                 @Override
                 public void onUploadFailure(Exception e) {
-                    // 处理上传失败的情况
                     e.printStackTrace();
-                    // ...
                 }
             });
-            saveImage(imageBitmap);
         }
         //上传图片后同步到RecyclerView
         for(int i=imageUris.size();i<getNum();i++) {
-            String string= ""+getPath() +"/trousers_"+i+".jpg";
+            String string= ""+getPath() +"/trousers_"+i+".png";
             Uri uri = Uri.fromFile(new File(string));
             imageUris.add((uri));
             checkedStatus.add(false);
         }
     }
-
     private void showDialog() {
         if (mDialog ==null){
             initShareDialog();
@@ -358,7 +345,7 @@ public class wardrobe_trousers extends AppCompatActivity
         return 0;
     }
 
-    //获取图片保存路径
+    //获取文件夹路径
     private String getPath()
     {
         String user_frame_name=""+user.getUser_id();
@@ -368,20 +355,20 @@ public class wardrobe_trousers extends AppCompatActivity
         File user_frame = new File(directory, user_frame_name);
         File wardrobe = new File(user_frame, "wardrobe");
         File trousers = new File(wardrobe, "trousers");
-        //File[] files = trousers.listFiles();
         return trousers.getPath();
     }
 
+    //保存图片
     private void saveImage(Bitmap bitmap) {
         int num=getNum();
         // 获取本地保存路径
         File trousers = new File(getPath());
-        File imageFile = new File(trousers, "trousers_"+num+".jpg");
+        File imageFile = new File(trousers, "trousers_"+num+".png");
         try {
             // 创建一个FileOutputStream来写入图片
             FileOutputStream fos = new FileOutputStream(imageFile);
             // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
             Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
         } catch (FileNotFoundException e) {

@@ -31,220 +31,241 @@
 
         <Button
             android:id="@+id/mine_button"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:layout_marginLeft="300sp"
-            android:layout_marginTop="0sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
             android:text="我的穿搭"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/advice_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:text="穿搭建议"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
     </RelativeLayout>
+
 
     <RelativeLayout
-        android:id="@+id/weather_layout"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:background="@drawable/weather_frame"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="left"
-        android:padding="16dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/location_icon"
-            android:layout_width="10dp"
-            android:layout_height="13dp"
-            android:layout_marginTop="0dp"
-            android:background="@drawable/location_icon"
-            android:clipToOutline="true"
-            />
+        <RelativeLayout
+            android:id="@+id/weather_layout"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/weather_frame"
+            android:padding="16dp">
 
-         <!-- Replace with your weather icon -->
+            <View
+                android:id="@+id/location_icon"
+                android:layout_width="10dp"
+                android:layout_height="13dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/location_icon"
+                android:clipToOutline="true" />
 
-        <TextView
-            android:id="@+id/location_text"
+            <!-- Replace with your weather icon -->
+
+            <TextView
+                android:id="@+id/location_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/location_icon"
+                android:layout_alignBottom="@id/location_icon"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/location_icon"
+                android:padding="0dp"
+                android:text="Location"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/temperature_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/location_text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="Temperature"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/weather_icon"
+                android:layout_width="69dp"
+                android:layout_height="23dp"
+                android:layout_below="@id/temperature_text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/weather_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="Weather"
+                android:textSize="10sp" />
+
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/clothes_view"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_above="@id/trousers_view"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="50dp"
+            tools:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/Clothe_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radiobutton"
+                android:gravity="center"
+                android:text="衣服"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/Clothes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radiobutton"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/trousers_view"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/radiobutton">
+
+            <TextView
+                android:id="@+id/Pant_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radiobutton"
+                android:gravity="center"
+                android:text="裤子"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/Pants"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radiobutton"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/shoes_view"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_below="@id/trousers_view"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/radiobutton">
+
+            <TextView
+                android:id="@+id/Shoe_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radiobutton"
+                android:gravity="center"
+                android:text="鞋子"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/Shoes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/radiobutton"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="50dp"
+            android:text="保存至我的穿搭"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/re_button"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="120dp"
+            android:text="推荐"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radiogroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/location_icon"
-            android:layout_alignTop="@id/location_icon"
-            android:layout_alignBottom="@id/location_icon"
-            android:layout_marginStart="10dp"
-            android:text="Location"
-            android:padding="0dp"
-            android:textSize="8sp" />
+            android:layout_below="@id/weather_layout"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp">
 
-        <TextView
-            android:id="@+id/temperature_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/location_text"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true"
-            android:text="Temperature"
-            android:textSize="10sp" />
+            <RadioButton
+                android:id="@+id/LeisureBtn"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/radiobutton"
+                android:gravity="center"
+                android:text="休闲" />
 
-        <ImageView
-            android:id="@+id/weather_icon"
-            android:layout_width="69dp"
-            android:layout_height="23dp"
-            android:layout_below="@id/temperature_text"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-             />
-        <TextView
-            android:id="@+id/weather_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/weather_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:textSize="10sp"
-            android:text="Weather"
-        />
+            <RadioButton
+                android:id="@+id/SportBtn"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/radiobutton"
+                android:gravity="center"
+                android:text="运动" />
 
-
+            <RadioButton
+                android:id="@+id/FormalBtn"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/radiobutton"
+                android:gravity="center"
+                android:text="正式" />
+        </RadioGroup>
     </RelativeLayout>
-
-
-    <FrameLayout
-        android:layout_width="175dp"
-        android:layout_height="160dp"
-        android:layout_marginLeft="200sp"
-        android:layout_marginTop="-130dp"
-        android:layout_marginBottom="20sp">
-
-        <TextView
-            android:id="@+id/Clothe_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/radiobutton"
-            android:text="衣服"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:visibility="visible" />
-        <ImageView
-            android:id="@+id/Clothes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/radiobutton"
-            android:visibility="gone"/>
-
-    </FrameLayout>
-
-
-    <FrameLayout
-        android:layout_width="175dp"
-        android:layout_height="160dp"
-        android:layout_marginLeft="200sp"
-        android:layout_marginBottom="20sp"
-        android:background="@drawable/radiobutton">
-
-        <TextView
-            android:id="@+id/Pant_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/radiobutton"
-            android:text="裤子"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:visibility="visible" />
-        <ImageView
-            android:id="@+id/Pants"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/radiobutton"
-            android:visibility="gone"/>
-
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="175dp"
-        android:layout_height="160dp"
-        android:layout_marginLeft="200sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="35sp"
-        android:background="@drawable/radiobutton">
-
-        <TextView
-            android:id="@+id/Shoe_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/radiobutton"
-            android:text="鞋子"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:visibility="visible" />
-        <ImageView
-            android:id="@+id/Shoes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/radiobutton"
-            android:visibility="gone"/>
-
-    </FrameLayout>
-
-
-
-
-
-
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="180dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="3sp"
-        android:layout_marginTop="-180dp"
-        android:text="保存至我的穿搭"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
-    <Button
-        android:id="@+id/re_button"
-        android:layout_width="180dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="3sp"
-        android:layout_marginTop="30dp"
-
-        android:text="重新推荐"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
-    <RadioGroup
-        android:id="@+id/radiogroup"
-        android:layout_width="250dp"
-        android:layout_height="600dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-360dp">
-    <RadioButton
-        android:id="@+id/LeisureBtn"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginBottom="35dp"
-        android:background="@drawable/radiobutton"
-        android:gravity="center"
-        android:text="休闲" />
-    <RadioButton
-        android:id="@+id/SportBtn"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginBottom="35dp"
-        android:background="@drawable/radiobutton"
-        android:gravity="center"
-        android:text="运动" />
-
-    <RadioButton
-        android:id="@+id/FormalBtn"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginBottom="35dp"
-        android:background="@drawable/radiobutton"
-        android:gravity="center"
-        android:text="正式" />
-</RadioGroup>
-
 </LinearLayout>
