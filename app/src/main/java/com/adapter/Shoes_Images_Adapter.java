@@ -36,9 +36,12 @@ public class Shoes_Images_Adapter extends RecyclerView.Adapter<Shoes_Images_Adap
         if (position < 0 || position >= imageUris.size()) {
             return;
         }
+        // imageUris 存储了所有图片的 Uri
         holder.imageView.setImageURI(imageUris.get(position));
         holder.checkBox.setChecked(checkedStatus.get(position));
         holder.checkBox.setVisibility(showCheckBoxes ? View.VISIBLE : View.GONE);
+
+        // 设置长按监听器，长按时显示复选框
         holder.itemView.setOnLongClickListener(v -> {
             wardrobe_shoes.shoes_backTohomePage.setVisibility(View.INVISIBLE);
             wardrobe_shoes.shoes_title.setText("删除");
@@ -70,11 +73,15 @@ public class Shoes_Images_Adapter extends RecyclerView.Adapter<Shoes_Images_Adap
             checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
+
+    //隐藏复选框
     public void hideCheckBoxes() {
         showCheckBoxes = false;
         notifyDataSetChanged();
 
     }
+
+    //删除选中的图片
     public void deleteSelectedImages() {
         for (int i = checkedStatus.size() - 1; i >= 0; i--) {
             if (checkedStatus.get(i)) {

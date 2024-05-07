@@ -24,6 +24,8 @@ public class Mine_Fragment extends Fragment {
     String imagePath;
     CircleImage circleImage;
     AppDatabase DB;
+
+    //初始化组件
     Button button_accountInformation;
     Button button_bodyInformation;
     Button button_log_out;
