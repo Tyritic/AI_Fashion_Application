@@ -1,7 +1,12 @@
 package com.example.ai_fashion;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+import static android.util.Log.d;
+
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,10 +20,24 @@ import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
+import com.Utils.ImageProcessor;
+import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class Register_Page extends AppCompatActivity {
+    private static final String TAG = "MyActivity";
+    private String serverUrl = "http://192.168.227.246:5000/upload_clothes";
     //初始化组件
     EditText mEditTextAccount;
     EditText mEditTextPassword;
@@ -30,6 +49,7 @@ public class Register_Page extends AppCompatActivity {
     String user_gender;
     AppDatabase DB;
     RadioGroup radioGroup;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +100,7 @@ public class Register_Page extends AppCompatActivity {
             }
 
             //设置注册逻辑
-            User user = new User(user_nickname,user_account, user_password,user_age, user_gender);
+            user = new User(user_nickname,user_account, user_password,user_age, user_gender);
             if(DB.userDao().findUserByUseraccount(user_account) != null)
             {
                 //在界面输出错误信息
@@ -107,14 +127,23 @@ public class Register_Page extends AppCompatActivity {
             }
             else
             {
-                //在界面输出注册成功信息
-                DB.userDao().insertUser(user);
-                Toast.makeText(Register_Page.this, "注册成功", Toast.LENGTH_SHORT).show();
-                //跳转到登录页面,并传递用户账号和密码
-                Intent intent=new Intent(Register_Page.this, Log_in_Page.class);//设置切换对应activity
-                intent.putExtra("user_account",user_account);
-                intent.putExtra("user_password",user_password);
-                startActivity(intent);//开始切换
+                //使用新线程发送请求
+                new Thread(() -> {
+                    user = new User(user_nickname,user_account, user_password,user_age, user_gender);
+                    boolean success = sendUserToServer(user);
+                    runOnUiThread(() -> {
+                        if(success) {
+                            // 注册成功，跳转到登录页面
+                            Intent intent = new Intent(Register_Page.this, Log_in_Page.class);
+                            intent.putExtra("user_account",user_account);
+                            intent.putExtra("user_password",user_password);
+                            startActivity(intent);
+                        } else {
+                            // 注册失败，显示错误信息
+                            mEditTextAccount.setError("账号已存在");
+                        }
+                    });
+                }).start();
             }
         });
 
@@ -126,4 +155,54 @@ public class Register_Page extends AppCompatActivity {
 
 
     };
+
+    //发送用户信息到服务器，并返回注册结果
+    public boolean sendUserToServer(User user) {
+        // 创建一个Gson对象
+        Gson gson = new Gson();
+
+        // 将对象转换为JSON格式的字符串
+        String json = gson.toJson(user);
+
+        // 创建一个RequestBody对象，它包含了要发送的数据
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+        // 创建一个Request对象，它表示了一个HTTP请求
+        Request request = new Request.Builder()
+                .url("http://10.196.5.214:8010")
+                .post(body)
+                .build();
+
+        // 创建一个OkHttpClient对象，它表示了一个HTTP客户端
+        OkHttpClient client = new OkHttpClient();
+
+        boolean success = false;
+
+        // 使用OkHttpClient发送HTTP请求
+        try {
+            // 发送请求并获取服务器的响应
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                // 请求成功，解析服务器返回的数据
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                // 解析服务器返回的数据中的message字段
+                String message = jsonObject.getString("message");
+                System.out.println(message);
+                if(message.equals("success")) {
+                    success = true;
+                }
+                else if(message.equals("Account already exists")) {
+                    success = false;
+                }
+            }
+            else {
+                // 请求失败，打印错误信息
+                System.out.println("request failed: " + response.message());
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
 }
