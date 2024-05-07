@@ -1,20 +1,37 @@
 package com.Utils;
 import androidx.annotation.NonNull;
 import okhttp3.*;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
+
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.MediaType;
 public class ImageProcessor {
+    private static final String TAG = "MyActivity";
 
     private final OkHttpClient client;
 
     public ImageProcessor() {
-        client = new OkHttpClient();
+        client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .build();
+
     }
 
     //定义异步上传图片方法，传参：目标Url，图片字节数组，监听器（用于在异步图像上传任务的不同阶段提供通知或回调）
@@ -26,11 +43,13 @@ public class ImageProcessor {
                 .url(url)
                 .post(body)
                 .build();
-
+            Log.d(TAG, "onResponse: OKOK31");
 
         client.newCall(request).enqueue(new Callback() {
+
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d(TAG, "onFailure: Thread = " + Thread.currentThread().getName());
                 //在进行回调之前，必须确保listener不为null，以避免空指针异常
                 if (listener != null) {
                     //调用其onUploadFailure方法，并将之前捕获的IOException对象e作为参数传递
@@ -39,12 +58,31 @@ public class ImageProcessor {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                //Log.d(TAG, "onSuccessful: Thread = " + Thread.currentThread().getName());
                 if (response.isSuccessful()) {
-                    byte[] processedImageBytes = response.body().bytes();
+
+                    try {
+                        Log.d(TAG, "OKOK5");
+                        assert response.body() != null;
+                        Log.v("onResponse", response.body().string());
+                        ResponseBody responseBody = response.body();
+                        String responseString=responseBody.string();
+                        JSONObject jsonObject= new JSONObject(responseString);
+                        System.out.println(jsonObject);
+                   } catch (JSONException e) {
+                       throw new RuntimeException(e);
+                    }
+                    //JSONObject jsonObject= new JSONObject(response.body().string());
+                    //System.out.println(jsonObject+"111");
+                    ResponseBody responseBody = response.body();
+                    Log.d(TAG, responseBody.string());
+                    String jsonString = responseBody.string()+"111";
+                    Log.d(TAG, jsonString);
+                    Bitmap bitmap=getBitmapFromJsonString(jsonString);
                     //在进行回调之前，必须确保listener不为null，以避免空指针异常
                     if (listener != null) {
-                        listener.onUploadSuccess(processedImageBytes);
+                        listener.onUploadSuccess(bitmap);
                     }
                 } else {
                     //在进行回调之前，必须确保listener不为null，以避免空指针异常
@@ -60,9 +98,54 @@ public class ImageProcessor {
      * 定义上传结果的监听器接口
      */
     public interface ImageProcessorListener {
-        void onUploadSuccess(byte[] processedImageBytes);
+        void onUploadSuccess(Bitmap bitmap);
         void onUploadFailure(Exception e);
     }
+    public void uploadTextAsync(String url, String jsonString, final TextProcessorListener listener) {
+        //1MediaType mediaType = MediaType.get("application/json"); // 注意这里我们没有指定字符集
+        MediaType mediaType  = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(mediaType, jsonString);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Log.d(TAG, "onResponse: OKOK31");
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d(TAG, "onFailure: Thread = " + Thread.currentThread().getName());
+                //在进行回调之前，必须确保listener不为null，以避免空指针异常
+                if (listener != null) {
+                    //调用其onUploadFailure方法，并将之前捕获的IOException对象e作为参数传递
+                    listener.onUploadFailure(e);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d(TAG, "onSuccessful: Thread = " + Thread.currentThread().getName());
+                if (response.isSuccessful()) {
+                    final String jsonString = response.body().string();
+                    //在进行回调之前，必须确保listener不为null，以避免空指针异常
+                    if (listener != null) {
+                        listener.onUploadSuccess(jsonString);
+                    }
+                } else {
+                    //在进行回调之前，必须确保listener不为null，以避免空指针异常
+                    if (listener != null) {
+                        listener.onUploadFailure(new IOException("Request failed with code: " + response.code()));
+                    }
+                }
+            }
+        });
+    }
+    public interface TextProcessorListener {
+        void onUploadSuccess(String json);
+        void onUploadFailure(Exception e);
+    }
+
 
     //输入URI，返回Base64编码的字符串
     public String encodeImageUriToBase64(Context context, Uri imageUri) {
@@ -89,6 +172,22 @@ public class ImageProcessor {
         }
         return null; // 如果发生错误，返回null
     }
+    //接收Base64编码的字符串，解码后将图像保存到指定路径
+    public Bitmap getBitmapFromJsonString(String base64String) {
+        // 去除Base64字符串中的前缀（如果有的话）
+        // 例如："data:image/jpeg;base64,"
+        String cleanBase64String = base64String.split(",")[1];
+        Log.d(TAG, cleanBase64String);
 
+        // Base64解码
+        byte[] decodedBytes = Base64.getDecoder().decode(cleanBase64String);
+        Log.d(TAG, "1");
+
+        // 创建Bitmap
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+
+        // 返回Bitmap
+        return bitmap;
+    }
 
 }
