@@ -56,6 +56,7 @@ public class wardrobe_shoes extends AppCompatActivity
     String user_account;
     String user_password;
     User user;
+    String image_type="shoes";
 
     //初始化组件
     public static ImageButton shoes_backTohomePage;
@@ -226,12 +227,18 @@ public class wardrobe_shoes extends AppCompatActivity
                     String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
                     Map<String, String> dataMap = new HashMap<>();
                     dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
+                    int num=getNum();
+                    String user_id = String.valueOf(user.getUser_id());
+                    dataMap.put("image_data", jsonString); // 将 encodedImage 字符串存储在 "image_data" 键下
+                    dataMap.put("image_name", "clothes_"+num+".jpg");//图片名如何？
+                    dataMap.put("image_type", image_type);
+                    dataMap.put("user_id", user_id);
                     Gson gson = new Gson();
                     String jsonstring = gson.toJson(dataMap);
                     imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                         @Override
-                        public void onUploadSuccess(byte[] processedImageBytes) {
-                            byte[] temp=processedImageBytes;
+                        public void onUploadSuccess(Bitmap bitmap) {
+                            Bitmap temp=bitmap;
                         }
 
                         @Override
@@ -259,13 +266,19 @@ public class wardrobe_shoes extends AppCompatActivity
                 ImageProcessor imageProcessor = new ImageProcessor();
                 String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
                 Map<String, String> dataMap = new HashMap<>();
+                int num=getNum();
+                String user_id = String.valueOf(user.getUser_id());
+                dataMap.put("image_data", jsonString); // 将 encodedImage 字符串存储在 "image_data" 键下
+                dataMap.put("image_name", "clothes_"+num+".jpg");//图片名如何？
+                dataMap.put("image_type", image_type);
+                dataMap.put("user_id", user_id);
                 dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
                 Gson gson = new Gson();
                 String jsonstring = gson.toJson(dataMap);
                 imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                     @Override
-                    public void onUploadSuccess(byte[] processedImageBytes) {
-                        byte[] temp=processedImageBytes;
+                    public void onUploadSuccess(Bitmap bitmap ) {
+                        Bitmap temp=bitmap;
                     }
 
                     @Override
@@ -299,14 +312,19 @@ public class wardrobe_shoes extends AppCompatActivity
             //切入口获取到Uri，还未作出处理
             ImageProcessor imageProcessor = new ImageProcessor();
             Map<String, String> dataMap = new HashMap<>();
+            int num=getNum();
+            String user_id = String.valueOf(user.getUser_id());
+            dataMap.put("image_name", "clothes_"+num+".jpg");//图片名如何？
+            dataMap.put("image_type", image_type);
+            dataMap.put("user_id", user_id);
             dataMap.put("image", encodedString); // 将 encodedImage 字符串存储在 "image" 键下
             Gson gson = new Gson();
             String jsonstring = gson.toJson(dataMap);
 
             imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                 @Override
-                public void onUploadSuccess(byte[] processedImageBytes) {
-                    byte[] temp=processedImageBytes;
+                public void onUploadSuccess(Bitmap bitmap ) {
+                    Bitmap temp=bitmap;
                 }
 
                 @Override

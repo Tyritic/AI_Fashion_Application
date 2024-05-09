@@ -208,7 +208,7 @@
         android:layout_marginLeft="3sp"
         android:layout_marginTop="30dp"
 
-        android:text="重新推荐"
+        android:text="推荐"
         android:textColor="@color/black"
         android:textSize="20sp" />
     <RadioGroup

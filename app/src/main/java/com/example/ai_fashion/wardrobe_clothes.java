@@ -48,13 +48,21 @@ import java.util.Map;
 
 public class wardrobe_clothes extends AppCompatActivity
 {
-    private String serverUrl = "http://10.196.27.132:8010";
+    //10.196.0.226
+    //private String serverUrl = "http://192.168.227.246:5000/upload_image";
+    //private String serverUrl = "https://d668-2001-250-3000-6010-614e-9181-5f0a-3d51.ngrok-free.app/upload_image";
+    private String serverUrl = "https://10.196.12.162:8010";
+    //192.168.227.225
+    // private String serverUrl = "http://192.168.227.246:5000/upload_clothes";
+    private static final String TAG = "MyActivity";
+
     private static final int PICK_IMAGE = 1;
     private static final int TAKE_PHOTO = 2;
     private Dialog mDialog;
     String user_account;
     String user_password;
     User user;
+    String image_type="clothes";
     public static final int REQUSET_CAMERA_PERMISSION  = 5555;
     public static ImageButton backTohomePage;
     public static TextView cloth_title;
@@ -228,25 +236,39 @@ public class wardrobe_clothes extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, " OKOK1");
+
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null)
         {
             if (data.getClipData() != null) {
                 // 用户选择了多张图片
+                Log.d(TAG, " OKOK21");
                 ClipData clipData = data.getClipData();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri imageUri = clipData.getItemAt(i).getUri();
                     Uri selectedImage = data.getData();
                     //切入口获取到Uri，还未作出处理
+                    String user_id = String.valueOf(user.getUser_id());
                     ImageProcessor imageProcessor = new ImageProcessor();
                     String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
                     Map<String, String> dataMap = new HashMap<>();
-                    dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
+                    int num=getNum();
+
+                    dataMap.put("image_data", jsonString); // 将 encodedImage 字符串存储在 "image_data" 键下
+                    Log.d(TAG, jsonString);
+                    dataMap.put("image_name", "clothes_"+num+".jpg");//图片名如何？
+                    dataMap.put("image_type", image_type);
+                    dataMap.put("user_id", user_id);
+                    Log.d(TAG,user_id);
                     Gson gson = new Gson();
                     String jsonstring = gson.toJson(dataMap);
+                    Log.d(TAG, " OKOK24");
                     imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                         @Override
-                        public void onUploadSuccess(byte[] processedImageBytes) {
-                            byte[] temp=processedImageBytes;
+                        public void onUploadSuccess(Bitmap bitmap) {
+                            Bitmap temp=bitmap;
+                            Log.d(TAG, " OKOK25");
+                            saveImage(temp);
                         }
 
                         @Override
@@ -257,6 +279,7 @@ public class wardrobe_clothes extends AppCompatActivity
                         }
                     });
                     // 处理每一张图片
+                   /*
                     try {
                         // 获取图片的输入流
                         InputStream imageStream = getContentResolver().openInputStream(imageUri);
@@ -267,20 +290,30 @@ public class wardrobe_clothes extends AppCompatActivity
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                    */
                 }
             } else if (data.getData() != null) {
+
                 // 用户只选择了一张图片
                 Uri selectedImage = data.getData();
                 ImageProcessor imageProcessor = new ImageProcessor();
                 String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
                 Map<String, String> dataMap = new HashMap<>();
+                int num=getNum();
+                String user_id = String.valueOf(user.getUser_id());
                 dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
+                dataMap.put("image_name", "clothes_"+num+".jpg");//图片名如何？
+                dataMap.put("image_type", image_type);
+                dataMap.put("user_id", user_id);
                 Gson gson = new Gson();
                 String jsonstring = gson.toJson(dataMap);
+                Log.d(TAG, " OKOK2");
                 imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                     @Override
-                    public void onUploadSuccess(byte[] processedImageBytes) {
-                        byte[] temp=processedImageBytes;
+                    public void onUploadSuccess(Bitmap bitmap) {
+                        Log.d(TAG, " OKOK3");
+                        Bitmap temp=bitmap;
+                        saveImage(temp);
                     }
 
                     @Override
@@ -290,6 +323,7 @@ public class wardrobe_clothes extends AppCompatActivity
                         // ...
                     }
                 });
+               /*1
                 try {
                     // 获取图片的输入流
                     InputStream imageStream = getContentResolver().openInputStream(selectedImage);
@@ -300,6 +334,7 @@ public class wardrobe_clothes extends AppCompatActivity
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+                */
             }
         }
         else if(requestCode == TAKE_PHOTO && resultCode == RESULT_OK && data != null)
@@ -315,14 +350,20 @@ public class wardrobe_clothes extends AppCompatActivity
             //切入口获取到Uri，还未作出处理
             ImageProcessor imageProcessor = new ImageProcessor();
             Map<String, String> dataMap = new HashMap<>();
+            int num=getNum();
+            String user_id = String.valueOf(user.getUser_id());
+            dataMap.put("image_name", "clothes_"+num+".jpg");//图片名如何？
+            dataMap.put("image_type", image_type);
+            dataMap.put("user_id", user_id);
             dataMap.put("image", encodedString); // 将 encodedImage 字符串存储在 "image" 键下
             Gson gson = new Gson();
             String jsonstring = gson.toJson(dataMap);
 
             imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
                 @Override
-                public void onUploadSuccess(byte[] processedImageBytes) {
-                    byte[] temp=processedImageBytes;
+                public void onUploadSuccess(Bitmap bitmap) {
+                    Bitmap temp=bitmap;
+                    saveImage(temp);
                 }
 
                 @Override
@@ -332,9 +373,11 @@ public class wardrobe_clothes extends AppCompatActivity
                     // ...
                 }
             });
+            /*
             if (imageBitmap != null) {
                 saveImage(imageBitmap);
             }
+             */
         }
         //上传图片后同步到RecyclerView
         for(int i=imageUris.size();i<getNum();i++) {

@@ -3,6 +3,7 @@ package com.example.ai_fashion;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,25 +47,15 @@ import java.util.Objects;
 
 public class Dressing_Fragment extends Fragment {
 
-    Button LeisureBtn;
-    Button SportBtn;
-    Button FormalBtn;
-    //Button save_button;
-    //Button re_button;
-    //ImageView Clothes;
-    //ImageView Pants;
-    //ImageView Shoes;
-    //TextView Clothes_;
-    //TextView Pants_;
-    //TextView Shoes_;
-    String serverUrl;
-    String retype;
+    private static final String TAG = "MyActivity";
+    //String serverUrl="b37606d49c5d3648e1ece38257fd057a";
+    String serverUrl="http://10.196.9.28:8010";
+    String type;
 
     String user_account;
     String user_password;
     User user;
     AppDatabase DB;
-    RadioGroup radioGroup;
     private String latitude;
     private String longitude;
     private String location_response;
@@ -109,18 +100,35 @@ public class Dressing_Fragment extends Fragment {
         TextView location_text = view.findViewById(R.id.location_text);
         TextView weather_text = view.findViewById(R.id.weather_text);
         ImageView weather_icon = view.findViewById(R.id.weather_icon);
-        Button LeisureBtn= view.findViewById(R.id.LeisureBtn);
-        Button SportBtn = view.findViewById(R.id.SportBtn);
-        Button FormalBtn = view.findViewById(R.id.FormalBtn);
+        RadioGroup radioGroup = view.findViewById(R.id.radiogroup);
+        Button mine_button=view.findViewById(R.id.mine_button);
         Button save_button = view.findViewById(R.id.save_button);
         Button re_button = view.findViewById(R.id.re_button);
-        ImageView Clothes=view.findViewById(R.id.Clothes);
-        ImageView Pants=view.findViewById(R.id.Pants);
-        ImageView Shoes=view.findViewById(R.id.Shoes);
-        TextView Clothes_=view.findViewById(R.id.Clothe_button);
-        TextView Pants_=view.findViewById(R.id.Pant_button);
-        TextView Shoes_=view.findViewById(R.id.Shoe_button);
+        ImageView Clothes_image=view.findViewById(R.id.Clothes);
+        ImageView Pants_image=view.findViewById(R.id.Pants);
+        ImageView Shoes_image=view.findViewById(R.id.Shoes);
+        TextView Clothes_text=view.findViewById(R.id.Clothe_button);
+        TextView Pants_text=view.findViewById(R.id.Pant_button);
+        TextView Shoes_text=view.findViewById(R.id.Shoe_button);
 
+        //设置场合选择
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                if(i==R.id.LeisureBtn)
+                {
+                    type ="Leisure";
+                }
+                else if(i==R.id.SportBtn)
+                {
+                    type ="Sport";
+                }
+                else if(i==R.id.FormalBtn)
+                {
+                    type ="Formal";
+                }
+            }
+        });
         //检查是否具有网络权限
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求网络权限
@@ -252,156 +260,12 @@ public class Dressing_Fragment extends Fragment {
             }
         });
 
-        /*
-        LeisureBtn= view.findViewById(R.id.LeisureBtn);
-        SportBtn = view.findViewById(R.id.SportBtn);
-        FormalBtn = view.findViewById(R.id.FormalBtn);
-        save_button = view.findViewById(R.id.save_button);
-        re_button = view.findViewById(R.id.re_button);
-        Clothes=view.findViewById(R.id.Clothes);
-        Pants=view.findViewById(R.id.Pants);
-        Shoes=view.findViewById(R.id.Shoes);
-        Clothes_=view.findViewById(R.id.Clothe_button);
-        Pants_=view.findViewById(R.id.Pant_button);
-        Shoes_=view.findViewById(R.id.Shoe_button);
-         */
+
         DB= Room.databaseBuilder(getActivity(), AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         user = DB.userDao().findUser(user_account,user_password);
         String user_id = String.valueOf(user.getUser_id());
 
-        //radioGroup = findViewById(R.id.radiogroup);
-
-
-        //设置性别选择
-        /*
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                if(i==R.id.manBtn)
-                {
-                    user_gender ="man";
-                }
-                else if(i==R.id.womanBtn)
-                {
-                    user_gender ="woman";
-                }
-            }
-        });
-         */
-
-//
-
-        LeisureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String type = "Leisure";
-                Map<String, String> dataMap = new HashMap<>();
-                dataMap.put("type", type);
-                dataMap.put("user_id", user_id);
-                retype=type;
-                Gson gson = new Gson();
-                String jsonstring = gson.toJson(dataMap);
-                ImageProcessor imageProcessor = new ImageProcessor();
-                imageProcessor. uploadTextAsync(serverUrl, jsonstring, new ImageProcessor.TextProcessorListener() {
-                    @Override
-                    public void onUploadSuccess(String json) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(json);
-                            String clothes = jsonObject.getString("clothes");
-                            String pants = jsonObject.getString("pants");
-                            String shoes = jsonObject.getString("shoes");
-
-                            Bitmap bitmap_clothes=imageProcessor.getBitmapFromJsonString(clothes);
-                            Bitmap bitmap_pants=imageProcessor.getBitmapFromJsonString(pants);
-                            Bitmap bitmap_shoes=imageProcessor.getBitmapFromJsonString(shoes);
-
-                            Clothes.setImageBitmap(bitmap_clothes);
-                            Pants.setImageBitmap(bitmap_pants);
-                            Shoes.setImageBitmap(bitmap_shoes);
-
-                            Clothes.setVisibility(View.VISIBLE);
-                            Pants.setVisibility(View.VISIBLE);
-                            Shoes.setVisibility(View.VISIBLE);
-                            Clothes_.setVisibility(View.GONE);
-                            Pants_.setVisibility(View.GONE);
-                            Shoes_.setVisibility(View.GONE);
-
-                            // 打印结果
-                            Log.d("JSON_DATA", "clothes: " + clothes + ", pants: " + pants + ", shoes: " + shoes);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onUploadFailure(Exception e) {
-                        // 处理上传失败的情况
-                        e.printStackTrace();
-                        // ...
-                    }
-                });
-            }
-    });
-        SportBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String type = "Sport";
-                Map<String, String> dataMap = new HashMap<>();
-                dataMap.put("type", type);
-                dataMap.put("user_id", user_id);
-                retype=type;
-                Gson gson = new Gson();
-                String jsonstring = gson.toJson(dataMap);
-                ImageProcessor imageProcessor = new ImageProcessor();
-                imageProcessor. uploadTextAsync(serverUrl, jsonstring, new ImageProcessor.TextProcessorListener() {
-                    @Override
-                    public void onUploadSuccess(String json) {
-
-
-                    }
-
-                    @Override
-                    public void onUploadFailure(Exception e) {
-                        // 处理上传失败的情况
-                        e.printStackTrace();
-                        // ...
-                    }
-                });
-
-            }
-        });
-        FormalBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String type = "Formal";
-                Map<String, String> dataMap = new HashMap<>();
-                dataMap.put("type", type);
-                dataMap.put("user_id", user_id);
-                retype=type;
-                Gson gson = new Gson();
-                String jsonstring = gson.toJson(dataMap);
-                ImageProcessor imageProcessor = new ImageProcessor();
-                imageProcessor. uploadTextAsync(serverUrl, jsonstring, new ImageProcessor.TextProcessorListener() {
-                    @Override
-                    public void onUploadSuccess(String json) {
-
-
-                    }
-
-                    @Override
-                    public void onUploadFailure(Exception e) {
-                        // 处理上传失败的情况
-                        e.printStackTrace();
-                        // ...
-                    }
-                });
-
-            }
-        });
         save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -409,31 +273,104 @@ public class Dressing_Fragment extends Fragment {
 
             }
         });
+
         re_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Clothes_image.setVisibility(View.GONE);
+                Pants_image.setVisibility(View.GONE);
+                Shoes_image.setVisibility(View.GONE);
+                Clothes_text.setVisibility(View.VISIBLE);
+                Pants_text.setVisibility(View.VISIBLE);
+                Shoes_text.setVisibility(View.VISIBLE);
+                if(type==null)
+                {
+                    Toast.makeText(getActivity(),"请选择场合",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Map<String, String> dataMap = new HashMap<>();
-                dataMap.put("type", retype);
+                dataMap.put("type", type);
                 dataMap.put("user_id", user_id);
                 Gson gson = new Gson();
                 String jsonstring = gson.toJson(dataMap);
                 ImageProcessor imageProcessor = new ImageProcessor();
                 imageProcessor. uploadTextAsync(serverUrl, jsonstring, new ImageProcessor.TextProcessorListener() {
-                    @Override
-                    public void onUploadSuccess(String json) {
+                            @Override
+                            public void onUploadSuccess(String json) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(json);
+                                    String clothes = jsonObject.getString("clothes");
+                                    String pants = jsonObject.getString("pants");
+                                    String shoes = jsonObject.getString("shoes");
+                                    Log.d("JSON_DATA", "clothes: " + clothes + ", pants: " + pants + ", shoes: " + shoes);
+                                    //废案
+                                    Bitmap bitmap_clothes=imageProcessor.getBitmapFromJsonString(clothes);
+                                    Bitmap bitmap_pants=imageProcessor.getBitmapFromJsonString(pants);
+                                    Bitmap bitmap_shoes=imageProcessor.getBitmapFromJsonString(shoes);
+
+                                    Clothes_image.setImageBitmap(bitmap_clothes);
+                                    Pants_image.setImageBitmap(bitmap_pants);
+                                    Shoes_image.setImageBitmap(bitmap_shoes);
+                                    //等待规定返回文件名，通过文件名提取图片绝对路径
+                                    //根据绝对路径设置imageView显示
+                                    String clothesImagePath = "/path/to/your/image.jpg";
+                                    String pantsImagePath = "/path/to/your/image.jpg";
+                                    String shoesImagePath = "/path/to/your/image.jpg";
+                                    Log.d(TAG,"pathOK");
+                                    Bitmap  clothesbitmap = BitmapFactory.decodeFile(clothesImagePath);
+                                    Bitmap pantsbitmap = BitmapFactory.decodeFile(pantsImagePath);
+                                    Bitmap shoesitmap = BitmapFactory.decodeFile(shoesImagePath);
+                                    Log.d(TAG,"bitmapOK");
+                                    if ((clothesbitmap != null)&&(pantsbitmap != null)&& (shoesitmap != null)){
+                                        // 设置位图到ImageView
+                                        Clothes_image.setImageBitmap( clothesbitmap);
+                                        Pants_image.setImageBitmap(pantsbitmap);
+                                        Shoes_image.setImageBitmap(shoesitmap);
+                                    } else {
+                                        // 位图加载失败，你可以在这里处理错误情况，比如显示一个默认图片或错误信息
+                                        Log.e("Image Loading", "Failed to load bitmap from " + clothesImagePath+"   "+ pantsImagePath+"   "+shoesImagePath);
+                                    }
+
+//                                    //控制组件的显示和隐藏
+                                    Clothes_image.setVisibility(View.VISIBLE);
+                                    Pants_image.setVisibility(View.VISIBLE);
+                                    Shoes_image.setVisibility(View.VISIBLE);
+                                    Clothes_text.setVisibility(View.GONE);
+                                    Pants_text.setVisibility(View.GONE);
+                                    Shoes_text.setVisibility(View.GONE);
+                                    // 打印结果
 
 
-                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            @Override
+                            public void onUploadFailure(Exception e) {
+                                // 处理上传失败的情况
+                                e.printStackTrace();
+                            }
 
-                    @Override
-                    public void onUploadFailure(Exception e) {
-                        // 处理上传失败的情况
-                        e.printStackTrace();
-                        // ...
-                    }
+
                 });
             }
         });
+       /*
+        mine_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), My_Dressing.class);
+                if(user_account!=null&&user_password!=null){
+                    intent.putExtra("user_account",user_account);
+                    intent.putExtra("user_password",user_password);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Dressing_Frament向My_Dressing传输为空", Toast.LENGTH_SHORT).show();
+                }
+                startActivity(intent);
+            }
+    });
+        */
 
         return view;
     }
