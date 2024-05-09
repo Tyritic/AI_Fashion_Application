@@ -20,8 +20,8 @@ public interface UserDao {
     User findUser(String username, String password);//查找根据账号密码查找用户
     @Query("SELECT * FROM Users WHERE user_account = :username")
     User findUserByUseraccount(String username);//根据用户名查找用户
-
-
+    @Query("SELECT * FROM Users WHERE user_id = :user_id")
+    User findUserByUserid(int user_id);//根据用户id查找用户
     @Update
     void updateUser(User user);//更新用户信息
 
