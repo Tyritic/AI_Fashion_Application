@@ -13,8 +13,19 @@ import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
+import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.regex.Pattern;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class Body_Page extends AppCompatActivity {
 
@@ -150,8 +161,27 @@ public class Body_Page extends AppCompatActivity {
                 user.setUser_height(Double.parseDouble(height));
                 user.setUser_weight(Double.parseDouble(weight));
                 user.setUser_proportion(Double.parseDouble(proportion));
+                //更新本地数据库
                 DB.userDao().updateUser(user);
-                Toast.makeText(Body_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
+
+                //发送用户信息到服务器
+                new Thread(() -> {
+                    boolean success=sendUserToServer(user);
+                    if(success)
+                    {
+                        //更新本地数据库
+                        DB.userDao().updateUser(user);
+                        runOnUiThread(() -> {
+                            Toast.makeText(Body_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                    else
+                    {
+                        runOnUiThread(() -> {
+                            Toast.makeText(Body_Page.this,"修改失败",Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                }).start();
             }
         });
 
@@ -172,5 +202,50 @@ public class Body_Page extends AppCompatActivity {
             startActivity(intent);
         });
 
+    }
+    //发送用户信息到服务器，并返回修改结果
+    public boolean sendUserToServer(User user) {
+        // 创建一个Gson对象
+        Gson gson = new Gson();
+
+        // 将对象转换为JSON格式的字符串
+        String json = gson.toJson(user);
+
+        // 创建RequestBody对象，它包含了要发送的数据
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+        // 创建Request对象，它表示了一个HTTP请求
+        Request request = new Request.Builder()
+                .url("http://10.196.5.214:8010")
+                .post(body)
+                .build();
+
+        // 创建OkHttpClient对象，它表示了一个HTTP客户端
+        OkHttpClient client = new OkHttpClient();
+
+        boolean success = false;
+
+        // 使用OkHttpClient发送HTTP请求
+        try {
+            // 发送请求并获取服务器的响应
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                // 请求成功，解析服务器返回的数据
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                // 解析服务器返回的数据中的message字段
+                String message = jsonObject.getString("message");
+                System.out.println(message);
+                if(message.equals("success")) {
+                    success = true;
+                }
+            }
+            else {
+                // 请求失败，打印错误信息
+                System.out.println("request failed: " + response.message());
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        return success;
     }
 }
