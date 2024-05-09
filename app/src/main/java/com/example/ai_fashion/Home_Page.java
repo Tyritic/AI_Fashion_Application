@@ -76,71 +76,6 @@ public class Home_Page extends AppCompatActivity {
         Intent intent = getIntent();
         user_account = intent.getStringExtra("user_account");
         user_password = intent.getStringExtra("user_password");
-        //获取对应的用户信息
-        user = DB.userDao().findUser(user_account,user_password);
-        Gson gson = new Gson();
-        String user_json = gson.toJson(user);
-        //Toast.makeText(Home_Page.this,user_json,Toast.LENGTH_SHORT).show();
-
-        //创建用户文件夹
-        String filename=""+user.getUser_id();
-        File directory=new File(getFilesDir(),filename);
-        if (!directory.exists()){
-            directory.mkdir();
-        }
-        File wardrobe=new File(directory,"wardrobe");
-        if (!wardrobe.exists()){
-            wardrobe.mkdir();
-        }
-        File clothes=new File(wardrobe,"clothes");
-        if (!clothes.exists()){
-            clothes.mkdir();
-        }
-        File trousers=new File(wardrobe,"trousers");
-        if (!trousers.exists()){
-            trousers.mkdir();
-        }
-        File shoes=new File(wardrobe,"shoes");
-        if (!shoes.exists()){
-            shoes.mkdir();
-        }
-        File dressing=new File(directory,"dressing");
-        if (!dressing.exists()){
-            dressing.mkdir();
-        }
-        File icon=new File(directory,"icon");
-        if (!icon.exists()){
-            icon.mkdir();
-        }
-
-        //下载默认头像
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_icon);
-        File defaule_icon=new File(icon,"default_icon.jpg");
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    // 创建一个FileOutputStream来写入图片
-                    FileOutputStream fos = new FileOutputStream(defaule_icon);
-                    // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                    fos.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-
-        //如果用户没有头像，则设置默认头像
-        if(user.getUser_icon()==null)
-        {
-            user.setUser_icon(defaule_icon.getAbsolutePath());
-            DB.userDao().updateUser(user);
-        }
-
         //底部导航栏的点击事件
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -268,6 +203,7 @@ public class Home_Page extends AppCompatActivity {
             fragmentTransaction.hide(mineFragment);
         }
     }
+
 
 
 

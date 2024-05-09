@@ -27,12 +27,22 @@ import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class Account_Page extends AppCompatActivity {
     ImageButton ImageButton_backTohomePage;
@@ -47,7 +57,7 @@ public class Account_Page extends AppCompatActivity {
     //修改前的信息
     String account;
     String password;
-    String birthday;
+    String age;
     String nickname;
     String newAccount;
     String newPassword;
@@ -79,6 +89,8 @@ public class Account_Page extends AppCompatActivity {
         {
             Toast.makeText(Account_Page.this,"Account_Page接收失败",Toast.LENGTH_SHORT).show();
         }
+
+        //初始化数据库并从本地数据库中获取用户信息
         DB = Room.databaseBuilder(this, AppDatabase.class,"Database")
                 .allowMainThreadQueries().build();
         user = DB.userDao().findUser(user_account,user_password);
@@ -109,27 +121,87 @@ public class Account_Page extends AppCompatActivity {
             //获取用户输入的信息
             account = mEditTextAccount.getText().toString();
             password = mEditTextPassword.getText().toString();
-            birthday = mEditTextAge.getText().toString();
+            age = mEditTextAge.getText().toString();
             nickname= mEditTextNickname.getText().toString();
+
             //判断用户是否修改了信息
-            boolean not_modified=account.equals(user_account)&&password.equals(user_password)&&birthday.equals(user.getUser_age())&&nickname.equals(user.getUser_nickname());
+            boolean not_modified=account.equals(user_account)&&password.equals(user_password)&& age.equals(user.getUser_age())&&nickname.equals(user.getUser_nickname());
             if(not_modified)
             {
                 Toast.makeText(Account_Page.this,"未修改",Toast.LENGTH_SHORT).show();
             }
-            else if(!account.equals(user_account)&&DB.userDao().findUserByUseraccount(account)!=null)
-            {
-                Toast.makeText(Account_Page.this,"用户名已存在",Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
+
+            //使用新线程发送请求
+            new Thread(() -> {
+                //更新原先的user对象
                 user.setUser_account(account);
                 user.setUser_password(password);
-                user.setUser_age(birthday);
+                user.setUser_age(age);
                 user.setUser_nickname(nickname);
-                DB.userDao().updateUser(user);
-                Toast.makeText(Account_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
-            }
+
+                // 创建一个Gson对象
+                Gson gson = new Gson();
+
+                // 将对象转换为JSON格式的字符串
+                String json = gson.toJson(user);
+
+                // 创建RequestBody对象，包含了要发送的数据
+                RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                // 创建Request对象，表示了一个HTTP请求
+                Request request = new Request.Builder()
+                        .url("http://10.196.5.214:8010")
+                        .post(body)
+                        .build();
+
+                // 创建一个OkHttpClient对象，它表示了一个HTTP客户端
+                OkHttpClient client = new OkHttpClient();
+
+                // 使用OkHttpClient发送HTTP请求
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        // 请求成功，解析服务器返回的数据
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        System.out.println(jsonObject);
+                        String message = jsonObject.getString("message");
+                        System.out.println(message);
+
+                        //解析服务器返回的数据中的message字段
+                        if(message.equals("Update successful")) {
+                            System.out.println("Update successful");
+                            DB.userDao().updateUser(user);
+                            runOnUiThread(() -> Toast.makeText(Account_Page.this,"修改成功",Toast.LENGTH_SHORT).show());
+                        }
+                        else if(message.equals("Invalid account")) {
+                            System.out.println("Invalid account");
+                            runOnUiThread(() -> Toast.makeText(Account_Page.this,"账号已存在",Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                    else {
+                        // 请求失败，打印错误信息
+                        System.out.println("request failed: " + response.message());
+                    }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
+
+//            else if(!account.equals(user_account)&&DB.userDao().findUserByUseraccount(account)!=null)
+//            {
+//                Toast.makeText(Account_Page.this,"用户名已存在",Toast.LENGTH_SHORT).show();
+//            }
+//            else
+//            {
+//                user.setUser_account(account);
+//                user.setUser_password(password);
+//                user.setUser_age(age);
+//                user.setUser_nickname(nickname);
+//                DB.userDao().updateUser(user);
+//
+//                Toast.makeText(Account_Page.this,"修改成功",Toast.LENGTH_SHORT).show();
+//            }
         });
 
         //返回按钮点击事件
@@ -137,10 +209,12 @@ public class Account_Page extends AppCompatActivity {
                 //获取用户退出后的账号和密码
                 newAccount=mEditTextAccount.getText().toString();
                 newPassword=mEditTextAccount.getText().toString();
-                //将用户账号和密码包装成传递
+
+                //将用户账号和密码包装成bundle传递
                 Bundle bundle=new Bundle();
                 bundle.putString("user_account",newAccount);
                 bundle.putString("user_password",newPassword);
+
                 if(newPassword==null||newAccount==null)
                 {
                     Toast.makeText(Account_Page.this,"Account_Page发送失败",Toast.LENGTH_SHORT).show();
@@ -207,8 +281,6 @@ public class Account_Page extends AppCompatActivity {
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null)
         {
             int num=getNum();
-            //Toast.makeText(wardrobe_cloth.this,"文件中有"+num,Toast.LENGTH_SHORT).show();
-            //Toast.makeText(wardrobe_cloth.this,""+requestCode,Toast.LENGTH_SHORT).show();
             Uri selectedImage = data.getData();
             try {
                 // 获取图片的输入流
@@ -216,35 +288,50 @@ public class Account_Page extends AppCompatActivity {
                 if (selectedImage != null) {
                     imageStream = getContentResolver().openInputStream(selectedImage);
                 }
+
                 // 将输入流解码为Bitmap
                 Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
                 String user_frame_name=""+user.getUser_id();
-                // 获取你之前创建的文件夹的路径
+
+                // 获取项目所在的系统路径
                 File directory = getFilesDir();
-                // 访问多级目录
+
+                // 访问头像目录
                 File user_frame = new File(directory, user_frame_name);
                 File icon = new File(user_frame, "icon");
-//                if(clothes.exists())
-//                {
-//                    Toast.makeText(wardrobe_cloth.this,"衣柜文件夹已存在",Toast.LENGTH_SHORT).show();
-//                }
-                // 在这个文件夹中创建一个新的文件来保存图片
+
+                // 在文件夹icon中创建一个新的文件来保存图片
                 File imageFile = new File(icon, "icon_"+num+".jpg");
                 if(imageFile.exists())
                 {
                     Toast.makeText(Account_Page.this,"上传成功",Toast.LENGTH_SHORT).show();
                 }
-                // 创建一个FileOutputStream来写入图片
+
+                // 创建FileOutputStream来写入图片
                 FileOutputStream fos = new FileOutputStream(imageFile);
+
                 // 将Bitmap压缩为JPEG格式，并写入到FileOutputStream中
                 selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.close();
                 String user_icon=imageFile.getAbsolutePath();
                 circleImage.setImageBitmap(selectedBitmap);
+
+                //发送用户信息到服务器
+                new Thread(() -> {
+                    boolean success= sendUserToServer(user);
+                    if(success)
+                    {
+                        runOnUiThread(() -> Toast.makeText(Account_Page.this,"上传成功",Toast.LENGTH_SHORT).show());
+                    }
+                    else
+                    {
+                        runOnUiThread(() -> Toast.makeText(Account_Page.this,"上传失败",Toast.LENGTH_SHORT).show());
+                    }
+                }).start();
+                //在本地数据库更新用户头像路径
                 user.setUser_icon(user_icon);
                 DB.userDao().updateUser(user);
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
-                //Toast.makeText(wardrobe_cloth.this,"第"+i+"张",Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -259,10 +346,12 @@ public class Account_Page extends AppCompatActivity {
             if (extras != null) {
                 imageBitmap = (Bitmap) extras.get("data");
             }
-            // 获取你之前创建的文件夹的路径
+
+            // 获取项目所在的系统路径
             File directory = getFilesDir();
             String user_frame_name=""+user.getUser_id();
-            // 访问多级目录
+
+            // 访问头像目录
             File user_frame = new File(directory, user_frame_name);
             File icon = new File(user_frame, "icon");
             File imageFile = new File(icon, "icon_"+num+".jpg");
@@ -276,6 +365,25 @@ public class Account_Page extends AppCompatActivity {
                 fos.close();
                 String user_icon=imageFile.getAbsolutePath();
                 circleImage.setImageBitmap(imageBitmap);
+
+                //发送用户信息到服务器
+                new Thread(() -> {
+                    boolean success= sendUserToServer(user);
+                    if(success)
+                    {
+                        runOnUiThread(() -> {
+                            Toast.makeText(Account_Page.this,"上传成功",Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                    else
+                    {
+                        runOnUiThread(() -> {
+                            Toast.makeText(Account_Page.this,"上传失败",Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                }).start();
+
+                //在本地数据库更新用户头像路径
                 user.setUser_icon(user_icon);
                 DB.userDao().updateUser(user);
                 Log.d("Image Save", "Image saved to " + imageFile.getAbsolutePath());
@@ -285,8 +393,9 @@ public class Account_Page extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        //上传图片后同步到RecyclerView
     }
+
+    //获取文件夹中的文件编号
     private int getNum()
     {
         String user_frame_name=""+user.getUser_id();
@@ -309,4 +418,49 @@ public class Account_Page extends AppCompatActivity {
         mDialog.show();
     }
 
+    //发送用户信息到服务器，并返回修改结果
+    public boolean sendUserToServer(User user) {
+        // 创建一个Gson对象
+        Gson gson = new Gson();
+
+        // 将对象转换为JSON格式的字符串
+        String json = gson.toJson(user);
+
+        // 创建RequestBody对象，它包含了要发送的数据
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+        // 创建Request对象，它表示了一个HTTP请求
+        Request request = new Request.Builder()
+                .url("https://d668-2001-250-3000-6010-614e-9181-5f0a-3d51.ngrok-free.app/refresh")
+                .post(body)
+                .build();
+
+        // 创建OkHttpClient对象，它表示了一个HTTP客户端
+        OkHttpClient client = new OkHttpClient();
+
+        boolean success = false;
+
+        // 使用OkHttpClient发送HTTP请求
+        try {
+            // 发送请求并获取服务器的响应
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                // 请求成功，解析服务器返回的数据
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                // 解析服务器返回的数据中的message字段
+                String message = jsonObject.getString("message");
+                System.out.println(message);
+                if(message.equals("success")) {
+                    success = true;
+                }
+            }
+            else {
+                // 请求失败，打印错误信息
+                System.out.println("request failed: " + response.message());
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }
