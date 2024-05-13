@@ -110,12 +110,6 @@ public class Log_in_Page extends AppCompatActivity {
 
                 // 创建一个OkHttpClient对象，它表示了一个HTTP客户端
                 OkHttpClient client = new OkHttpClient();
-                try {
-                    Response response = client.newCall(request).execute();
-                    //跳转到主页面
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
                 // 使用OkHttpClient发送HTTP请求
                 try {
                     // 发送请求并获取服务器的响应
