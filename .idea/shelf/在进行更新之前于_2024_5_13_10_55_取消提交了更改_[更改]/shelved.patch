@@ -1,0 +1,325 @@
+Index: app/src/main/java/com/DB/UserDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.DB;\r\n\r\nimport androidx.room.Dao;\r\nimport androidx.room.Delete;\r\nimport androidx.room.Insert;\r\nimport androidx.room.Query;\r\nimport androidx.room.Update;\r\n\r\nimport com.JavaBean.User;\r\n\r\n@Dao\r\npublic interface UserDao {\r\n    @Insert\r\n    void insertUser(User user);//插入单个用户\r\n    @Insert\r\n    void insertUsers(User... users);//插入多个用户\r\n    @Delete\r\n    void deleteUser(User user);//删除用户\r\n    @Query(\"SELECT * FROM Users WHERE user_account = :username AND user_password = :password\")\r\n    User findUser(String username, String password);//查找根据账号密码查找用户\r\n    @Query(\"SELECT * FROM Users WHERE user_account = :username\")\r\n    User findUserByUseraccount(String username);//根据用户名查找用户\r\n\r\n\r\n    @Update\r\n    void updateUser(User user);//更新用户信息\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/DB/UserDao.java b/app/src/main/java/com/DB/UserDao.java
+--- a/app/src/main/java/com/DB/UserDao.java	(revision 67d275082aa455471db2d7716f0629e071137606)
++++ b/app/src/main/java/com/DB/UserDao.java	(date 1715568500827)
+@@ -20,8 +20,8 @@
+     User findUser(String username, String password);//查找根据账号密码查找用户
+     @Query("SELECT * FROM Users WHERE user_account = :username")
+     User findUserByUseraccount(String username);//根据用户名查找用户
+-
+-
++    @Query("SELECT * FROM Users WHERE user_id = :user_id")
++    User findUserByUserid(int user_id);//根据用户id查找用户
+     @Update
+     void updateUser(User user);//更新用户信息
+ 
+Index: app/src/main/java/com/example/ai_fashion/Log_in_Page.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.ai_fashion;\r\n\r\nimport android.content.Intent;\r\nimport android.content.pm.PackageManager;\r\nimport android.os.Bundle;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.room.Room;\r\n\r\nimport com.DB.AppDatabase;\r\nimport com.JavaBean.User;\r\n\r\npublic class Log_in_Page extends AppCompatActivity {\r\n    //请求定位权限\r\n    public static final int REQUEST_LOCATION_PERMISSION = 5555;\r\n    //用户账号和密码\r\n    String user_account;\r\n    String user_password;\r\n    //初始化组件\r\n    Button button_register;\r\n    Button botton_login;\r\n    EditText mEditTextAccount;\r\n    EditText mEditTextPassword;\r\n    AppDatabase DB;//数据库\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.activity_log_in_page);\r\n        \r\n        // 检查是否具有定位权限\r\n        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n            // 如果没有权限，请求定位权限\r\n            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.READ_PHONE_STATE}, REQUEST_LOCATION_PERMISSION);\r\n        }\r\n        \r\n        //获取用户账号和密码，通过上一个页面传递过来的数据\r\n        Intent intent1 = getIntent();\r\n        user_account = intent1.getStringExtra(\"user_account\");\r\n        user_password = intent1.getStringExtra(\"user_password\");\r\n        \r\n        //初始化组件\r\n        button_register = findViewById(R.id.register_button);\r\n        botton_login = findViewById(R.id.login_button);\r\n        mEditTextAccount = findViewById(R.id.input_user_account);\r\n        mEditTextPassword = findViewById(R.id.input_user_password);\r\n        if(user_account!=null&&user_password!=null) {\r\n            mEditTextAccount.setText(user_account);\r\n            mEditTextPassword.setText(user_password);\r\n        }\r\n\r\n       //创建数据库\r\n        DB = Room.databaseBuilder(this, AppDatabase.class,\"Database\")\r\n                .allowMainThreadQueries().build();//允许在主线程中查询数据库\r\n        \r\n        //注册按钮的点击事件\r\n        button_register.setOnClickListener(v -> {\r\n            //跳转到注册页面\r\n            Intent intent = new Intent(Log_in_Page.this, Register_Page.class);\r\n            startActivity(intent);\r\n        });\r\n        \r\n        //登录按钮的点击事件\r\n        botton_login.setOnClickListener(v -> {\r\n            //获取用户输入的账号和密码\r\n            String user_account = mEditTextAccount.getText().toString();\r\n            String user_password = mEditTextPassword.getText().toString();\r\n            User user = DB.userDao().findUser(user_account,user_password);\r\n            if(user!=null)\r\n            {\r\n                //登录成功，输出提示信息\r\n                Toast.makeText(Log_in_Page.this,\"欢迎用户\"+user.getUser_nickname()+\"回来\",Toast.LENGTH_SHORT).show();\r\n                //跳转到主页面\r\n                new Thread(() -> {\r\n                    //建立一个Intent对象，用于启动Home_Page,并传递用户账号和密码\r\n                    Intent intent = new Intent(Log_in_Page.this, Home_Page.class);\r\n                    intent.putExtra(\"user_account\",user_account);\r\n                    intent.putExtra(\"user_password\",user_password);\r\n                    startActivity(intent);\r\n                }).start();\r\n            }\r\n            //登录失败，输出提示信息\r\n            else if(DB.userDao().findUserByUseraccount(user_account)==null)//用户不存在\r\n            {\r\n                Toast.makeText(Log_in_Page.this,\"用户不存在\",Toast.LENGTH_SHORT).show();\r\n            }\r\n            //用户存在但是密码错误\r\n            else if(DB.userDao().findUser(user_account,user_password)==null&&DB.userDao().findUserByUseraccount(user_account)!=null)\r\n            {\r\n                Toast.makeText(Log_in_Page.this,\"密码错误\",Toast.LENGTH_SHORT).show();\r\n            }\r\n        });\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/ai_fashion/Log_in_Page.java b/app/src/main/java/com/example/ai_fashion/Log_in_Page.java
+--- a/app/src/main/java/com/example/ai_fashion/Log_in_Page.java	(revision 67d275082aa455471db2d7716f0629e071137606)
++++ b/app/src/main/java/com/example/ai_fashion/Log_in_Page.java	(date 1715568500851)
+@@ -2,6 +2,8 @@
+ 
+ import android.content.Intent;
+ import android.content.pm.PackageManager;
++import android.graphics.Bitmap;
++import android.graphics.BitmapFactory;
+ import android.os.Bundle;
+ import android.widget.Button;
+ import android.widget.EditText;
+@@ -15,6 +17,22 @@
+ 
+ import com.DB.AppDatabase;
+ import com.JavaBean.User;
++import com.google.gson.Gson;
++
++import org.json.JSONException;
++import org.json.JSONObject;
++
++import java.io.File;
++import java.io.FileNotFoundException;
++import java.io.FileOutputStream;
++import java.io.FileWriter;
++import java.io.IOException;
++
++import okhttp3.MediaType;
++import okhttp3.OkHttpClient;
++import okhttp3.Request;
++import okhttp3.RequestBody;
++import okhttp3.Response;
+ 
+ public class Log_in_Page extends AppCompatActivity {
+     //请求定位权限
+@@ -28,6 +46,7 @@
+     EditText mEditTextAccount;
+     EditText mEditTextPassword;
+     AppDatabase DB;//数据库
++    User user;
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+@@ -71,30 +90,168 @@
+             //获取用户输入的账号和密码
+             String user_account = mEditTextAccount.getText().toString();
+             String user_password = mEditTextPassword.getText().toString();
+-            User user = DB.userDao().findUser(user_account,user_password);
+-            if(user!=null)
+-            {
+-                //登录成功，输出提示信息
+-                Toast.makeText(Log_in_Page.this,"欢迎用户"+user.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
+-                //跳转到主页面
+-                new Thread(() -> {
+-                    //建立一个Intent对象，用于启动Home_Page,并传递用户账号和密码
+-                    Intent intent = new Intent(Log_in_Page.this, Home_Page.class);
+-                    intent.putExtra("user_account",user_account);
+-                    intent.putExtra("user_password",user_password);
+-                    startActivity(intent);
+-                }).start();
+-            }
+-            //登录失败，输出提示信息
+-            else if(DB.userDao().findUserByUseraccount(user_account)==null)//用户不存在
+-            {
+-                Toast.makeText(Log_in_Page.this,"用户不存在",Toast.LENGTH_SHORT).show();
+-            }
+-            //用户存在但是密码错误
+-            else if(DB.userDao().findUser(user_account,user_password)==null&&DB.userDao().findUserByUseraccount(user_account)!=null)
+-            {
+-                Toast.makeText(Log_in_Page.this,"密码错误",Toast.LENGTH_SHORT).show();
+-            }
++            //创建一个新线程，用于登录与处理服务器交互
++            new Thread(() -> {
++                User user = new User(user_account, user_password);
++                // 创建一个Gson对象
++                Gson gson = new Gson();
++
++                // 将对象转换为JSON格式的字符串
++                String json = gson.toJson(user);
++
++                // 创建一个RequestBody对象，它包含了要发送的数据
++                RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
++
++                // 创建一个Request对象，它表示了一个HTTP请求
++                Request request = new Request.Builder()
++                        .url("http://10.196.5.214:8010")
++                        .post(body)
++                        .build();
++
++                // 创建一个OkHttpClient对象，它表示了一个HTTP客户端
++                OkHttpClient client = new OkHttpClient();
++                try {
++                    Response response = client.newCall(request).execute();
++                    //跳转到主页面
++                } catch (IOException e) {
++                    throw new RuntimeException(e);
++                }
++                // 使用OkHttpClient发送HTTP请求
++                try {
++                    // 发送请求并获取服务器的响应
++                    Response response = client.newCall(request).execute();
++
++                    // 请求成功，解析服务器返回的数据
++                    if (response.isSuccessful()) {
++                        // 打印服务器返回的数据
++                        JSONObject jsonObject = new JSONObject(response.body().string());
++                        System.out.println(jsonObject);
++                        // 解析服务器返回的数据中的message字段
++                        String message = jsonObject.getString("message");
++                        System.out.println(message);
++                        if(message.equals("Login successful")) {
++                            JSONObject data = jsonObject.getJSONObject("data");
++                            // 解析服务器返回的数据中的data字段并创建User对象
++                            int user_id = data.getInt("user_id");
++                            String user_nickname = data.getString("user_nickname");
++                            String user_age = data.getString("user_age");
++                            String user_gender = data.getString("user_gender");
++                            String user_icon = data.getString("user_icon");
++                            Double user_height = data.getDouble("user_height");
++                            Double user_weight = data.getDouble("user_weight");
++                            Double user_proportion = data.getDouble("user_proportion");
++                            User user1 = new User(user_id, user_nickname, user_account, user_password, user_age, user_gender, user_height, user_weight, user_proportion, user_icon);
++
++                            //若第一次登录则将用户信息存入数据库
++                            if(DB.userDao().findUserByUserid(user_id)==null)
++                            {
++                                DB.userDao().insertUser(user1);
++                            }
++
++                            //创建用户文件夹
++                            createUserFolder(user1.getUser_id());
++
++                            //下载默认头像
++                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_icon);
++                            File icon=getIconFolder(user1.getUser_id());
++                            File defaule_icon=new File(icon,"default_icon.jpg");
++                            try {
++                                FileOutputStream fileOutputStream = new FileOutputStream(defaule_icon);
++                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
++                                fileOutputStream.flush();
++                                fileOutputStream.close();
++                            } catch (FileNotFoundException e) {
++                                e.printStackTrace();
++                            } catch (IOException e) {
++                                e.printStackTrace();
++                            }
++
++                            //如果用户没有设置头像，则设置默认头像
++                            if(user1.getUser_icon().equals("0"))
++                            {
++                                user1.setUser_icon(defaule_icon.getAbsolutePath());
++                                DB.userDao().updateUser(user1);
++                            }
++
++                            //跳转到主页面
++                            runOnUiThread(() -> {
++                                Toast.makeText(Log_in_Page.this,"欢迎用户"+user1.getUser_nickname()+"回来",Toast.LENGTH_SHORT).show();
++                                //跳转到主页面
++                                Intent intent = new Intent(Log_in_Page.this, Home_Page.class);
++                                intent.putExtra("user_account",user_account);
++                                intent.putExtra("user_password",user_password);
++                                startActivity(intent);
++                            });
++                        }
++                        else if(message.equals("Invalid password")) {
++                            System.out.println("Invalid password");
++                            runOnUiThread(() -> {
++                                Toast.makeText(Log_in_Page.this,"密码错误",Toast.LENGTH_SHORT).show();
++                            });
++                        }
++                        else if(message.equals("Account does not exist")) {
++                            System.out.println("Account does not exist");
++                            runOnUiThread(() -> {
++                                Toast.makeText(Log_in_Page.this,"用户不存在",Toast.LENGTH_SHORT).show();
++                            });
++                        }
++                    }
++                    else {
++                        // 请求失败，打印错误信息
++                        System.out.println("request failed: " + response.message());
++                    }
++                } catch (IOException | JSONException e) {
++                    e.printStackTrace();
++                }
++            }).start();
+         });
+     }
++
++    //创建用户文件夹
++    private void createUserFolder(int user_id)
++    {
++        //创建用户文件夹
++        String filename=""+user_id;
++        File directory=new File(getFilesDir(),filename);
++        if (!directory.exists()){
++            directory.mkdir();
++        }
++        File wardrobe=new File(directory,"wardrobe");
++        if (!wardrobe.exists()){
++            wardrobe.mkdir();
++        }
++        File clothes=new File(wardrobe,"clothes");
++        if (!clothes.exists()){
++            clothes.mkdir();
++        }
++        File trousers=new File(wardrobe,"trousers");
++        if (!trousers.exists()){
++            trousers.mkdir();
++        }
++        File shoes=new File(wardrobe,"shoes");
++        if (!shoes.exists()){
++            shoes.mkdir();
++        }
++        File dressing=new File(directory,"dressing");
++        if (!dressing.exists()){
++            dressing.mkdir();
++        }
++        File icon=new File(directory,"icon");
++        if (!icon.exists()){
++            icon.mkdir();
++        }
++    }
++
++    //获取头像文件夹
++    private File getIconFolder(int user_id)
++    {
++        String filename=""+user_id;
++        File directory=new File(getFilesDir(),filename);
++        File icon=new File(directory,"icon");
++        return icon;
++    }
++
++
++
++
+ }
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    package=\"com.example.ai_fashion\">\r\n\r\n    <uses-permission android:name=\"android.permission.CAMERA\" />\r\n\r\n    <uses-feature\r\n        android:name=\"android.hardware.camera\"\r\n        android:required=\"false\" />\r\n\r\n    <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\r\n    <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\r\n    <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\r\n    <uses-permission\r\n        android:name=\"android.permission.MANAGE_EXTERNAL_STORAGE\"\r\n        tools:ignore=\"ScopedStorage\" />\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />\r\n    <uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.AI_Fashion\"\r\n        android:usesCleartextTraffic=\"true\"\r\n        tools:targetApi=\"31\">\r\n\r\n        <activity\r\n            android:name=\".Advice_Page\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".My_Dressing\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".Body_Page\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".wardrobe_clothes\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".wardrobe_trousers\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".wardrobe_shoes\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".Account_Page\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".Home_Page\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".Register_Page\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".Log_in_Page\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".Welcome_Page\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n\r\n        <provider\r\n            android:name=\"androidx.core.content.FileProvider\"\r\n            android:authorities=\"com.example.lenovo.cameraalbumtest.fileprovider\"\r\n            android:exported=\"false\"\r\n            android:grantUriPermissions=\"true\">\r\n            <meta-data\r\n                android:name=\"android.support.FILE_PROVIDER_PATHS\"\r\n                android:resource=\"@xml/file_path\" />\r\n        </provider>\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 67d275082aa455471db2d7716f0629e071137606)
++++ b/app/src/main/AndroidManifest.xml	(date 1715568500823)
+@@ -41,6 +41,9 @@
+             android:name=".My_Dressing"
+             android:exported="false" />
+         <activity
++            android:name=".My_Dressing"
++            android:exported="false" />
++        <activity
+             android:name=".Body_Page"
+             android:exported="false" />
+         <activity
+Index: app/src/main/java/com/JavaBean/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.JavaBean;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.room.ColumnInfo;\r\nimport androidx.room.Entity;\r\nimport androidx.room.PrimaryKey;\r\n\r\n@Entity(tableName = \"Users\")\r\npublic class User {\r\n    @PrimaryKey(autoGenerate = true)\r\n    @NonNull\r\n    private int user_id;\r\n    @ColumnInfo(name = \"user_nickname\")\r\n    private String user_nickname;\r\n    @ColumnInfo(name = \"user_account\")\r\n    private String user_account;\r\n    @ColumnInfo(name = \"user_password\")\r\n    private String user_password;\r\n    @ColumnInfo(name = \"user_age\")\r\n    private String user_age;\r\n    @ColumnInfo(name = \"user_gender\")\r\n    private String user_gender;\r\n    @ColumnInfo(name = \"user_height\")\r\n    private double user_height;\r\n\r\n    @ColumnInfo(name = \"user_weight\")\r\n    private double user_weight;\r\n\r\n    @ColumnInfo(name=\"user_proportion\")\r\n    private double user_proportion;\r\n    @ColumnInfo(name=\"user_icon\")\r\n    private String user_icon;\r\n\r\n    public String getUser_icon() {\r\n        return user_icon;\r\n    }\r\n\r\n    public void setUser_icon(String user_icon) {\r\n        this.user_icon = user_icon;\r\n    }\r\n\r\n    public User(int user_id, String user_nickname, String user_account, String user_password, String user_age, String user_gender, double user_height, double user_weight, double user_proportion, String user_icon) {\r\n        this.user_id = user_id;\r\n        this.user_nickname = user_nickname;\r\n        this.user_account = user_account;\r\n        this.user_password = user_password;\r\n        this.user_age = user_age;\r\n        this.user_gender = user_gender;\r\n        this.user_height = user_height;\r\n        this.user_weight = user_weight;\r\n        this.user_proportion = user_proportion;\r\n        this.user_icon = user_icon;\r\n    }\r\n\r\n    public double getUser_height() {\r\n        return user_height;\r\n    }\r\n\r\n    public void setUser_height(double user_height) {\r\n        this.user_height = user_height;\r\n    }\r\n\r\n    public double getUser_weight() {\r\n        return user_weight;\r\n    }\r\n\r\n    public void setUser_weight(double user_weight) {\r\n        this.user_weight = user_weight;\r\n    }\r\n\r\n    public double getUser_proportion() {\r\n        return user_proportion;\r\n    }\r\n\r\n    public void setUser_proportion(double user_proportion) {\r\n        this.user_proportion = user_proportion;\r\n    }\r\n\r\n    public String getUser_age() {\r\n        return user_age;\r\n    }\r\n\r\n    public User() {\r\n    }\r\n\r\n    public String getUser_nickname() {\r\n        return user_nickname;\r\n    }\r\n\r\n    public void setUser_nickname(String user_nickname) {\r\n        this.user_nickname = user_nickname;\r\n    }\r\n\r\n    public String getUser_gender() {\r\n        return user_gender;\r\n    }\r\n\r\n    public void setUser_gender(String user_gender) {\r\n        this.user_gender = user_gender;\r\n    }\r\n\r\n    public int getUser_id() {\r\n        return user_id;\r\n    }\r\n\r\n    public void setUser_id(int user_id) {\r\n        this.user_id = user_id;\r\n    }\r\n\r\n    public User(String user_nickname,String user_account, String user_password, String user_age, String user_gender) {\r\n        this.user_account = user_account;\r\n        this.user_password = user_password;\r\n        this.user_nickname = user_nickname;\r\n        this.user_age = user_age;\r\n        this.user_gender=user_gender;\r\n    }\r\n\r\n    public void setUser_age(String user_age) {\r\n        this.user_age = user_age;\r\n    }\r\n\r\n    public String getUser_password() {\r\n        return user_password;\r\n    }\r\n\r\n    public void setUser_password(String user_password) {\r\n        this.user_password = user_password;\r\n    }\r\n\r\n    public String getUser_account() {\r\n        return user_account;\r\n    }\r\n\r\n    public void setUser_account(String user_account) {\r\n        this.user_account = user_account;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/JavaBean/User.java b/app/src/main/java/com/JavaBean/User.java
+--- a/app/src/main/java/com/JavaBean/User.java	(revision 67d275082aa455471db2d7716f0629e071137606)
++++ b/app/src/main/java/com/JavaBean/User.java	(date 1715568500831)
+@@ -6,7 +6,7 @@
+ import androidx.room.PrimaryKey;
+ 
+ @Entity(tableName = "Users")
+-public class User {
++public class User implements Comparable<User>{
+     @PrimaryKey(autoGenerate = true)
+     @NonNull
+     private int user_id;
+@@ -83,6 +83,11 @@
+     public User() {
+     }
+ 
++    public User(String user_account, String user_password) {
++        this.user_account = user_account;
++        this.user_password = user_password;
++    }
++
+     public String getUser_nickname() {
+         return user_nickname;
+     }
+@@ -134,4 +139,9 @@
+     public void setUser_account(String user_account) {
+         this.user_account = user_account;
+     }
++
++    @Override
++    public int compareTo(User o) {
++        return this.user_id-o.user_id;
++    }
+ }
