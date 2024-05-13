@@ -55,6 +55,7 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         return true;
     });
 
+
     holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
         checkedStatus.set(position, isChecked);
     });
