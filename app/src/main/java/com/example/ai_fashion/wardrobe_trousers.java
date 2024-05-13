@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -30,18 +31,24 @@ import androidx.room.Room;
 
 import com.DB.AppDatabase;
 import com.JavaBean.User;
+import com.Utils.ImageProcessor;
 import com.adapter.Trousers_Images_Adapter;
+import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class wardrobe_trousers extends AppCompatActivity
 {
+    private String serverUrl = "http://10.196.27.132:8010";
     private static final int PICK_IMAGE = 1;
     private static final int TAKE_PHOTO = 2;
     private Dialog mDialog;
@@ -217,11 +224,32 @@ public class wardrobe_trousers extends AppCompatActivity
                 // 用户选择了多张图片
                 ClipData clipData = data.getClipData();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
-                    Uri imageUri = clipData.getItemAt(i).getUri();
+                    Uri selectedImage = clipData.getItemAt(i).getUri();
                     // 处理每一张图片
+
+                    //切入口获取到Uri，还未作出处理
+                    ImageProcessor imageProcessor = new ImageProcessor();
+                    String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
+                    Map<String, String> dataMap = new HashMap<>();
+                    dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
+                    Gson gson = new Gson();
+                    String jsonstring = gson.toJson(dataMap);
+                    imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
+                        @Override
+                        public void onUploadSuccess(byte[] processedImageBytes) {
+                            byte[] temp=processedImageBytes;
+                        }
+
+                        @Override
+                        public void onUploadFailure(Exception e) {
+                            // 处理上传失败的情况
+                            e.printStackTrace();
+                            // ...
+                        }
+                    });
                     try {
                         // 获取图片的输入流
-                        InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                        InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                         // 将输入流解码为Bitmap
                         Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
                         // 保存图片
@@ -232,10 +260,30 @@ public class wardrobe_trousers extends AppCompatActivity
                 }
             } else if (data.getData() != null) {
                 // 用户只选择了一张图片
-                Uri imageUri = data.getData();
+                Uri selectedImage = data.getData();
+                //切入口获取到Uri，还未作出处理
+                ImageProcessor imageProcessor = new ImageProcessor();
+                String jsonString=imageProcessor.encodeImageUriToBase64(this,selectedImage);
+                Map<String, String> dataMap = new HashMap<>();
+                dataMap.put("image", jsonString); // 将 encodedImage 字符串存储在 "image" 键下
+                Gson gson = new Gson();
+                String jsonstring = gson.toJson(dataMap);
+                imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
+                    @Override
+                    public void onUploadSuccess(byte[] processedImageBytes) {
+                        byte[] temp=processedImageBytes;
+                    }
+
+                    @Override
+                    public void onUploadFailure(Exception e) {
+                        // 处理上传失败的情况
+                        e.printStackTrace();
+                        // ...
+                    }
+                });
                 try {
                     // 获取图片的输入流
-                    InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                     // 将输入流解码为Bitmap
                     Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
                     // 保存图片
@@ -250,6 +298,31 @@ public class wardrobe_trousers extends AppCompatActivity
             //获取拍摄的图片
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream); // 使用PNG格式，100表示无压缩
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            // 将Bitmap转换为Base64字符串
+            String encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            //切入口获取到Uri，还未作出处理
+            ImageProcessor imageProcessor = new ImageProcessor();
+            Map<String, String> dataMap = new HashMap<>();
+            dataMap.put("image", encodedString); // 将 encodedImage 字符串存储在 "image" 键下
+            Gson gson = new Gson();
+            String jsonstring = gson.toJson(dataMap);
+
+            imageProcessor.uploadImageAsync(serverUrl, jsonstring, new ImageProcessor.ImageProcessorListener() {
+                @Override
+                public void onUploadSuccess(byte[] processedImageBytes) {
+                    byte[] temp=processedImageBytes;
+                }
+
+                @Override
+                public void onUploadFailure(Exception e) {
+                    // 处理上传失败的情况
+                    e.printStackTrace();
+                    // ...
+                }
+            });
             saveImage(imageBitmap);
         }
         //上传图片后同步到RecyclerView
