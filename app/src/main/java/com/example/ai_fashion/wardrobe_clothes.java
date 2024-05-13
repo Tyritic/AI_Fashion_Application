@@ -64,6 +64,7 @@ public class wardrobe_clothes extends AppCompatActivity
     public static ImageButton backTohomePage;
     public static TextView cloth_title;
     public static ImageButton uploadPictures;
+
     //cycleView更改
     public static TextView cloth_cancel;
     public static TextView cloth_confirm;
