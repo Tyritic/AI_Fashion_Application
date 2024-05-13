@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Users")
-public class User {
+public class User implements Comparable<User>{
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private int user_id;
@@ -83,6 +83,11 @@ public class User {
     public User() {
     }
 
+    public User(String user_account, String user_password) {
+        this.user_account = user_account;
+        this.user_password = user_password;
+    }
+
     public String getUser_nickname() {
         return user_nickname;
     }
@@ -133,5 +138,10 @@ public class User {
 
     public void setUser_account(String user_account) {
         this.user_account = user_account;
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return this.user_id-o.user_id;
     }
 }

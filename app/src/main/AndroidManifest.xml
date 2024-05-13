@@ -41,6 +41,9 @@
             android:name=".My_Dressing"
             android:exported="false" />
         <activity
+            android:name=".My_Dressing"
+            android:exported="false" />
+        <activity
             android:name=".Body_Page"
             android:exported="false" />
         <activity
